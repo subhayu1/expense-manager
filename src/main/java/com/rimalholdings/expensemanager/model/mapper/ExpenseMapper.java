@@ -46,7 +46,7 @@ public class ExpenseMapper extends AbstractMapper<ExpenseEntity> {
 
   @Override
   public String getEntity(Long id) {
-    return null;
+    return convertDtoToString(expenseService.findById(id));
   }
 
   @Override
