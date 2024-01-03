@@ -27,32 +27,28 @@ public class BillPaymentMapper extends AbstractMapper<BillPaymentEntity>{
     this.expenseService = expenseService;
   }
 
-  @Override
-  public BillPaymentEntity mapToDTO(BaseDTOInterface dtoInterface) {
-    if(!(dtoInterface instanceof BillPaymentDTO billpaymentDTO)){
-      throw new IllegalArgumentException("Invalid DTO type");
-    }
-    BillPaymentEntity billPaymentEntity = new BillPaymentEntity();
-    billPaymentEntity.setId(billpaymentDTO.getId());
-    billPaymentEntity.setPaymentAmount(billpaymentDTO.getPaymentAmount());
-    billPaymentEntity.setPaymentMethod(billpaymentDTO.getPaymentMethod());
-    billPaymentEntity.setPaymentReference(billpaymentDTO.getPaymentReference());
-    VendorEntity vendorEntity = new VendorEntity();
-    vendorEntity.setId(billpaymentDTO.getVendorId());
-    billPaymentEntity.setVendor(vendorEntity);
-    for (Map.Entry<Long, BigDecimal> entry : billpaymentDTO.getExpensePaymentMap().entrySet()) {
-      Long expenseId = entry.getKey();
-      BigDecimal paymentAmount = entry.getValue();
+ @Override
+public BillPaymentEntity mapToDTO(BaseDTOInterface dtoInterface) {
+  BillPaymentDTO billpaymentDTO = (BillPaymentDTO) dtoInterface;
+  BillPaymentEntity billPaymentEntity = new BillPaymentEntity();
+  billPaymentEntity.setId(billpaymentDTO.getId());
+  billPaymentEntity.setPaymentAmount(billpaymentDTO.getPaymentAmount());
+  billPaymentEntity.setPaymentMethod(billpaymentDTO.getPaymentMethod());
+  billPaymentEntity.setPaymentReference(billpaymentDTO.getPaymentReference());
 
-      ExpenseEntity expenseEntity = expenseService.findById(expenseId);
-      expenseEntity.setPaymentAmount(paymentAmount);
-      expenseEntity.setAmountDue(expenseEntity.getTotalAmount().subtract(paymentAmount));
+  VendorEntity vendorEntity = new VendorEntity();
+  vendorEntity.setId(billpaymentDTO.getVendorId());
+  billPaymentEntity.setVendor(vendorEntity);
 
-      billPaymentEntity.getExpenses().add(expenseEntity);
-    }
-    return billPaymentEntity;
+  billpaymentDTO.getExpensePaymentMap().forEach((expenseId, paymentAmount) -> {
+    ExpenseEntity expenseEntity = expenseService.findById(expenseId);
+    expenseEntity.setPaymentAmount(paymentAmount);
+    expenseEntity.setAmountDue(expenseEntity.getTotalAmount().subtract(paymentAmount));
+    billPaymentEntity.getExpenses().add(expenseEntity);
+  });
 
-  }
+  return billPaymentEntity;
+}
 
 
   @Override
