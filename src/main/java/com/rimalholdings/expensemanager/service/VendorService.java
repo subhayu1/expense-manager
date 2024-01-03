@@ -43,7 +43,4 @@ public class VendorService extends AbstractEntityService<VendorEntity> {
             )));
   }
 
-  public List<VendorEntity> getAllVendors() {
-    return getRepository().findAll();
-  }
 }

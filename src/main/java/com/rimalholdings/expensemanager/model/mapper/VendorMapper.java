@@ -78,7 +78,7 @@ public VendorEntity mapToDTO(BaseDTOInterface dtoInterface) {
   }
   @Override
   public List<VendorEntity> getAllEntities() {
-    List<VendorEntity> vendorEntities = vendorService.getAllVendors();
+    List<VendorEntity> vendorEntities = vendorService.findAll();
     return convertDtoToString(vendorEntities);
   }
 

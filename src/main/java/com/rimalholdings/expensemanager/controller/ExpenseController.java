@@ -1,7 +1,9 @@
 package com.rimalholdings.expensemanager.controller;
 
 import com.rimalholdings.expensemanager.data.dto.ExpenseDTO;
+import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.model.mapper.ExpenseMapper;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +45,12 @@ public class ExpenseController {
     String expense = expenseMapper.getEntity(expenseId);
     return ResponseEntity.ok(expense);
   }
+  @GetMapping("/")
+  public ResponseEntity<List<ExpenseEntity>> getAllExpenses() {
+    List<ExpenseEntity> expenses = expenseMapper.getAllEntities();
+    return ResponseEntity.ok(expenses);
+  }
+
   @DeleteMapping("/{expenseId}")
   public ResponseEntity<String> deleteExpense(@PathVariable Long expenseId) {
     log.info("Deleting expense with ID {}", expenseId);

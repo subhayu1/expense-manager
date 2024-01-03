@@ -4,6 +4,7 @@ import com.rimalholdings.expensemanager.Exception.ExceptionConstant;
 import com.rimalholdings.expensemanager.Exception.ObjectNotFoundException;
 import com.rimalholdings.expensemanager.data.dao.BaseRepository;
 import com.rimalholdings.expensemanager.data.entity.BaseEntity;
+import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 public abstract class AbstractEntityService<T extends BaseEntity> {
@@ -34,5 +35,8 @@ public abstract class AbstractEntityService<T extends BaseEntity> {
                 ExceptionConstant.OBJECT_NOT_FOUND,ExceptionConstant.VENDOR, id
             )));
     repository.deleteById(entity.getId());
+  }
+  public List<T> findAll() {
+    return repository.findAll();
   }
 }

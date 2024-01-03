@@ -26,4 +26,5 @@ public class ExpenseService extends AbstractEntityService<ExpenseEntity> {
     getRepository().deleteById(expenseEntity.getId());
 
   }
+
 }

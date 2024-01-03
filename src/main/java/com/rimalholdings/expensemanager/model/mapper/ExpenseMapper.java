@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j(topic = "ExpenseMapper")
 public class ExpenseMapper extends AbstractMapper<ExpenseEntity> {
+
   private final ExpenseService expenseService;
 
 
@@ -23,7 +24,7 @@ public class ExpenseMapper extends AbstractMapper<ExpenseEntity> {
 
   @Override
   public ExpenseEntity mapToDTO(BaseDTOInterface dtoInterface) {
-    if(!(dtoInterface instanceof ExpenseDTO expenseDTO)){
+    if (!(dtoInterface instanceof ExpenseDTO expenseDTO)) {
       throw new IllegalArgumentException("Invalid DTO type");
     }
     VendorEntity vendorEntity = new VendorEntity();
@@ -52,7 +53,7 @@ public class ExpenseMapper extends AbstractMapper<ExpenseEntity> {
 
   @Override
   public String saveOrUpdateEntity(BaseDTOInterface dtoInterface) {
-    if(!(dtoInterface instanceof ExpenseDTO expenseDTO)){
+    if (!(dtoInterface instanceof ExpenseDTO expenseDTO)) {
       throw new IllegalArgumentException("Invalid DTO type");
     }
     ExpenseEntity expenseEntity = mapToDTO(expenseDTO);
@@ -64,7 +65,7 @@ public class ExpenseMapper extends AbstractMapper<ExpenseEntity> {
 
   @Override
   public List<ExpenseEntity> getAllEntities() {
-    return null;
+    List<ExpenseEntity> expenseEntities = expenseService.findAll();
+    return convertDtoToString(expenseEntities);
   }
-
 }
