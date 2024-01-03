@@ -7,6 +7,7 @@ import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.helper.VendorHelper;
 import com.rimalholdings.expensemanager.data.dto.VendorDTO;
 import com.rimalholdings.expensemanager.service.VendorService;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +75,11 @@ public VendorEntity mapToDTO(BaseDTOInterface dtoInterface) {
   public String getEntity(Long id) {
     VendorEntity vendorEntity = vendorService.getVendorById(id);
     return convertDtoToString(vendorEntity);
+  }
+  @Override
+  public List<VendorEntity> getAllEntities() {
+    List<VendorEntity> vendorEntities = vendorService.getAllVendors();
+    return convertDtoToString(vendorEntities);
   }
 
   public VendorEntity getVendorDetails(Long id) {

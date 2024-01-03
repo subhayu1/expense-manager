@@ -4,7 +4,9 @@ package com.rimalholdings.expensemanager.controller;
 import com.rimalholdings.expensemanager.Exception.DuplicateIdException;
 import com.rimalholdings.expensemanager.Exception.IdNotSuppliedException;
 import com.rimalholdings.expensemanager.data.dto.VendorDTO;
+import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.model.mapper.VendorMapper;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/vendor")
-@Slf4j(topic = "APIController")
-public class APIController {
+@Slf4j(topic = "VendorController")
+public class VendorController {
 
   private final VendorMapper vendorMapper;
 
-  public APIController(VendorMapper vendorMapper) {
+  public VendorController(VendorMapper vendorMapper) {
     this.vendorMapper = vendorMapper;
   }
 
@@ -41,6 +43,11 @@ public class APIController {
     String vendor = vendorMapper.getEntity(vendorId);
     return ResponseEntity.ok(vendor);
   }
+  @GetMapping("/")
+  public ResponseEntity<List<VendorEntity>>getAllVendors() {
+    List<VendorEntity> vendors = vendorMapper.getAllEntities();
+    return ResponseEntity.ok(vendors);
+  }
 
   @PutMapping("/")
   public ResponseEntity<String> updateVendor(@RequestBody VendorDTO vendorDTO)
@@ -56,4 +63,5 @@ public class APIController {
     vendorMapper.deleteEntity(vendorId);
     return ResponseEntity.ok("Vendor deleted");
   }
+
 }

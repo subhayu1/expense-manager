@@ -6,6 +6,7 @@ import com.rimalholdings.expensemanager.data.dto.ExpenseDTO;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.service.ExpenseService;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +60,11 @@ public class ExpenseMapper extends AbstractMapper<ExpenseEntity> {
     return convertDtoToString(savedExpense);
 
 
+  }
+
+  @Override
+  public List<ExpenseEntity> getAllEntities() {
+    return null;
   }
 
 }

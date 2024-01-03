@@ -6,6 +6,7 @@ import com.rimalholdings.expensemanager.Exception.ObjectNotFoundException;
 import com.rimalholdings.expensemanager.data.dao.BaseRepository;
 import com.rimalholdings.expensemanager.data.dao.VendorRepository;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,5 +41,9 @@ public class VendorService extends AbstractEntityService<VendorEntity> {
             String.format(
                 ExceptionConstant.OBJECT_NOT_FOUND,ExceptionConstant.VENDOR, vendorId
             )));
+  }
+
+  public List<VendorEntity> getAllVendors() {
+    return getRepository().findAll();
   }
 }

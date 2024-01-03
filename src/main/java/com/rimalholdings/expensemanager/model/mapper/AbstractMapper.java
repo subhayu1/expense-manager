@@ -3,7 +3,7 @@ package com.rimalholdings.expensemanager.model.mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
-import com.rimalholdings.expensemanager.service.VendorService;
+import java.util.List;
 
 public abstract class AbstractMapper<T> {
 
@@ -21,6 +21,13 @@ public abstract class AbstractMapper<T> {
       throw new RuntimeException(e);
     }
   }
+  public List<T> convertDtoToString(List<T> dto) {
+    try {
+      return  objectMapper.readValue(objectMapper.writeValueAsString(dto),List.class);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
+  }
   public abstract T mapToDTO(BaseDTOInterface dtoInterface);
 
   public abstract void deleteEntity(Long id);
@@ -28,7 +35,6 @@ public abstract class AbstractMapper<T> {
   public abstract String saveOrUpdateEntity(BaseDTOInterface dtoInterface);
 
 
-
-
+  public abstract List<T> getAllEntities();
 
 }
