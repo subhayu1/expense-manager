@@ -1,0 +1,27 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        type: debug
+        use_sql_comments: true
+        connection:
+          url: jdbc:mysql://localhost:3306/expense_manager
+          username: root
+          password: password
+          driver-class-name: com.mysql.cj.jdbc.Driver
+
+      datasource:
+      url: jdbc:mysql://localhost:3306/expense_manager
+      username: root
+      password: password
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      generate-ddl: true
+
+  docker:
+    compose:
+      enabled: true
+      file: docker-compose.yml
