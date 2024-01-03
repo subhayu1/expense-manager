@@ -7,13 +7,13 @@ import java.util.regex.Pattern;
 public class VendorHelper {
   private static final Integer VENDOR_ID_SEED = 10000;
   private static final Integer VENDOR_ID_MAX = 99999;
-  public static String generateVendorId(String name) {
+  public static String generateVendorId(String name,Integer zipCode) {
   String[] nameParts = name.split(" ");
   StringBuilder vendorId = new StringBuilder();
   if (nameParts.length >= 2) {
     vendorId.append(nameParts[0].charAt(0));
     vendorId.append(nameParts[1]);
-    vendorId.append(randomInt());
+    vendorId.append(zipCode);
   }
   return vendorId.toString().toLowerCase();
 }

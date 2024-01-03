@@ -11,15 +11,15 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "vendor")
-public class VendorEntity {
+public class VendorEntity extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Long id;
 
-  @Column(name = "vendorid", length=20,nullable = false, unique = true)
-  private String vendorId;
+  @Column(name = "externalId", length=20,nullable = false, unique = true)
+  private String externalId;
 
   @Column(name = "name")
   private String name;

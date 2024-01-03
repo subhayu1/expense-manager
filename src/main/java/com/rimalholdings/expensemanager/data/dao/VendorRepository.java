@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface VendorRepository extends JpaRepository<VendorEntity, Long> {
+public interface VendorRepository extends BaseRepository<VendorEntity> {
 
-  Optional<VendorEntity> getVendorByVendorId(String vendorId);
+  Optional<VendorEntity> getVendorByExternalId(String vendorId);
 }

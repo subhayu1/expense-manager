@@ -6,11 +6,9 @@ import com.rimalholdings.expensemanager.service.VendorService;
 
 public abstract class AbstractMapper<T> {
 
-  private final VendorService vendorService;
   private final ObjectMapper objectMapper;
 
-  protected AbstractMapper(VendorService vendorService, ObjectMapper objectMapper) {
-    this.vendorService = vendorService;
+  protected AbstractMapper( ObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
   }
 

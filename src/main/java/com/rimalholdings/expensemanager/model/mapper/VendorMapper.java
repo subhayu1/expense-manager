@@ -20,31 +20,27 @@ public class VendorMapper extends AbstractMapper<VendorEntity> {
 
 
   public VendorMapper(VendorService vendorService, ObjectMapper objectMapper) {
-    super(vendorService, objectMapper);
+    super(objectMapper);
     this.vendorService = vendorService;
     this.objectMapper = objectMapper;
   }
 
  public String saveOrUpdateVendor(VendorDTO vendorDTO) throws DuplicateIdException {
   VendorEntity vendorEntity = mapToDTO(vendorDTO);
-  try {
-    VendorEntity savedVendor = vendorService.save(vendorEntity);
-    return convertDtoToString(savedVendor);
-  } catch (SQLIntegrityConstraintViolationException e) {
-    String errorMessage = "Error saving VendorDTO with ID " + vendorDTO.getId() + ": " + e.getMessage();
-    logger.info(errorMessage);
-    throw new DuplicateIdException(errorMessage);
-  }
-}
+   VendorEntity savedVendor = vendorService.save(vendorEntity);
+   return convertDtoToString(savedVendor);
+ }
 
 protected VendorEntity mapToDTO(VendorDTO vendor) {
   VendorEntity vendorEntity = new VendorEntity();
   vendorEntity.setId(vendor.getId());
 
-  if(isCreateOperation(vendor)) {
-    vendorEntity.setVendorId(VendorHelper.generateVendorId(vendor.getName()));
+  if (vendor.getExternalId()!=null) {
+    vendorEntity.setExternalId(vendor.getExternalId());
   } else {
-    vendorEntity.setVendorId(getVendorDetails(vendor.getId()).getVendorId());
+    vendorEntity.setExternalId(VendorHelper.generateVendorId(
+        vendor.getName(),vendor.getZip()
+    ));
   }
 
   vendorEntity.setVendorType(vendor.getVendorType());
@@ -66,7 +62,7 @@ protected VendorEntity mapToDTO(VendorDTO vendor) {
 }
 
   public void deleteVendor(Long id) {
-    vendorService.delete(id);
+    vendorService.deleteById(id);
   }
 
 
