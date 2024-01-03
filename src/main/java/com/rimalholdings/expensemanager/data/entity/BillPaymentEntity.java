@@ -2,7 +2,6 @@ package com.rimalholdings.expensemanager.data.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinColumns;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
@@ -18,7 +17,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "billpayment")
 public class BillPaymentEntity extends BaseEntity {
 
-  @ManyToMany
+  @ManyToMany(cascade = jakarta.persistence.CascadeType.PERSIST)
   @JoinTable(
       name = "billpayment_expense",
       joinColumns = @JoinColumn(name = "billpaymentid", referencedColumnName = "id"),

@@ -1,14 +1,11 @@
 package com.rimalholdings.expensemanager.service;
 
-import com.rimalholdings.expensemanager.Exception.DuplicateIdException;
 import com.rimalholdings.expensemanager.Exception.ExceptionConstant;
 import com.rimalholdings.expensemanager.Exception.ObjectNotFoundException;
 import com.rimalholdings.expensemanager.data.dao.BaseRepository;
 import com.rimalholdings.expensemanager.data.dao.VendorRepository;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
-import java.util.List;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class VendorService extends AbstractEntityService<VendorEntity> {
@@ -21,7 +18,7 @@ public class VendorService extends AbstractEntityService<VendorEntity> {
     return getRepository().findById(vendorId)
         .orElseThrow(() -> new ObjectNotFoundException(
             String.format(
-                ExceptionConstant.OBJECT_NOT_FOUND,ExceptionConstant.VENDOR, vendorId
+                ExceptionConstant.OBJECT_NOT_FOUND, ExceptionConstant.VENDOR, vendorId
             )));
   }
 
@@ -29,17 +26,17 @@ public class VendorService extends AbstractEntityService<VendorEntity> {
   public void deleteById(Long vendorId) {
     VendorEntity vendorEntity = getRepository().findById(vendorId)
         .orElseThrow(() -> new ObjectNotFoundException(
-        String.format(
-            ExceptionConstant.OBJECT_NOT_FOUND,ExceptionConstant.VENDOR, vendorId
-        )));
+            String.format(
+                ExceptionConstant.OBJECT_NOT_FOUND, ExceptionConstant.VENDOR, vendorId
+            )));
     getRepository().deleteById(vendorEntity.getId());
   }
 
-  public VendorEntity getVendorByVendorId(String  vendorId) {
+  public VendorEntity getVendorByVendorId(String vendorId) {
     return ((VendorRepository) getRepository()).getVendorByExternalId(vendorId)
         .orElseThrow(() -> new ObjectNotFoundException(
             String.format(
-                ExceptionConstant.OBJECT_NOT_FOUND,ExceptionConstant.VENDOR, vendorId
+                ExceptionConstant.OBJECT_NOT_FOUND, ExceptionConstant.VENDOR, vendorId
             )));
   }
 

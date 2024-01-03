@@ -6,8 +6,9 @@ import com.rimalholdings.expensemanager.Exception.IdNotSuppliedException;
 import com.rimalholdings.expensemanager.data.dto.VendorDTO;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.model.mapper.VendorMapper;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,16 +44,19 @@ public class VendorController {
     String vendor = vendorMapper.getEntity(vendorId);
     return ResponseEntity.ok(vendor);
   }
+
   @GetMapping("/")
-  public ResponseEntity<List<VendorEntity>>getAllVendors() {
-    List<VendorEntity> vendors = vendorMapper.getAllEntities();
+  public ResponseEntity<Page<VendorEntity>> getAllVendors(Pageable pageable) {
+    Page<VendorEntity> vendors = vendorMapper.getAllEntities(pageable);
     return ResponseEntity.ok(vendors);
   }
 
   @PutMapping("/")
   public ResponseEntity<String> updateVendor(@RequestBody VendorDTO vendorDTO)
       throws DuplicateIdException, IdNotSuppliedException {
-    if(vendorDTO.getId() == null) throw new IdNotSuppliedException("Vendor ID not supplied");
+    if (vendorDTO.getId() == null) {
+      throw new IdNotSuppliedException("Vendor ID not supplied");
+    }
     String updatedVendor = vendorMapper.saveOrUpdateEntity(vendorDTO);
     return ResponseEntity.ok(updatedVendor);
   }

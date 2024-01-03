@@ -1,10 +1,8 @@
 package com.rimalholdings.expensemanager.data.dto;
 
 import java.math.BigDecimal;
-import lombok.Data;
 
-@Data
-public class ExpenseDTO implements BaseDTOInterface {
+public class BillpaymentDTO implements BaseDTOInterface {
 
   private Long id;
   private Long vendorId;
@@ -12,5 +10,5 @@ public class ExpenseDTO implements BaseDTOInterface {
   private BigDecimal amountPaid;
   private BigDecimal amountDue;
   private String description;
-  private String dueDate;
+
 }

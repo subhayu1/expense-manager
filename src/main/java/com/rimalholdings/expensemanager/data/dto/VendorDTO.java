@@ -1,12 +1,10 @@
 package com.rimalholdings.expensemanager.data.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
- public class VendorDTO implements BaseDTOInterface {
+public class VendorDTO implements BaseDTOInterface {
+
   private Long id;
   private String name;
   private String externalId;

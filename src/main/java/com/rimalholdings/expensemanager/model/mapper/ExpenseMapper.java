@@ -6,8 +6,10 @@ import com.rimalholdings.expensemanager.data.dto.ExpenseDTO;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.service.ExpenseService;
-import java.util.List;
+import java.sql.Timestamp;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,6 +34,7 @@ public class ExpenseMapper extends AbstractMapper<ExpenseEntity> {
 
     ExpenseEntity expenseEntity = new ExpenseEntity();
     expenseEntity.setId(expenseDTO.getId());
+    expenseEntity.setDueDate(Timestamp.valueOf(expenseDTO.getDueDate()));
     expenseEntity.setVendor(vendorEntity);
     expenseEntity.setTotalAmount(expenseDTO.getTotalAmount());
     expenseEntity.setAmountPaid(expenseDTO.getAmountPaid());
@@ -64,8 +67,7 @@ public class ExpenseMapper extends AbstractMapper<ExpenseEntity> {
   }
 
   @Override
-  public List<ExpenseEntity> getAllEntities() {
-    List<ExpenseEntity> expenseEntities = expenseService.findAll();
-    return convertDtoToString(expenseEntities);
+  public Page<ExpenseEntity> getAllEntities(Pageable pageable) {
+    return expenseService.findAll(pageable);
   }
 }
