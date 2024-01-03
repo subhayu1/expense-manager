@@ -37,7 +37,6 @@ public class ExpenseMapper extends AbstractMapper<ExpenseEntity> {
     expenseEntity.setDueDate(Timestamp.valueOf(expenseDTO.getDueDate()));
     expenseEntity.setVendor(vendorEntity);
     expenseEntity.setTotalAmount(expenseDTO.getTotalAmount());
-    expenseEntity.setAmountPaid(expenseDTO.getAmountPaid());
     expenseEntity.setAmountDue(expenseDTO.getAmountDue());
     expenseEntity.setDescription(expenseDTO.getDescription());
     return expenseEntity;

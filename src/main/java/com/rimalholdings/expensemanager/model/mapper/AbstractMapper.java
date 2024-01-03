@@ -24,9 +24,9 @@ public abstract class AbstractMapper<T> {
     }
   }
 
-  public List<T> convertDtoToString(List<T> dto) {
+  public List<T>convertDtoToString(List<T> dto) {
     try {
-      return objectMapper.readValue(objectMapper.writeValueAsString(dto), List.class);
+      return  objectMapper.readValue(objectMapper.writeValueAsString(dto), List.class);
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
