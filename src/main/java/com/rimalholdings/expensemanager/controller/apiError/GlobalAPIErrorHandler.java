@@ -4,12 +4,8 @@ import com.rimalholdings.expensemanager.Exception.DuplicateIdException;
 import com.rimalholdings.expensemanager.Exception.ExceptionConstant;
 import com.rimalholdings.expensemanager.Exception.IdNotSuppliedException;
 import com.rimalholdings.expensemanager.Exception.ObjectNotFoundException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,9 +16,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 public class GlobalAPIErrorHandler {
+
   @ExceptionHandler(ObjectNotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-public Map<String, String> handleObjectNotFoundException(ObjectNotFoundException e) {
+  public Map<String, String> handleObjectNotFoundException(ObjectNotFoundException e) {
     Map<String, String> errorMap = new LinkedHashMap<>();
     errorMap.put("HttpStatus", HttpStatus.NOT_FOUND.toString());
     errorMap.put("status", String.valueOf(ExceptionConstant.ERROR));
@@ -30,9 +27,10 @@ public Map<String, String> handleObjectNotFoundException(ObjectNotFoundException
     log.info("Handled NoSuchElementException: {}", e.getMessage());
     return errorMap;
   }
+
   @ExceptionHandler(IdNotSuppliedException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-public Map<String, String> handleIdNotSuppliedException(IdNotSuppliedException e) {
+  public Map<String, String> handleIdNotSuppliedException(IdNotSuppliedException e) {
     Map<String, String> errorMap = new LinkedHashMap<>();
     errorMap.put("HttpStatus", HttpStatus.BAD_REQUEST.toString());
     errorMap.put("status", String.valueOf(ExceptionConstant.ERROR));
@@ -40,9 +38,10 @@ public Map<String, String> handleIdNotSuppliedException(IdNotSuppliedException e
     log.info("Handled IdNotSuppliedException: {}", e.getMessage());
     return errorMap;
   }
+
   @ExceptionHandler(DuplicateIdException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-public Map<String, String> handleDuplicateIdException(DuplicateIdException e) {
+  public Map<String, String> handleDuplicateIdException(DuplicateIdException e) {
     Map<String, String> errorMap = new LinkedHashMap<>();
     errorMap.put("HttpStatus", HttpStatus.BAD_REQUEST.toString());
     errorMap.put("status", String.valueOf(ExceptionConstant.ERROR));

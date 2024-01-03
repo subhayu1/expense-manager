@@ -1,80 +1,83 @@
 package com.rimalholdings.expensemanager.model.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rimalholdings.expensemanager.Exception.DuplicateIdException;
+import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
+import com.rimalholdings.expensemanager.data.dto.VendorDTO;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.helper.VendorHelper;
-import com.rimalholdings.expensemanager.model.VendorDTO;
 import com.rimalholdings.expensemanager.service.VendorService;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.logging.Logger;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j(topic = "VendorMapper")
 public class VendorMapper extends AbstractMapper<VendorEntity> {
 
   private final VendorService vendorService;
-  private final ObjectMapper objectMapper;
-
-  private final Logger logger = Logger.getLogger(VendorMapper.class.getName());
-
 
   public VendorMapper(VendorService vendorService, ObjectMapper objectMapper) {
-    super(vendorService, objectMapper);
+    super(objectMapper);
     this.vendorService = vendorService;
-    this.objectMapper = objectMapper;
   }
 
- public String saveOrUpdateVendor(VendorDTO vendorDTO) throws DuplicateIdException {
-  VendorEntity vendorEntity = mapToDTO(vendorDTO);
-  try {
+  @Override
+  public String saveOrUpdateEntity(BaseDTOInterface dtoInterface) {
+    if (!(dtoInterface instanceof VendorDTO vendorDTO)) {
+      throw new IllegalArgumentException("Invalid DTO type");
+    }
+    VendorEntity vendorEntity = mapToDTO(vendorDTO);
     VendorEntity savedVendor = vendorService.save(vendorEntity);
     return convertDtoToString(savedVendor);
-  } catch (SQLIntegrityConstraintViolationException e) {
-    String errorMessage = "Error saving VendorDTO with ID " + vendorDTO.getId() + ": " + e.getMessage();
-    logger.info(errorMessage);
-    throw new DuplicateIdException(errorMessage);
-  }
-}
-
-protected VendorEntity mapToDTO(VendorDTO vendor) {
-  VendorEntity vendorEntity = new VendorEntity();
-  vendorEntity.setId(vendor.getId());
-
-  vendorEntity.setVendorId(VendorHelper
-      .generateVendorId(vendor.getName()));
-
-  vendorEntity.setVendorType(vendor.getVendorType());
-  vendorEntity.setName(vendor.getName());
-  vendorEntity.setAddress1(vendor.getAddress1());
-  vendorEntity.setAddress2(vendor.getAddress2());
-  vendorEntity.setCity(vendor.getCity());
-  vendorEntity.setState(vendor.getState());
-  vendorEntity.setZip(vendor.getZip());
-
-  vendorEntity.setPhone(VendorHelper
-      .sanitizePhoneNumber(vendor.getPhone()));
-
-  if(VendorHelper.isValidEmail(vendor.getEmail())) {
-    vendorEntity.setEmail(vendor.getEmail());
   }
 
-  return vendorEntity;
-}
-
-  public void deleteVendor(Long vendorId) {
-    vendorService.delete(vendorId);
-  }
-
-
-  public String getVendor(Long vendorId) {
-    VendorEntity vendorEntity = vendorService.getVendorById(vendorId);
-    try {
-      // Convert the VendorDTO object to a JSON string
-      return objectMapper.writeValueAsString(vendorEntity);
-    } catch (Exception e) {
-      logger.info("Error converting VendorDTO to JSON string: " + e.getMessage());
-      throw new RuntimeException(e);
+  @Override
+  public VendorEntity mapToDTO(BaseDTOInterface dtoInterface) {
+    if (!(dtoInterface instanceof VendorDTO vendorDTO)) {
+      throw new IllegalArgumentException("Invalid DTO type");
     }
+
+    VendorEntity vendorEntity = new VendorEntity();
+
+    // Map fields from VendorDTO to VendorEntity
+    vendorEntity.setId(vendorDTO.getId());
+    vendorEntity.setName(vendorDTO.getName());
+
+    if (vendorDTO.getExternalId() == null) {
+      vendorEntity.setExternalId(
+          VendorHelper.generateVendorId(vendorDTO.getName(), vendorDTO.getZip()));
+    } else {
+      vendorEntity.setExternalId(vendorDTO.getExternalId());
+    }
+    vendorEntity.setVendorType(vendorDTO.getVendorType());
+    vendorEntity.setAddress1(vendorDTO.getAddress1());
+    vendorEntity.setAddress2(vendorDTO.getAddress2());
+    vendorEntity.setCity(vendorDTO.getCity());
+    vendorEntity.setState(vendorDTO.getState());
+    vendorEntity.setZip(vendorDTO.getZip());
+    vendorEntity.setPhone(VendorHelper.sanitizePhoneNumber(vendorDTO.getPhone()));
+
+    if (VendorHelper.isValidEmail(vendorDTO.getEmail())) {
+      vendorEntity.setEmail(vendorDTO.getEmail());
+    }
+
+    return vendorEntity;
+  }
+
+  @Override
+  public void deleteEntity(Long id) {
+    vendorService.deleteById(id);
+  }
+
+  @Override
+  public String getEntity(Long id) {
+    VendorEntity vendorEntity = vendorService.getVendorById(id);
+    return convertDtoToString(vendorEntity);
+  }
+
+  @Override
+  public Page<VendorEntity> getAllEntities(Pageable pageable) {
+    return vendorService.findAll(pageable);
   }
 }

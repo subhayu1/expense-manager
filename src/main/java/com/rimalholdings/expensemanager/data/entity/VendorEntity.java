@@ -2,24 +2,17 @@ package com.rimalholdings.expensemanager.data.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
 @Data
 @Table(name = "vendor")
-public class VendorEntity {
+public class VendorEntity extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Long id;
 
-  @Column(name = "vendorid", length=20,nullable = false, unique = true)
-  private String vendorId;
+  @Column(name = "externalid", length = 20, nullable = false, unique = true)
+  private String externalId;
 
   @Column(name = "name")
   private String name;

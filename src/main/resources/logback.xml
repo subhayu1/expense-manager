@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-  <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
-
-  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
     <file>./logs/app.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
       <fileNamePattern>./logs/app.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
@@ -11,15 +11,15 @@
       <maxHistory>5</maxHistory>
       <totalSizeCap>100MB</totalSizeCap>
     </rollingPolicy>
-    <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-    </encoder>
   </appender>
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+  <logger level="DEBUG" name="org.springframework.web"/>
 
   <root level="INFO">
-    <appender-ref ref="CONSOLE" />
-    <appender-ref ref="FILE" />
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="FILE"/>
   </root>
-
-  <logger name="org.springframework.web" level="DEBUG"/>
 </configuration>
