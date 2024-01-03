@@ -39,4 +39,12 @@ public class VendorService {
         )));
     vendorRepository.deleteById(vendorEntity.getId());
   }
+  public VendorEntity getVendorByVendorId(String  vendorId) {
+    return vendorRepository.getVendorByVendorId(vendorId)
+        .orElseThrow(() -> new ObjectNotFoundException(
+            String.format(
+                ExceptionConstant.OBJECT_NOT_FOUND,ExceptionConstant.VENDOR, vendorId
+            )));
+  }
+
 }

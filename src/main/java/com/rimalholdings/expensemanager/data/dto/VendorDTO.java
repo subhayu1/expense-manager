@@ -1,9 +1,11 @@
-package com.rimalholdings.expensemanager.model;
+package com.rimalholdings.expensemanager.data.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
-public class VendorDTO {
+ public class VendorDTO {
   private Long id;
   private String vendorId;
   private String name;
@@ -15,5 +17,7 @@ public class VendorDTO {
   private Integer zip;
   private String phone;
   private String email;
+
+
 
 }

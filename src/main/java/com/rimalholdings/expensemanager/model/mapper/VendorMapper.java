@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rimalholdings.expensemanager.Exception.DuplicateIdException;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.helper.VendorHelper;
-import com.rimalholdings.expensemanager.model.VendorDTO;
+import com.rimalholdings.expensemanager.data.dto.VendorDTO;
 import com.rimalholdings.expensemanager.service.VendorService;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.logging.Logger;
@@ -41,8 +41,11 @@ protected VendorEntity mapToDTO(VendorDTO vendor) {
   VendorEntity vendorEntity = new VendorEntity();
   vendorEntity.setId(vendor.getId());
 
-  vendorEntity.setVendorId(VendorHelper
-      .generateVendorId(vendor.getName()));
+  if(isCreateOperation(vendor)) {
+    vendorEntity.setVendorId(VendorHelper.generateVendorId(vendor.getName()));
+  } else {
+    vendorEntity.setVendorId(getVendorDetails(vendor.getId()).getVendorId());
+  }
 
   vendorEntity.setVendorType(vendor.getVendorType());
   vendorEntity.setName(vendor.getName());
@@ -62,19 +65,21 @@ protected VendorEntity mapToDTO(VendorDTO vendor) {
   return vendorEntity;
 }
 
-  public void deleteVendor(Long vendorId) {
-    vendorService.delete(vendorId);
+  public void deleteVendor(Long id) {
+    vendorService.delete(id);
   }
 
 
-  public String getVendor(Long vendorId) {
-    VendorEntity vendorEntity = vendorService.getVendorById(vendorId);
-    try {
-      // Convert the VendorDTO object to a JSON string
-      return objectMapper.writeValueAsString(vendorEntity);
-    } catch (Exception e) {
-      logger.info("Error converting VendorDTO to JSON string: " + e.getMessage());
-      throw new RuntimeException(e);
-    }
+  public String getVendor(Long id) {
+    VendorEntity vendorEntity = vendorService.getVendorById(id);
+    return convertDtoToString(vendorEntity);
   }
+
+  public VendorEntity getVendorDetails(Long id) {
+    return vendorService.getVendorById(id);
+  }
+  private boolean isCreateOperation(VendorDTO vendor) {
+    return vendor.getId() == null;
+  }
+
 }

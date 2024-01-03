@@ -3,7 +3,7 @@ package com.rimalholdings.expensemanager.controller;
 
 import com.rimalholdings.expensemanager.Exception.DuplicateIdException;
 import com.rimalholdings.expensemanager.Exception.IdNotSuppliedException;
-import com.rimalholdings.expensemanager.model.VendorDTO;
+import com.rimalholdings.expensemanager.data.dto.VendorDTO;
 import com.rimalholdings.expensemanager.model.mapper.VendorMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
