@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/vendor")
 @Slf4j(topic = "APIController")
 public class APIController {
 
@@ -28,30 +28,32 @@ public class APIController {
     this.vendorMapper = vendorMapper;
   }
 
-  @PostMapping("/vendor")
+  @PostMapping("/")
   public ResponseEntity<String> createVendor(@RequestBody VendorDTO vendorDTO)
       throws DuplicateIdException {
     log.info("Creating new vendor: {}", vendorDTO);
-    String vendor = vendorMapper.saveOrUpdateVendor(vendorDTO);
-    return ResponseEntity.status(HttpStatus.CREATED).body(vendor);
+    String createdVendor = vendorMapper.saveOrUpdateEntity(vendorDTO);
+    return ResponseEntity.status(HttpStatus.CREATED).body(createdVendor);
   }
 
-  @GetMapping("/vendor/{vendorId}")
+  @GetMapping("/{vendorId}")
   public ResponseEntity<String> getVendor(@PathVariable Long vendorId) {
-    String vendor = vendorMapper.getVendor(vendorId);
+    String vendor = vendorMapper.getEntity(vendorId);
     return ResponseEntity.ok(vendor);
   }
 
- @PutMapping("/vendor")
-public ResponseEntity<String> updateVendor(@RequestBody VendorDTO vendorDTO)
-     throws DuplicateIdException {
-  if(vendorDTO.getId() == null) throw new IdNotSuppliedException("Vendor ID not supplied");
-  return ResponseEntity.ok(vendorMapper.saveOrUpdateVendor(vendorDTO));
-}
-  @DeleteMapping("/vendor/{vendorId}")
+  @PutMapping("/")
+  public ResponseEntity<String> updateVendor(@RequestBody VendorDTO vendorDTO)
+      throws DuplicateIdException, IdNotSuppliedException {
+    if(vendorDTO.getId() == null) throw new IdNotSuppliedException("Vendor ID not supplied");
+    String updatedVendor = vendorMapper.saveOrUpdateEntity(vendorDTO);
+    return ResponseEntity.ok(updatedVendor);
+  }
+
+  @DeleteMapping("/{vendorId}")
   public ResponseEntity<String> deleteVendor(@PathVariable Long vendorId) {
     log.info("Deleting vendor with ID {}", vendorId);
-    vendorMapper.deleteVendor(vendorId);
+    vendorMapper.deleteEntity(vendorId);
     return ResponseEntity.ok("Vendor deleted");
   }
 }

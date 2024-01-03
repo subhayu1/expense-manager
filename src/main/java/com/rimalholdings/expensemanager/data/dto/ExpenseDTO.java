@@ -5,10 +5,10 @@ import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
-public class ExpenseDTO {
+public class ExpenseDTO implements BaseDTOInterface {
   private Long id;
-  private String vendorId;
-  private String totalAmount;
+  private Long vendorId;
+  private BigDecimal totalAmount;
   private BigDecimal amountPaid;
   private BigDecimal amountDue;
   private String description;

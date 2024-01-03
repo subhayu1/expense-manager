@@ -16,9 +16,6 @@ import lombok.Data;
 @Data
 @Table(name = "expense")
 public class ExpenseEntity extends BaseEntity {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
 
   @JoinColumn(name = "vendorid", referencedColumnName = "id")
   @ManyToOne
