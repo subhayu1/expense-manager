@@ -10,6 +10,7 @@ import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.service.BillPaymentService;
 import com.rimalholdings.expensemanager.service.ExpenseService;
 import java.math.BigDecimal;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,31 +38,33 @@ public class BillPaymentMapper extends AbstractMapper<BillPaymentEntity> {
     billPaymentEntity.setPaymentAmount(billpaymentDTO.getPaymentAmount());
     billPaymentEntity.setPaymentMethod(billpaymentDTO.getPaymentMethod());
     billPaymentEntity.setPaymentReference(billpaymentDTO.getPaymentReference());
-
     VendorEntity vendorEntity = new VendorEntity();
     vendorEntity.setId(billpaymentDTO.getVendorId());
     billPaymentEntity.setVendor(vendorEntity);
 
-    billpaymentDTO.getExpensePaymentMap().forEach((expenseId, paymentAmount) -> {
-      ExpenseEntity expenseEntity = expenseService.findById(expenseId);
-      expenseEntity.setPaymentAmount(paymentAmount);
-      log.info("amount due: {}", expenseEntity.getAmountDue());
-      log.info("payment amount: {}", paymentAmount);
-
-      if (expenseEntity.getAmountDue().compareTo(BigDecimal.ZERO) == ZERO) {
-        throw new CannotOverpayExpenseException("Expense already paid in full");
-      }
-
-      if (expenseEntity.getAmountDue().compareTo(paymentAmount) == 0) {
-        expenseEntity.setAmountDue(BigDecimal.ZERO);
-      } else {
-        expenseEntity.setAmountDue(expenseEntity.getTotalAmount().subtract(paymentAmount));
-      }
-      billPaymentEntity.getExpenses().add(expenseEntity);
-    });
+    Map<Long, BigDecimal> expensePaymentMap = billpaymentDTO.getExpensePaymentMap();
+    if (expensePaymentMap != null) {
+      expensePaymentMap.forEach((expenseId, paymentAmount) -> {
+        ExpenseEntity expenseEntity = expenseService.findById(expenseId);
+        expenseEntity.setPaymentAmount(paymentAmount);
+        log.info("amount due: {}", expenseEntity.getAmountDue());
+        log.info("payment amount: {}", paymentAmount);
+        if (expenseEntity.getAmountDue().compareTo(BigDecimal.ZERO) == ZERO) {
+          // Handle the case when the expense is already paid in full
+          throw new CannotOverpayExpenseException("Expense already paid in full");
+        }
+        if (expenseEntity.getAmountDue().compareTo(paymentAmount) == 0) {
+          expenseEntity.setAmountDue(BigDecimal.ZERO);
+        } else {
+          expenseEntity.setAmountDue(expenseEntity.getTotalAmount().subtract(paymentAmount));
+        }
+        billPaymentEntity.getExpenses().add(expenseEntity);
+      });
+    }
 
     return billPaymentEntity;
   }
+
 
   @Override
   public void deleteEntity(Long id) {
