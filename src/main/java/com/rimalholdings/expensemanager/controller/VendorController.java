@@ -6,7 +6,10 @@ import com.rimalholdings.expensemanager.Exception.IdNotSuppliedException;
 import com.rimalholdings.expensemanager.data.dto.VendorDTO;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.model.mapper.VendorMapper;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springdoc.core.annotations.RouterOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -46,7 +49,7 @@ public class VendorController implements APIControllerInterface {
   }
 
   @GetMapping("/")
-  public ResponseEntity<Page<VendorEntity>> getAllVendors(Pageable pageable) {
+  public ResponseEntity<Page<VendorEntity>> getAllVendors(@ParameterObject Pageable pageable) {
     Page<VendorEntity> vendors = vendorMapper.getAllEntities(pageable);
     return ResponseEntity.ok(vendors);
   }

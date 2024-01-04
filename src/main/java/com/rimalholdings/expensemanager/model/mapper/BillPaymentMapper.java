@@ -42,7 +42,7 @@ public class BillPaymentMapper extends AbstractMapper<BillPaymentEntity> {
     vendorEntity.setId(billpaymentDTO.getVendorId());
     billPaymentEntity.setVendor(vendorEntity);
 
-    Map<Long, BigDecimal> expensePaymentMap = billpaymentDTO.getExpensePaymentMap();
+    Map<Long, BigDecimal> expensePaymentMap = billpaymentDTO.getExpensePayments();
     if (expensePaymentMap != null) {
       expensePaymentMap.forEach((expenseId, paymentAmount) -> {
         ExpenseEntity expenseEntity = expenseService.findById(expenseId);

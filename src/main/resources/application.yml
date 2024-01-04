@@ -1,4 +1,12 @@
 spring:
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+        max-page-size: 100
+      sort:
+        sort-parameter: sort
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -25,3 +33,6 @@ spring:
     compose:
       enabled: true
       file: docker-compose.yml
+rsa:
+    private-key: classpath:certs/private.pem
+    public-key: classpath:certs/public.pem

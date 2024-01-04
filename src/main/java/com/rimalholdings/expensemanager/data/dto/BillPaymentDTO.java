@@ -12,6 +12,6 @@ public class BillPaymentDTO implements BaseDTOInterface {
   private BigDecimal paymentAmount;
   private String paymentMethod;
   private String paymentReference;
-  private Map<Long, BigDecimal> expensePaymentMap;
+  private Map<Long, BigDecimal> expensePayments;
 
 }

@@ -20,7 +20,6 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import org.junit.jupiter.api.Test;
 
 class BillPaymentMapperTest {
 
@@ -52,7 +51,7 @@ class BillPaymentMapperTest {
         Map<Long, BigDecimal> expensePaymentMap = new HashMap<>();
         expensePaymentMap.put(1L, BigDecimal.valueOf(50));
         expensePaymentMap.put(2L, BigDecimal.valueOf(50));
-        billPaymentDTO.setExpensePaymentMap(expensePaymentMap);
+        billPaymentDTO.setExpensePayments(expensePaymentMap);
 
         ExpenseEntity expenseEntity1 = new ExpenseEntity();
         expenseEntity1.setId(1L);
