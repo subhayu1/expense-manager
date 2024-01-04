@@ -5,6 +5,7 @@ import com.rimalholdings.expensemanager.data.dto.BillPaymentDTO;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.model.mapper.BillPaymentMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class BillPaymentController implements APIControllerInterface {
   }
 
   @GetMapping("/")
-  public ResponseEntity<Page<BillPaymentEntity>> getAllBillPayments(Pageable pageable) {
+  public ResponseEntity<Page<BillPaymentEntity>> getAllBillPayments(@ParameterObject Pageable pageable) {
     log.info("Getting all bill payments");
     Page<BillPaymentEntity> allBillPayments = billPaymentMapper.getAllEntities(pageable);
     return ResponseEntity.ok(allBillPayments);

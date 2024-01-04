@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @Table(name = "expense")

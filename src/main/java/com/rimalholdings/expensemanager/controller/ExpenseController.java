@@ -4,6 +4,7 @@ import com.rimalholdings.expensemanager.data.dto.ExpenseDTO;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.model.mapper.ExpenseMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -51,7 +52,7 @@ public class ExpenseController implements APIControllerInterface {
   }
 
   @GetMapping("/")
-  public ResponseEntity<Page<ExpenseEntity>> getAllExpenses(Pageable pageable) {
+  public ResponseEntity<Page<ExpenseEntity>> getAllExpenses(@ParameterObject Pageable pageable) {
     Page<ExpenseEntity> expenses = expenseMapper.getAllEntities(pageable);
     return ResponseEntity.ok(expenses);
   }
