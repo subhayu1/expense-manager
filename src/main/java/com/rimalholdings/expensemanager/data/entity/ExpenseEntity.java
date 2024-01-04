@@ -40,7 +40,7 @@ public class ExpenseEntity extends BaseEntity {
   @EqualsAndHashCode.Exclude
   @JsonBackReference
   @ManyToMany(mappedBy = "expenses")
-  private List<BillPaymentEntity> payments= new ArrayList<>();
+  private List<BillPaymentEntity> payments = new ArrayList<>();
 
   @Column(name = "paymentamount")
   private BigDecimal paymentAmount;

@@ -26,7 +26,7 @@ public class GlobalAPIErrorHandler {
     errorMap.put("status", String.valueOf(ExceptionConstant.ERROR));
     errorMap.put("message", e.getMessage());
     log.info("Handled NoSuchElementException: {}", e.getMessage());
-    log.info("Stacktrace: {}", e.getMessage(),e);
+    log.info("Stacktrace: {}", e.getMessage(), e);
 
     return errorMap;
   }
@@ -40,7 +40,7 @@ public class GlobalAPIErrorHandler {
     errorMap.put("status", String.valueOf(ExceptionConstant.ERROR));
     errorMap.put("message", e.getMessage());
     log.info("Handled Exception: {}", e.getMessage());
-    log.info("Stacktrace: {}", e.getMessage(),e);
+    log.info("Stacktrace: {}", e.getMessage(), e);
     return errorMap;
   }
 }

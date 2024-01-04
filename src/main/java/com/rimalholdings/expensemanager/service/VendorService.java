@@ -3,7 +3,6 @@ package com.rimalholdings.expensemanager.service;
 import com.rimalholdings.expensemanager.Exception.ExceptionConstant;
 import com.rimalholdings.expensemanager.Exception.ObjectNotFoundException;
 import com.rimalholdings.expensemanager.data.dao.BaseRepository;
-import com.rimalholdings.expensemanager.data.dao.VendorRepository;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import org.springframework.stereotype.Service;
 
