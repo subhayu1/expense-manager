@@ -11,7 +11,7 @@ import lombok.Data;
 public class VendorEntity extends BaseEntity {
 
 
-  @Column(name = "externalid", length = 20, nullable = false, unique = true)
+  @Column(name = "externalid", length = 30, nullable = false, unique = true)
   private String externalId;
 
   @Column(name = "name")

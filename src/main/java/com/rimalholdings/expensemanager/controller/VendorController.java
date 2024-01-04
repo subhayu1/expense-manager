@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/vendor")
 @Slf4j(topic = "VendorController")
-public class VendorController {
+public class VendorController implements APIControllerInterface {
 
   private final VendorMapper vendorMapper;
 

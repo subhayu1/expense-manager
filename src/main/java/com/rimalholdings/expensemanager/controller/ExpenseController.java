@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j(topic = "ExpenseController")
 @RequestMapping("/api/v1/expense")
 
-public class ExpenseController {
+public class ExpenseController implements APIControllerInterface {
 
   private final ExpenseMapper expenseMapper;
 

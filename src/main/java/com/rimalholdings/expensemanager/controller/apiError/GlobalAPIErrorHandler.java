@@ -31,7 +31,7 @@ public class GlobalAPIErrorHandler {
     return errorMap;
   }
 
-  @ExceptionHandler({ObjectNotFoundException.class, IdNotSuppliedException.class,
+  @ExceptionHandler({IdNotSuppliedException.class,
       DuplicateIdException.class, UpdateNotAllowedException.class,
       CannotOverpayExpenseException.class})
   @ResponseStatus(HttpStatus.BAD_REQUEST)
