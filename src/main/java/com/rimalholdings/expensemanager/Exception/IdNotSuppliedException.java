@@ -1,6 +1,7 @@
 package com.rimalholdings.expensemanager.Exception;
 
-public class IdNotSuppliedException extends IllegalArgumentException {
+public class IdNotSuppliedException extends IllegalArgumentException
+implements ExpenseManagerExceptionInterface {
 
   public IdNotSuppliedException(String message) {
     super(message);

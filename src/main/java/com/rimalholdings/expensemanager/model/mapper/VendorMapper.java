@@ -24,9 +24,7 @@ public class VendorMapper extends AbstractMapper<VendorEntity> {
 
   @Override
   public String saveOrUpdateEntity(BaseDTOInterface dtoInterface) {
-    if (!(dtoInterface instanceof VendorDTO vendorDTO)) {
-      throw new IllegalArgumentException("Invalid DTO type");
-    }
+    VendorDTO vendorDTO = (VendorDTO) dtoInterface;
     VendorEntity vendorEntity = mapToDTO(vendorDTO);
     VendorEntity savedVendor = vendorService.save(vendorEntity);
     return convertDtoToString(savedVendor);
@@ -34,9 +32,7 @@ public class VendorMapper extends AbstractMapper<VendorEntity> {
 
   @Override
   public VendorEntity mapToDTO(BaseDTOInterface dtoInterface) {
-    if (!(dtoInterface instanceof VendorDTO vendorDTO)) {
-      throw new IllegalArgumentException("Invalid DTO type");
-    }
+    VendorDTO vendorDTO = (VendorDTO) dtoInterface;
 
     VendorEntity vendorEntity = new VendorEntity();
 
