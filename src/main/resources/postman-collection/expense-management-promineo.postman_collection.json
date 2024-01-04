@@ -1,0 +1,363 @@
+{
+	"info": {
+		"_postman_id": "dac75db9-246b-4a8d-9021-f45d66a118a1",
+		"name": "expense-management-promineo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9714675",
+		"_collection_link": "https://cloudy-crescent-918423.postman.co/workspace/e452b3c0-02df-4d29-8696-6f25acd758e0/collection/9714675-dac75db9-246b-4a8d-9021-f45d66a118a1?action=share&source=collection_link&creator=9714675"
+	},
+	"item": [
+		{
+			"name": "vendor-operations",
+			"item": [
+				{
+					"name": "update-vendor",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":1,\n    \"externalId\":\"arao12345\",\n    \"name\": \"Amrita Rao\",\n    \"address1\": \"new address \",\n    \"address2\": null,\n    \"city\": \"Zuni\",\n    \"state\": \"NM\",\n    \"zip\": 12345,\n    \"phone\": \"(510)-676-0209\",\n    \"email\": \"Amrita@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}{{vendor}}/",
+							"host": [
+								"{{base-url}}{{vendor}}"
+							],
+							"path": [
+								""
+							],
+							"query": [
+								{
+									"key": "accept",
+									"value": "ap",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-vendor",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base-url}}{{vendor}}/1",
+							"host": [
+								"{{base-url}}{{vendor}}"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-vendor-by-id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/vendor/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"vendor",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create-vendor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Rajni Rao Rimal\",\n    \"address1\": \"236 main st \",\n    \"vendorType\": 1,\n    \"address2\": \"apt 23\",\n    \"city\": \"Zuni\",\n    \"state\": \"NM\",\n    \"zip\": 87327,\n    \"phone\": \"5106760209\",\n    \"email\": \"rimal@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}{{vendor}}/",
+							"host": [
+								"{{base-url}}{{vendor}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-all-vendors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}{{vendor}}/?page=0&size=3",
+							"host": [
+								"{{base-url}}{{vendor}}"
+							],
+							"path": [
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "expense-operations",
+			"item": [
+				{
+					"name": "create-expense",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vendorId\": 1,\n    \"totalAmount\": 250.00,\n    \"amountPaid\": 0,\n    \"amountDue\": 250.00,\n    \"description\": \"utility expense\",\n    \"dueDate\": \"2024-01-22 12:00:00.0\"\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}{{expense}}/",
+							"host": [
+								"{{base-url}}{{expense}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-expense",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"vendorId\": 1,\n    \"totalAmount\": 1500.00,\n    \"amountPaid\": 0,\n    \"amountDue\": 1500.00,\n    \"description\": \"rent espense\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}{{expense}}/",
+							"host": [
+								"{{base-url}}{{expense}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-expense-by-id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base-url}}{{expense}}/1",
+							"host": [
+								"{{base-url}}{{expense}}"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-expense-by-id",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base-url}}{{expense}}/1",
+							"host": [
+								"{{base-url}}{{expense}}"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-all-expenses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}{{expense}}/?page=0&size=3",
+							"host": [
+								"{{base-url}}{{expense}}"
+							],
+							"path": [
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "bill-payment-operations",
+			"item": [
+				{
+					"name": "create-bill-payment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vendorId\": 1,\n    \"paymentAmount\": 200.00,\n    \"paymentMethod\": \"Credit Card\",\n    \"paymentReference\": \"Payment for expenses\",\n    \"expensePaymentMap\": {\n        \"1\": 200.00\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}bill-payment/",
+							"host": [
+								"{{base-url}}bill-payment"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-bill-payments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}{{bill-payment}}",
+							"host": [
+								"{{base-url}}{{bill-payment}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
