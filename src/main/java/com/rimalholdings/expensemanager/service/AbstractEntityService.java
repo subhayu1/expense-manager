@@ -27,7 +27,10 @@ public abstract class AbstractEntityService<T extends BaseEntity> {
 
   @Transactional
   public T findById(Long id) {
-    return repository.findById(id).orElse(null);
+    return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(
+        String.format(
+            ExceptionConstant.OBJECT_NOT_FOUND, ExceptionConstant.VENDOR, id
+        )));
   }
 
   @Transactional

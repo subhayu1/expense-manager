@@ -1,9 +1,17 @@
 package com.rimalholdings.expensemanager.controller;
 
+import com.rimalholdings.expensemanager.Exception.UpdateNotAllowedException;
 import com.rimalholdings.expensemanager.data.dto.BillPaymentDTO;
+import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
+import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.model.mapper.BillPaymentMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +29,22 @@ public class BillPaymentController {
   @PostMapping("/")
   public ResponseEntity<String> createBillPayment(@RequestBody BillPaymentDTO billPaymentDTO) {
     log.info("Creating new bill payment: {}", billPaymentDTO);
+    if(billPaymentDTO.getId()!=null){
+      throw new UpdateNotAllowedException("Not allowed to update bill payment");
+    }
     String createdBillPayment = billPaymentMapper.saveOrUpdateEntity(billPaymentDTO);
     return ResponseEntity.ok(createdBillPayment);
+  }
+  @GetMapping("/")
+  public ResponseEntity<Page<BillPaymentEntity>> getAllBillPayments(Pageable pageable) {
+    log.info("Getting all bill payments");
+    Page<BillPaymentEntity> allBillPayments = billPaymentMapper.getAllEntities(pageable);
+    return ResponseEntity.ok(allBillPayments);
+  }
+  @GetMapping("/{billPaymentId}")
+  public ResponseEntity<String> getBillPayment(@PathVariable Long  billPaymentId) {
+    log.info("Getting bill payment with id: {}", billPaymentId);
+    String billPayment = billPaymentMapper.getEntity(billPaymentId);
+    return ResponseEntity.ok(billPayment);
   }
 }
