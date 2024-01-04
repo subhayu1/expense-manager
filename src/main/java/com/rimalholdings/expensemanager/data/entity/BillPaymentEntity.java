@@ -29,7 +29,7 @@ public class BillPaymentEntity extends BaseEntity {
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
   @JsonManagedReference
-  private  List<ExpenseEntity> expenses = new ArrayList<>();
+  private List<ExpenseEntity> expenses = new ArrayList<>();
 
   private BigDecimal paymentAmount;
   private String paymentMethod;

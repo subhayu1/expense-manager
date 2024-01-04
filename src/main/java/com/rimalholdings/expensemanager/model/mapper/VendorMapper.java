@@ -72,7 +72,7 @@ public class VendorMapper extends AbstractMapper<VendorEntity> {
 
   @Override
   public String getEntity(Long id) {
-    VendorEntity vendorEntity = vendorService.getVendorById(id);
+    VendorEntity vendorEntity = vendorService.findById(id);
     return convertDtoToString(vendorEntity);
   }
 
