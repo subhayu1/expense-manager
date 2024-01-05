@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class TokenService {
 
 private final JwtEncoder encoder;
+private static final String ISSUER = "rimalholdings.com";
 
 public TokenService(JwtEncoder encoder) {
 	this.encoder = encoder;
@@ -29,7 +30,7 @@ public String generateToken(Authentication authentication) {
 			.collect(Collectors.joining(" "));
 	JwtClaimsSet claims =
 		JwtClaimsSet.builder()
-			.issuer("self")
+			.issuer(ISSUER)
 			.issuedAt(now)
 			.expiresAt(now.plus(1, ChronoUnit.HOURS))
 			.subject(authentication.getName())

@@ -11,11 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j(topic = "AuthController")
 @RestController
-// @RequestMapping("/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
 private final TokenService tokenService;
@@ -36,8 +38,8 @@ public ResponseEntity<Map<String, String>> token(Authentication authentication) 
 
 @PostMapping("/user")
 public ResponseEntity<Map<String, String>> user(
-	CreateUserDTO createUserDTO, Authentication authentication) {
-	Map<String, String> user = Map.of("user", authentication.getName());
+	@RequestBody CreateUserDTO createUserDTO) {
+	Map<String, String> user = Map.of("user", createUserDTO.getUsername());
 	userService.createUser(createUserDTO);
 
 	log.info("user generated for user: '{}' ", user);
