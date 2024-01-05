@@ -1,3 +1,4 @@
+/* (C)1 */
 package com.rimalholdings.expensemanager.data.entity;
 
 import jakarta.persistence.GeneratedValue;
@@ -12,8 +13,7 @@ import lombok.Setter;
 @MappedSuperclass
 public abstract class BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Long id;
 }
