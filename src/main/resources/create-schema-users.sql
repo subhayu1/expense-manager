@@ -1,15 +1,26 @@
+DELIMITER //
+CREATE PROCEDURE CreateDatabaseAndUsers()
+BEGIN
+  DECLARE _exists INT;
 
-drop user if exists 'flyway_admin'@'%';
-drop user if exists 'em_rw_user'@'%';
+  CREATE DATABASE IF NOT EXISTS expense_manager;
+  USE expense_manager;
 
+  SELECT COUNT(*) INTO _exists FROM mysql.user WHERE user = 'flyway_admin';
+  IF _exists = 0 THEN
+    CREATE USER 'flyway_admin'@'%' IDENTIFIED BY 'flyway';
+    GRANT ALL PRIVILEGES ON expense_manager.* TO 'flyway_admin'@'%';
+  END IF;
 
-create user 'flyway_admin'@'%' identified by 'flyway';
-create user 'em_rw_user'@'%' identified by 'adminUser';
--- Creating the user with the specified password
--- Assigning the role to the user
-GRANT all privileges on expense_manager.* TO 'em_rw_user'@'%';
-GRANT all privileges on expense_manager.* TO 'flyway_admin'@'%';
+  SELECT COUNT(*) INTO _exists FROM mysql.user WHERE user = 'em_rw_user';
+  IF _exists = 0 THEN
+    CREATE USER 'em_rw_user'@'%' IDENTIFIED BY 'adminUser';
+    GRANT ALL PRIVILEGES ON expense_manager.* TO 'em_rw_user'@'%';
+  END IF;
 
+  FLUSH PRIVILEGES;
+END//
+DELIMITER ;
 
 
 
