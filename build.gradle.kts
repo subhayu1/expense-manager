@@ -16,6 +16,7 @@ tasks.build {
     dependsOn("bootJar")
 }
 
+
 repositories {
     mavenCentral()
     mavenLocal()
@@ -39,6 +40,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     compileOnly ("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
+
     testImplementation ("org.springframework.boot:spring-boot-starter-test")
     testImplementation( "io.projectreactor:reactor-test")
     testImplementation ("org.springframework.boot:spring-boot-starter-test")
@@ -82,6 +84,32 @@ spotless {
         endWithNewline()
         importOrder("java|javax", "com.rimalholdings", "", "\\#com.rimalholdings", "\\#")
 
+
+    }
+}
+openApi {
+    apiDocsUrl.set("http://localhost:8080/v3/api-docs") // URL of your API docs
+    outputDir.set(file(".")) // Output directory
+    outputFileName.set("swagger.yml") // Output file name
+}
+spotless {
+    // optional: limit format enforcement to just the files changed by this feature branch
+    // ratchetFrom("origin/main")
+
+    format("misc") {
+        // define the files to apply `misc` to
+        target("*.gradle", "*.md", ".gitignore")
+
+        setEncoding("UTF-8")
+    }
+    java {
+        // optional: you can specify a specific version and/or config file
+        removeUnusedImports()
+        googleJavaFormat()
+        indentWithTabs()
+        trimTrailingWhitespace()
+        endWithNewline()
+        importOrder("java|javax", "com.rimalholdings", "", "\\#com.rimalholdings", "\\#")
 
     }
 }
