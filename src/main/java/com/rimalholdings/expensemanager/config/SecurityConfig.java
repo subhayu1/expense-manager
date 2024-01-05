@@ -99,6 +99,19 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         .httpBasic(withDefaults())
         .build();
   }
+  @Bean
+public SecurityFilterChain basicAuthFilterChain(HttpSecurity http) throws Exception {
+    return http
+        .csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/token")
+            .permitAll()
+            .anyRequest().authenticated())// match the token endpoint
+        .httpBasic(withDefaults()) // enable Basic Auth
+        .csrf(AbstractHttpConfigurer::disable) // disable CSRF protection
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // set session management to stateless
+        .build();
+}
 
   @Bean
   JwtDecoder jwtDecoder() {

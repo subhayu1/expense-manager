@@ -1,6 +1,7 @@
 package com.rimalholdings.expensemanager.controller;
 
 import com.rimalholdings.expensemanager.data.dto.CreateUserDTO;
+import com.rimalholdings.expensemanager.data.dto.LoginRequestDTO;
 import com.rimalholdings.expensemanager.service.TokenService;
 import com.rimalholdings.expensemanager.service.UserService;
 import java.util.Map;
@@ -10,7 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +31,7 @@ public class AuthController {
   }
 
   @PostMapping("/token")
-  public ResponseEntity<Map<String,String>> token(Authentication authentication) {
+  public ResponseEntity<Map<String,String>> token(  Authentication authentication) {
     Map<String,String> token = Map.of("token", tokenService.generateToken(authentication));
 
     log.info("token generated for user: '{}' ", token);
