@@ -1,5 +1,8 @@
 spring:
   data:
+    jpa:
+      repositories:
+        enabled: true
     web:
       pageable:
         default-page-size: 10
@@ -16,18 +19,12 @@ spring:
         format_sql: true
         type: debug
         use_sql_comments: true
-        connection:
-          url: jdbc:mysql://localhost:3306/expense_manager
-          username: em_rw_user
-          password: adminUser
-          driver-class-name: com.mysql.cj.jdbc.Driver
 
-      datasource:
-      url: jdbc:mysql://localhost:3306/expense_manager
-      username: em_rw_user
-      password: adminUser
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      generate-ddl: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/expense_manager
+    username: em_rw_user
+    password: adminUser
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   docker:
     compose:

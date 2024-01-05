@@ -3,7 +3,6 @@ package com.rimalholdings.expensemanager.config;
 
 import java.util.List;
 
-import com.rimalholdings.expensemanager.data.dao.UserRepository;
 import com.rimalholdings.expensemanager.service.UserService;
 
 import com.nimbusds.jose.jwk.JWK;
@@ -16,7 +15,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -39,19 +37,13 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 public class SecurityConfig {
-private final UserRepository userRepository;
 
 private final RsaKeyProperties jwtConfigProperties;
 
 private final UserService userService;
 
-public SecurityConfig(
-	UserRepository userRepository,
-	RsaKeyProperties jwtConfigProperties,
-	UserService userService) {
-	this.userRepository = userRepository;
+public SecurityConfig(RsaKeyProperties jwtConfigProperties, UserService userService) {
 	this.jwtConfigProperties = jwtConfigProperties;
 	this.userService = userService;
 }
