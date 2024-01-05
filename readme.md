@@ -34,25 +34,30 @@ Expense Manager is a Java-based project for managing expenses. It provides funct
     ```shell
     cd expense-manager
     ```
+3. Create sql users and database byrunning the follwing script:
 
-3. Build the project using Maven:
+    ```shell
+   chmod +x create-db-schema-and-users.sh
+    ./create-db-schema-and-users.sh
+    ```
+4. Build the project using Maven:
 
     ```shell
     mvn clean install
     ```
 
-4. Run the application:
+5. Run the application:
 
     ```shell
     mvn spring-boot:run
     ```
 
-5. Access the application in your web browser:
+6. Access the application in your web browser:
 
     ```
     http://localhost:8080
     ```
-6. Using Postman:
+7. Using Postman:
     
         ```
         postman collection is available in the src/main/resources folder
