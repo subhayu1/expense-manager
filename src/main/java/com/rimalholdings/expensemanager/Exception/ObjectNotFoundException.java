@@ -1,12 +1,12 @@
+/* (C)1 */
 package com.rimalholdings.expensemanager.Exception;
 
 import java.util.NoSuchElementException;
 
 public class ObjectNotFoundException extends NoSuchElementException
-implements ExpenseManagerExceptionInterface {
+	implements ExpenseManagerExceptionInterface {
 
-  public ObjectNotFoundException(String message) {
-    super(message);
-  }
-
+public ObjectNotFoundException(String message) {
+	super(message);
+}
 }

@@ -1,3 +1,4 @@
+/* (C)1 */
 package com.rimalholdings.expensemanager.config;
 
 import io.swagger.v3.oas.models.Components;
@@ -10,20 +11,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfiguration {
 
-  @Bean
-  public OpenAPI customOpenAPI() {
-    final String securitySchemeName = "bearerAuth";
-    return new OpenAPI()
-        .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
-        .components(
-            new Components()
-                .addSecuritySchemes(securitySchemeName,
-                    new SecurityScheme()
-                        .name(securitySchemeName)
-                        .type(SecurityScheme.Type.HTTP)
-                        .scheme("bearer")
-                        .bearerFormat("JWT")
-                )
-        );
-  }
+@Bean
+public OpenAPI customOpenAPI() {
+	final String securitySchemeName = "bearerAuth";
+	return new OpenAPI()
+		.addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+		.components(
+			new Components()
+				.addSecuritySchemes(
+					securitySchemeName,
+					new SecurityScheme()
+						.name(securitySchemeName)
+						.type(SecurityScheme.Type.HTTP)
+						.scheme("bearer")
+						.bearerFormat("JWT")));
+}
 }

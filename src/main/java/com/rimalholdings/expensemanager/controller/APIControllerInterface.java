@@ -1,5 +1,3 @@
 package com.rimalholdings.expensemanager.controller;
 
-public interface APIControllerInterface {
-
-}
+public interface APIControllerInterface {}
