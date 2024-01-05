@@ -60,7 +60,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 		.authorizeHttpRequests(
 			auth ->
 				auth.requestMatchers(
-						"/swagger-ui/index.html", "/swagger-ui/**", "/v3/api-docs/**", "/token")
+						"/swagger-ui/index.html", "/swagger-ui/**", "/v3/api-docs/**", "/auth/token")
 					.permitAll()
 					.anyRequest()
 					.authenticated())
@@ -78,7 +78,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Bean
 SecurityFilterChain tokenSecurityFilterChain(HttpSecurity http) throws Exception {
-	return http.securityMatcher(new AntPathRequestMatcher("/token"))
+	return http.securityMatcher(new AntPathRequestMatcher("/auth/token"))
 		.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
 		.sessionManagement(
 			session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -98,7 +98,7 @@ public SecurityFilterChain basicAuthFilterChain(HttpSecurity http) throws Except
 	return http.csrf(AbstractHttpConfigurer::disable)
 		.authorizeHttpRequests(
 			auth ->
-				auth.requestMatchers("/token").permitAll().anyRequest().authenticated()) // match
+				auth.requestMatchers("/auth/token").permitAll().anyRequest().authenticated()) // match
 		// the
 		// token
 		// endpoint
@@ -110,6 +110,26 @@ public SecurityFilterChain basicAuthFilterChain(HttpSecurity http) throws Except
 		// management
 		// to
 		// stateless
+		.build();
+}
+@Bean
+// matcher for create user endpoint
+public SecurityFilterChain createUserFilterChain(HttpSecurity http) throws Exception {
+	return http.csrf(AbstractHttpConfigurer::disable)
+		.authorizeHttpRequests(
+			auth ->
+				auth.requestMatchers(new AntPathRequestMatcher("/auth/user", "POST"))
+					.permitAll()
+					.anyRequest()
+					.authenticated())
+		.sessionManagement(
+			session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+		.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())))
+		.userDetailsService(userService)
+		.exceptionHandling(
+			(ex) ->
+				ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+					.accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
 		.build();
 }
 

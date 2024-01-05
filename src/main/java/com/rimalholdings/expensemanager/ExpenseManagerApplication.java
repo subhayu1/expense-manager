@@ -2,8 +2,8 @@ package com.rimalholdings.expensemanager;
 
 import com.rimalholdings.expensemanager.config.RsaKeyProperties;
 import com.rimalholdings.expensemanager.data.dao.UserRepository;
-import com.rimalholdings.expensemanager.data.dto.LoginRequestDTO;
 import com.rimalholdings.expensemanager.data.entity.UserEntity;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -20,7 +20,7 @@ public class ExpenseManagerApplication {
 
 private static final String ADMIN = "ADMIN";
 private static final String PASSWORD = "password";
-private static final String ROLE_ADMIN = "ROLE_ADMIN";
+private static final String ROLE_ADMIN = "ADMIN";
 
 public static void main(String[] args) {
 	SpringApplication.run(ExpenseManagerApplication.class, args);
@@ -37,4 +37,3 @@ CommandLineRunner setupDefaultUser(UserRepository repository, PasswordEncoder pa
 	};
 }
 }
-

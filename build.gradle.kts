@@ -4,7 +4,7 @@ plugins {
     `maven-publish`
     id("org.springframework.boot") version "3.2.1"
     id("io.spring.dependency-management") version "1.1.3"
-    id("org.flywaydb.flyway") version "10.4.1"
+    id("org.flywaydb.flyway") version "8.0.0"
     id("org.springdoc.openapi-gradle-plugin") version "1.8.0"
     id("com.diffplug.spotless") version "6.23.0"
 }
@@ -33,8 +33,8 @@ dependencies {
     implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-configuration-processor:2.6.2")
-    implementation("org.flywaydb:flyway-core:10.4.1")
-    implementation("org.flywaydb:flyway-mysql:10.4.1")
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-mysql")
     implementation("com.mysql:mysql-connector-j:8.2.0")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -92,24 +92,7 @@ openApi {
     outputDir.set(file(".")) // Output directory
     outputFileName.set("swagger.yml") // Output file name
 }
-spotless {
-    // optional: limit format enforcement to just the files changed by this feature branch
-    // ratchetFrom("origin/main")
+flyway {
+  configFiles = arrayOf("flyway.conf")
 
-    format("misc") {
-        // define the files to apply `misc` to
-        target("*.gradle", "*.md", ".gitignore")
-
-        setEncoding("UTF-8")
-    }
-    java {
-        // optional: you can specify a specific version and/or config file
-        removeUnusedImports()
-        googleJavaFormat()
-        indentWithTabs()
-        trimTrailingWhitespace()
-        endWithNewline()
-        importOrder("java|javax", "com.rimalholdings", "", "\\#com.rimalholdings", "\\#")
-
-    }
 }
