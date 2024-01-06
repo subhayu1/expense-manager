@@ -1,7 +1,6 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.model.mapper;
 
-import com.rimalholdings.expensemanager.Exception.DuplicateIdException;
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.VendorDTO;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
