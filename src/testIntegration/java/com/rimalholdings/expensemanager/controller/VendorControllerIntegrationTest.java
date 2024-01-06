@@ -1,50 +1,21 @@
 package com.rimalholdings.expensemanager.controller;
 
-import com.rimalholdings.expensemanager.data.dao.UserRepository;
-import com.rimalholdings.expensemanager.data.dao.VendorRepository;
-import com.rimalholdings.expensemanager.data.dto.CreateUserDTO;
-import com.rimalholdings.expensemanager.data.dto.VendorDTO;
-import com.rimalholdings.expensemanager.data.entity.UserEntity;
-import com.rimalholdings.expensemanager.data.entity.VendorEntity;
-import com.rimalholdings.expensemanager.service.UserService;
-import com.rimalholdings.expensemanager.service.VendorService;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-
-import static  io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.hasSize;
+import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.security.oauth2.jwt.JwtEncoderParameters.from;
+
+import com.rimalholdings.expensemanager.data.dao.UserRepository;
+import com.rimalholdings.expensemanager.data.dao.VendorRepository;
+import com.rimalholdings.expensemanager.data.entity.VendorEntity;
+import io.restassured.http.ContentType;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.test.context.ActiveProfiles;
 
 @Component
+@ActiveProfiles("test")
 public class VendorControllerIntegrationTest extends AbstractIntegrationTest{
 
 
@@ -76,6 +47,7 @@ vendorRepository.saveAll(List.of(vendor1, vendor2));
 				.then()
 				.statusCode(200)
 				.extract().asString();
+		System.out.println(responseString);
 		assertEquals(2, vendorRepository.count());
 		assertNotNull(responseString);
 	}
