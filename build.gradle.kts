@@ -15,6 +15,15 @@ tasks.build {
     dependsOn(tasks.named("test"))
     dependsOn("bootJar")
 }
+tasks.test {
+    useJUnitPlatform()
+    maxHeapSize = "1g"
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
+}
+
+
 
 
 repositories {

@@ -21,7 +21,7 @@ public static String generateVendorId(String name, Integer zipCode) {
 	vendorId.setLength(1); // Reset to only first character
 	vendorId.append(nameParts[1]);
 	} else if (nameParts.length != 1) {
-	vendorId.append(randomInt());
+	vendorId.append(nameParts[1].charAt(0));
 	}
 
 	vendorId.append(zipCode);
