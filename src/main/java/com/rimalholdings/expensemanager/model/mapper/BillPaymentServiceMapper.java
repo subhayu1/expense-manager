@@ -20,14 +20,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j(topic = "BILL_PAYMENT_MAPPER")
-public class BillPaymentMapper extends AbstractMapper<BillPaymentEntity> {
+@Slf4j(topic = "BillPaymentServiceMapper")
+public class BillPaymentServiceMapper extends AbstractServiceMapper<BillPaymentEntity> {
 
 private static final Integer ZERO = 0;
 private final BillPaymentService billPaymentService;
 private final ExpenseService expenseService;
 
-protected BillPaymentMapper(
+protected BillPaymentServiceMapper(
 	ObjectMapper objectMapper,
 	BillPaymentService billPaymentService,
 	ExpenseService expenseService) {

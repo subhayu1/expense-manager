@@ -2,8 +2,10 @@
 package com.rimalholdings.expensemanager.model.mapper;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.sql.Timestamp;
 
+import com.rimalholdings.expensemanager.Exception.CannotOverpayExpenseException;
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.ExpenseDTO;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
@@ -22,7 +24,7 @@ import static org.mockito.Mockito.*;
 
 class ExpenseMapperTest {
 
-private ExpenseMapper expenseMapper;
+private ExpenseServiceMapper expenseMapper;
 
 @Mock private ExpenseService expenseService;
 private final ObjectMapper objectMapper = new ObjectMapper();
@@ -30,20 +32,21 @@ private final ObjectMapper objectMapper = new ObjectMapper();
 @BeforeEach
 void setUp() {
 	MockitoAnnotations.openMocks(this);
-	expenseMapper = new ExpenseMapper(objectMapper, expenseService);
+	expenseMapper = new ExpenseServiceMapper(objectMapper, expenseService);
 }
 
 @Test
 void mapToDTO_ValidExpenseDTO_ReturnsExpenseEntity() {
-	// Arrange
 	ExpenseDTO expenseDTO = new ExpenseDTO();
+	expenseDTO.setDueDate("2022-01-01 12:00:00");
+	BigDecimal totalAmount = BigDecimal.valueOf(100).round(new MathContext(2));
+	BigDecimal paymentAmount = BigDecimal.valueOf(50).round(new MathContext(2));
+	expenseDTO.setTotalAmount(totalAmount);
+	expenseDTO.setPaymentAmount(paymentAmount);
 	expenseDTO.setId(1L);
 	expenseDTO.setDueDate("2022-01-01 12:00:00");
 	expenseDTO.setVendorId(1L);
-	expenseDTO.setTotalAmount(BigDecimal.valueOf(100.0));
-	expenseDTO.setAmountDue(BigDecimal.valueOf(50.0));
 	expenseDTO.setDescription("Test Expense");
-
 	// Act
 	ExpenseEntity expenseEntity = expenseMapper.mapToDTO(expenseDTO);
 
@@ -53,8 +56,32 @@ void mapToDTO_ValidExpenseDTO_ReturnsExpenseEntity() {
 	assertEquals(Timestamp.valueOf(expenseDTO.getDueDate()), expenseEntity.getDueDate());
 	assertEquals(expenseDTO.getVendorId(), expenseEntity.getVendor().getId());
 	assertEquals(expenseDTO.getTotalAmount(), expenseEntity.getTotalAmount());
-	assertEquals(expenseDTO.getAmountDue(), expenseEntity.getAmountDue());
 	assertEquals(expenseDTO.getDescription(), expenseEntity.getDescription());
+}
+
+@Test
+void testCalculateValidAmountDue() {
+	// Arrange
+	BigDecimal totalAmount = BigDecimal.valueOf(100.0);
+	BigDecimal paymentAmount = BigDecimal.valueOf(50.0);
+
+	// Act
+	BigDecimal result = expenseMapper.calculateAmountDue(totalAmount, paymentAmount);
+
+	// Assert
+	assertEquals(BigDecimal.valueOf(50.0), result);
+}
+
+@Test
+void testCalculateInvalidAmountDue() {
+	// Arrange
+	BigDecimal totalAmount = BigDecimal.valueOf(100.0);
+	BigDecimal paymentAmount = BigDecimal.valueOf(150.0);
+
+	// Act & Assert
+	assertThrows(
+		CannotOverpayExpenseException.class,
+		() -> expenseMapper.calculateAmountDue(totalAmount, paymentAmount));
 }
 
 @Test
@@ -94,10 +121,15 @@ void getEntity_ValidId_ReturnsConvertedDtoToString() {
 
 @Test
 void saveOrUpdateEntity_ValidExpenseDTO_ReturnsConvertedDtoToString() {
-	// Arrange
+
 	ExpenseDTO expenseDTO = new ExpenseDTO();
 	expenseDTO.setDueDate("2022-01-01 12:00:00");
+	BigDecimal totalAmount = BigDecimal.valueOf(100).round(new MathContext(2));
+	BigDecimal paymentAmount = BigDecimal.valueOf(50).round(new MathContext(2));
+	expenseDTO.setTotalAmount(totalAmount);
+	expenseDTO.setPaymentAmount(paymentAmount);
 	ExpenseEntity expenseEntity = new ExpenseEntity();
+
 	expenseEntity.setDueDate(Timestamp.valueOf(expenseDTO.getDueDate()));
 	when(expenseService.save(any(ExpenseEntity.class))).thenReturn(expenseEntity);
 

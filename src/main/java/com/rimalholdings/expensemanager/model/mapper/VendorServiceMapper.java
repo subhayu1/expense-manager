@@ -14,12 +14,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j(topic = "VendorMapper")
-public class VendorMapper extends AbstractMapper<VendorEntity> {
+@Slf4j(topic = "VendorServiceMapper")
+public class VendorServiceMapper extends AbstractServiceMapper<VendorEntity> {
 
 private final VendorService vendorService;
 
-public VendorMapper(VendorService vendorService, ObjectMapper objectMapper) {
+public VendorServiceMapper(VendorService vendorService, ObjectMapper objectMapper) {
 	super(objectMapper);
 	this.vendorService = vendorService;
 }

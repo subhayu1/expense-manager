@@ -10,11 +10,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public abstract class AbstractMapper<T> {
+public abstract class AbstractServiceMapper<T> {
 
 private final ObjectMapper objectMapper;
 
-protected AbstractMapper(ObjectMapper objectMapper) {
+protected AbstractServiceMapper(ObjectMapper objectMapper) {
 	this.objectMapper = objectMapper;
 }
 

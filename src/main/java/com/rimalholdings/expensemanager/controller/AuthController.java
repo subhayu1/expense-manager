@@ -37,8 +37,7 @@ public ResponseEntity<Map<String, String>> token(Authentication authentication) 
 }
 
 @PostMapping("/user")
-public ResponseEntity<Map<String, String>> user(
-	@RequestBody CreateUserDTO createUserDTO) {
+public ResponseEntity<Map<String, String>> user(@RequestBody CreateUserDTO createUserDTO) {
 	Map<String, String> user = Map.of("user", createUserDTO.getUsername());
 	userService.createUser(createUserDTO);
 

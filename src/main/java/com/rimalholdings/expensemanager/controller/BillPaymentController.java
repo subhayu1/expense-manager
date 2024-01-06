@@ -4,7 +4,7 @@ package com.rimalholdings.expensemanager.controller;
 import com.rimalholdings.expensemanager.Exception.UpdateNotAllowedException;
 import com.rimalholdings.expensemanager.data.dto.BillPaymentDTO;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
-import com.rimalholdings.expensemanager.model.mapper.BillPaymentMapper;
+import com.rimalholdings.expensemanager.model.mapper.BillPaymentServiceMapper;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/bill-payment")
 public class BillPaymentController implements APIControllerInterface {
 
-private final BillPaymentMapper billPaymentMapper;
+private final BillPaymentServiceMapper billPaymentMapper;
 
-public BillPaymentController(BillPaymentMapper billPaymentMapper) {
+public BillPaymentController(BillPaymentServiceMapper billPaymentMapper) {
 	this.billPaymentMapper = billPaymentMapper;
 }
 

@@ -60,7 +60,10 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 		.authorizeHttpRequests(
 			auth ->
 				auth.requestMatchers(
-						"/swagger-ui/index.html", "/swagger-ui/**", "/v3/api-docs/**", "/auth/token")
+						"/swagger-ui/index.html",
+						"/swagger-ui/**",
+						"/v3/api-docs/**",
+						"/auth/token")
 					.permitAll()
 					.anyRequest()
 					.authenticated())
@@ -98,7 +101,10 @@ public SecurityFilterChain basicAuthFilterChain(HttpSecurity http) throws Except
 	return http.csrf(AbstractHttpConfigurer::disable)
 		.authorizeHttpRequests(
 			auth ->
-				auth.requestMatchers("/auth/token").permitAll().anyRequest().authenticated()) // match
+				auth.requestMatchers("/auth/token")
+					.permitAll()
+					.anyRequest()
+					.authenticated()) // match
 		// the
 		// token
 		// endpoint
@@ -112,6 +118,7 @@ public SecurityFilterChain basicAuthFilterChain(HttpSecurity http) throws Except
 		// stateless
 		.build();
 }
+
 @Bean
 // matcher for create user endpoint
 public SecurityFilterChain createUserFilterChain(HttpSecurity http) throws Exception {
