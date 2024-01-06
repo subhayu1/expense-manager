@@ -27,14 +27,15 @@ class BillPaymentMapperTest {
 
 @Mock private ExpenseService expenseService;
 
-private BillPaymentMapper billPaymentMapper;
+private BillPaymentServiceMapper billPaymentMapper;
 
 private final ObjectMapper objectMapper = new ObjectMapper();
 
 @BeforeEach
 void setUp() {
 	MockitoAnnotations.openMocks(this);
-	billPaymentMapper = new BillPaymentMapper(objectMapper, billPaymentService, expenseService);
+	billPaymentMapper =
+		new BillPaymentServiceMapper(objectMapper, billPaymentService, expenseService);
 }
 
 @Test

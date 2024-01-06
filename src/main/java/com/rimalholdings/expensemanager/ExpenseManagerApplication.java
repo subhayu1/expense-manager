@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableConfigurationProperties(RsaKeyProperties.class)
 public class ExpenseManagerApplication {
 
-private static final String ADMIN = "ADMIN";
+private static final String ADMIN = "admin";
 private static final String PASSWORD = "password";
 private static final String ROLE_ADMIN = "ADMIN";
 

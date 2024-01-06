@@ -5,7 +5,7 @@ import com.rimalholdings.expensemanager.Exception.DuplicateIdException;
 import com.rimalholdings.expensemanager.Exception.IdNotSuppliedException;
 import com.rimalholdings.expensemanager.data.dto.VendorDTO;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
-import com.rimalholdings.expensemanager.model.mapper.VendorMapper;
+import com.rimalholdings.expensemanager.model.mapper.VendorServiceMapper;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
@@ -27,9 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j(topic = "VendorController")
 public class VendorController implements APIControllerInterface {
 
-private final VendorMapper vendorMapper;
+private final VendorServiceMapper vendorMapper;
 
-public VendorController(VendorMapper vendorMapper) {
+public VendorController(VendorServiceMapper vendorMapper) {
 	this.vendorMapper = vendorMapper;
 }
 

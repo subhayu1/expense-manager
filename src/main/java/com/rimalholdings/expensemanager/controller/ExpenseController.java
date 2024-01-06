@@ -3,7 +3,7 @@ package com.rimalholdings.expensemanager.controller;
 
 import com.rimalholdings.expensemanager.data.dto.ExpenseDTO;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
-import com.rimalholdings.expensemanager.model.mapper.ExpenseMapper;
+import com.rimalholdings.expensemanager.model.mapper.ExpenseServiceMapper;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
@@ -25,9 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/expense")
 public class ExpenseController implements APIControllerInterface {
 
-private final ExpenseMapper expenseMapper;
+private final ExpenseServiceMapper expenseMapper;
 
-public ExpenseController(ExpenseMapper expenseMapper) {
+public ExpenseController(ExpenseServiceMapper expenseMapper) {
 	this.expenseMapper = expenseMapper;
 }
 
@@ -35,6 +35,7 @@ public ExpenseController(ExpenseMapper expenseMapper) {
 public ResponseEntity<String> createExpense(@RequestBody ExpenseDTO expenseDTO) {
 	log.info("Creating new expense: {}", expenseDTO);
 	String createdExpense = expenseMapper.saveOrUpdateEntity(expenseDTO);
+
 	return ResponseEntity.status(HttpStatus.CREATED).body(createdExpense);
 }
 

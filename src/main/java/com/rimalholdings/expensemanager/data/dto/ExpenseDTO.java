@@ -11,8 +11,7 @@ public class ExpenseDTO implements BaseDTOInterface {
 private Long id;
 private Long vendorId;
 private BigDecimal totalAmount;
-private BigDecimal amountPaid;
-private BigDecimal amountDue;
+private BigDecimal paymentAmount;
 private String description;
 private String dueDate;
 }

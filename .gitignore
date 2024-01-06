@@ -14,7 +14,8 @@ target/
 .settings
 .springBeans
 .sts4-cache
-.gradle/
+.gradle/buildOutputCleanup
+.gradle/*
 ### IntelliJ IDEA ###
 .idea
 *.iws
@@ -33,3 +34,4 @@ build/
 out/
 ### VS Code ###
 .vscode/
+/.gradle/

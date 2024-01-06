@@ -1,8 +1,10 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.model.mapper;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
+import com.rimalholdings.expensemanager.Exception.CannotOverpayExpenseException;
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.ExpenseDTO;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
@@ -16,12 +18,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j(topic = "ExpenseMapper")
-public class ExpenseMapper extends AbstractMapper<ExpenseEntity> {
+@Slf4j(topic = "ExpenseServiceMapper")
+public class ExpenseServiceMapper extends AbstractServiceMapper<ExpenseEntity> {
 
 private final ExpenseService expenseService;
 
-protected ExpenseMapper(ObjectMapper objectMapper, ExpenseService expenseService) {
+protected ExpenseServiceMapper(ObjectMapper objectMapper, ExpenseService expenseService) {
 	super(objectMapper);
 	this.expenseService = expenseService;
 }
@@ -39,9 +41,20 @@ public ExpenseEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	expenseEntity.setDueDate(Timestamp.valueOf(expenseDTO.getDueDate()));
 	expenseEntity.setVendor(vendorEntity);
 	expenseEntity.setTotalAmount(expenseDTO.getTotalAmount());
-	expenseEntity.setAmountDue(expenseDTO.getAmountDue());
+	expenseEntity.setPaymentAmount(expenseDTO.getPaymentAmount());
+
+	expenseEntity.setAmountDue(
+		calculateAmountDue(expenseDTO.getTotalAmount(), expenseDTO.getPaymentAmount()));
+
 	expenseEntity.setDescription(expenseDTO.getDescription());
 	return expenseEntity;
+}
+
+protected BigDecimal calculateAmountDue(BigDecimal totalAmount, BigDecimal paymentAmount) {
+	if (paymentAmount.compareTo(totalAmount) > 0) {
+	throw new CannotOverpayExpenseException("Payment amount cannot be greater than total amount");
+	}
+	return totalAmount.subtract(paymentAmount);
 }
 
 @Override
@@ -61,6 +74,7 @@ public String saveOrUpdateEntity(BaseDTOInterface dtoInterface) {
 	}
 	ExpenseEntity expenseEntity = mapToDTO(expenseDTO);
 	ExpenseEntity savedExpense = expenseService.save(expenseEntity);
+
 	return convertDtoToString(savedExpense);
 }
 
