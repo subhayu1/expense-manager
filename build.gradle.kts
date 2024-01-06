@@ -53,6 +53,14 @@ dependencies {
     testImplementation ("org.springframework.boot:spring-boot-starter-test")
     testImplementation( "io.projectreactor:reactor-test")
     testImplementation ("org.springframework.boot:spring-boot-starter-test")
+    testImplementation ("io.rest-assured:rest-assured:5.4.0")
+    testImplementation ("io.rest-assured:spring-mock-mvc:5.4.0")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation ("org.testcontainers:mysql" )// Use the latest version
+
+
+
 }
 
 group = "com.rimalholdings"

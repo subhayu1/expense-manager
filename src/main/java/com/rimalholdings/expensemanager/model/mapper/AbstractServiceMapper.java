@@ -1,6 +1,7 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.model.mapper;
 
+import com.rimalholdings.expensemanager.Exception.DuplicateIdException;
 import java.util.List;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
@@ -41,7 +42,7 @@ public abstract void deleteEntity(Long id);
 
 public abstract String getEntity(Long id);
 
-public abstract String saveOrUpdateEntity(BaseDTOInterface dtoInterface);
+public abstract String saveOrUpdateEntity(BaseDTOInterface dtoInterface) throws DuplicateIdException;
 
 public abstract Page<T> getAllEntities(Pageable pageable);
 }
