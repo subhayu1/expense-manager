@@ -1,4 +1,3 @@
-import org.eclipse.jgit.lib.ObjectChecker.type
 
 plugins {
     `java-library`
@@ -14,11 +13,6 @@ plugins {
 tasks.build {
     dependsOn(tasks.named("compileJava"))
     dependsOn(tasks.named("test"))
-  //  dependsOn(tasks.named("spotlessApply"))
-   // dependsOn(tasks.named("openApiGenerate"))
-    //dependsOn(tasks.named("flywayMigrate"))
-    dependsOn(tasks.named("integTest"))
-
     dependsOn("bootJar")
 }
 tasks.test {
@@ -28,14 +22,6 @@ tasks.test {
         events("passed", "skipped", "failed")
     }
 }
-tasks.withType<Test> {
-    useJUnitPlatform()
-    maxHeapSize = "1g"
-    testLogging {
-        events("passed", "skipped", "failed")
-    }
-}
-
 
 
 
@@ -70,10 +56,12 @@ dependencies {
     testImplementation("io.rest-assured:spring-mock-mvc:5.4.0")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation ("org.testcontainers:mysql" )// Use the latest version
+    testImplementation("org.testcontainers:mysql")// Use the latest version
 
 
-
+    //integTestImplementation(sourceSets.test.get().output)
+    //integTestImplementation(configurations.testImplementation.get())
+   // integTestRuntimeOnly(configurations.testRuntimeOnly.get())
 }
 
 group = "com.rimalholdings"
