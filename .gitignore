@@ -14,8 +14,8 @@ target/
 .settings
 .springBeans
 .sts4-cache
-.gradle/buildOutputCleanup/buildOutputCleanup.lock
-.gradle/file-system.probe
+.gradle/
+
 ### IntelliJ IDEA ###
 .idea
 *.iws

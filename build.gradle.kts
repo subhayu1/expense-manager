@@ -1,4 +1,3 @@
-import org.eclipse.jgit.lib.ObjectChecker.type
 
 plugins {
     `java-library`
@@ -14,11 +13,6 @@ plugins {
 tasks.build {
     dependsOn(tasks.named("compileJava"))
     dependsOn(tasks.named("test"))
-  //  dependsOn(tasks.named("spotlessApply"))
-   // dependsOn(tasks.named("openApiGenerate"))
-    //dependsOn(tasks.named("flywayMigrate"))
-    dependsOn(tasks.named("integTest"))
-
     dependsOn("bootJar")
 }
 tasks.test {
@@ -28,14 +22,6 @@ tasks.test {
         events("passed", "skipped", "failed")
     }
 }
-tasks.withType<Test> {
-    useJUnitPlatform()
-    maxHeapSize = "1g"
-    testLogging {
-        events("passed", "skipped", "failed")
-    }
-}
-
 
 
 
@@ -53,7 +39,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.projectlombok:lombok")
-    implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-configuration-processor:2.6.2")
     implementation("org.flywaydb:flyway-core")
@@ -61,18 +47,20 @@ dependencies {
     implementation("com.mysql:mysql-connector-j:8.2.0")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    compileOnly ("org.projectlombok:lombok")
+    compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
-    testImplementation ("org.springframework.boot:spring-boot-starter-test")
-    testImplementation( "io.projectreactor:reactor-test")
-    testImplementation ("org.springframework.boot:spring-boot-starter-test")
-    testImplementation ("io.rest-assured:rest-assured:5.4.0")
-    testImplementation ("io.rest-assured:spring-mock-mvc:5.4.0")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("io.projectreactor:reactor-test")
+    testImplementation("io.rest-assured:rest-assured:5.4.0")
+    testImplementation("io.rest-assured:spring-mock-mvc:5.4.0")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation ("org.testcontainers:mysql" )
+    testImplementation("org.testcontainers:mysql")
 
+    //integTestImplementation(sourceSets.test.get().output)
+    //integTestImplementation(configurations.testImplementation.get())
+   // integTestRuntimeOnly(configurations.testRuntimeOnly.get())
 }
 
 group = "com.rimalholdings"
@@ -122,26 +110,12 @@ openApi {
     outputFileName.set("swagger.yml") // Output file name
 }
 flyway {
-  configFiles = arrayOf("flyway.conf")
+    configFiles = arrayOf("flyway.conf")
 
 }
-sourceSets {
-    create("integTest") {
-        java.srcDir("src/testIntegration/java")
-        resources.srcDir("src/testIntegration/resources")
-        compileClasspath += sourceSets["main"].output + sourceSets["test"].output
-        runtimeClasspath += sourceSets["main"].output + sourceSets["test"].output
-    }
+tasks.named("compileJava", JavaCompile::class) {
+    options.compilerArgs.add("-parameters")
 }
-configurations {
-    maybeCreate("integTestImplementation").extendsFrom(configurations["testImplementation"])
-    maybeCreate("integTestRuntimeOnly").extendsFrom(configurations["testRuntimeOnly"])
-}
-tasks.register<Test>("integTest") {
-    dependsOn("test")
-    useJUnitPlatform()
-    include("**/*IntegrationTest.class")
-    testLogging {
-        events("passed", "skipped", "failed")
-    }
+tasks.named("compileTestJava", JavaCompile::class) {
+    options.compilerArgs.add("-parameters")
 }
