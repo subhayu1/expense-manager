@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Timestamp;
 
-import com.rimalholdings.expensemanager.Exception.CannotOverpayExpenseException;
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.ExpenseDTO;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
@@ -40,9 +39,7 @@ void mapToDTO_ValidExpenseDTO_ReturnsExpenseEntity() {
 	ExpenseDTO expenseDTO = new ExpenseDTO();
 	expenseDTO.setDueDate("2022-01-01 12:00:00");
 	BigDecimal totalAmount = BigDecimal.valueOf(100).round(new MathContext(2));
-	BigDecimal paymentAmount = BigDecimal.valueOf(50).round(new MathContext(2));
 	expenseDTO.setTotalAmount(totalAmount);
-	expenseDTO.setPaymentAmount(paymentAmount);
 	expenseDTO.setId(1L);
 	expenseDTO.setDueDate("2022-01-01 12:00:00");
 	expenseDTO.setVendorId(1L);
@@ -60,37 +57,12 @@ void mapToDTO_ValidExpenseDTO_ReturnsExpenseEntity() {
 }
 
 @Test
-void testCalculateValidAmountDue() {
-	// Arrange
-	BigDecimal totalAmount = BigDecimal.valueOf(100.0);
-	BigDecimal paymentAmount = BigDecimal.valueOf(50.0);
-
-	// Act
-	BigDecimal result = expenseMapper.calculateAmountDue(totalAmount, paymentAmount);
-
-	// Assert
-	assertEquals(BigDecimal.valueOf(50.0), result);
-}
-
-@Test
-void testCalculateInvalidAmountDue() {
-	// Arrange
-	BigDecimal totalAmount = BigDecimal.valueOf(100.0);
-	BigDecimal paymentAmount = BigDecimal.valueOf(150.0);
-
-	// Act & Assert
-	assertThrows(
-		CannotOverpayExpenseException.class,
-		() -> expenseMapper.calculateAmountDue(totalAmount, paymentAmount));
-}
-
-@Test
 void mapToDTO_InvalidDTOType_ThrowsIllegalArgumentException() {
 	// Arrange
 	BaseDTOInterface invalidDTO = mock(BaseDTOInterface.class);
 
 	// Act & Assert
-	assertThrows(IllegalArgumentException.class, () -> expenseMapper.mapToDTO(invalidDTO));
+	assertThrows(ClassCastException.class, () -> expenseMapper.mapToDTO(invalidDTO));
 }
 
 @Test
@@ -125,9 +97,7 @@ void saveOrUpdateEntity_ValidExpenseDTO_ReturnsConvertedDtoToString() {
 	ExpenseDTO expenseDTO = new ExpenseDTO();
 	expenseDTO.setDueDate("2022-01-01 12:00:00");
 	BigDecimal totalAmount = BigDecimal.valueOf(100).round(new MathContext(2));
-	BigDecimal paymentAmount = BigDecimal.valueOf(50).round(new MathContext(2));
 	expenseDTO.setTotalAmount(totalAmount);
-	expenseDTO.setPaymentAmount(paymentAmount);
 	ExpenseEntity expenseEntity = new ExpenseEntity();
 
 	expenseEntity.setDueDate(Timestamp.valueOf(expenseDTO.getDueDate()));

@@ -36,6 +36,13 @@ protected BillPaymentServiceMapper(
 	this.expenseService = expenseService;
 }
 
+private Long parseLongFromString(Map<String, Long> expenseId) {
+	for (Map.Entry<String, Long> entry : expenseId.entrySet()) {
+	return Long.parseLong(entry.getKey());
+	}
+	return null;
+}
+
 @Override
 public BillPaymentEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	BillPaymentDTO billpaymentDTO = (BillPaymentDTO) dtoInterface;
@@ -47,11 +54,11 @@ public BillPaymentEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	vendorEntity.setId(billpaymentDTO.getVendorId());
 	billPaymentEntity.setVendor(vendorEntity);
 
-	Map<Long, BigDecimal> expensePaymentMap = billpaymentDTO.getExpensePayments();
+	Map<String, BigDecimal> expensePaymentMap = billpaymentDTO.getExpensePayments();
 	if (expensePaymentMap != null) {
 	expensePaymentMap.forEach(
 		(expenseId, paymentAmount) -> {
-			ExpenseEntity expenseEntity = expenseService.findById(expenseId);
+			ExpenseEntity expenseEntity = expenseService.findById(Long.parseLong(expenseId));
 			expenseEntity.setPaymentAmount(paymentAmount);
 			log.info("amount due: {}", expenseEntity.getAmountDue());
 			log.info("payment amount: {}", paymentAmount);
@@ -83,7 +90,6 @@ public String getEntity(Long id) {
 public String saveOrUpdateEntity(BaseDTOInterface dtoInterface) {
 	BillPaymentDTO billpaymentDTO = (BillPaymentDTO) dtoInterface;
 	BillPaymentEntity billPaymentEntity = mapToDTO(billpaymentDTO);
-
 	BillPaymentEntity savedBillPaymentEntity = billPaymentService.save(billPaymentEntity);
 	return convertDtoToString(savedBillPaymentEntity);
 }

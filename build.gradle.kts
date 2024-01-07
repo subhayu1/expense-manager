@@ -17,14 +17,25 @@ tasks.build {
 }
 tasks.test {
     useJUnitPlatform()
+    exclude("com/rimalholdings/expensemanager/testInteg/*")
+
+
     maxHeapSize = "1g"
     testLogging {
         events("passed", "skipped", "failed")
     }
 }
-
-
-
+tasks.register(
+    "testInteg",
+    Test::class
+) {
+    useJUnitPlatform()
+    include("com/rimalholdings/expensemanager/testInteg/*")
+    maxHeapSize = "1g"
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
+}
 
 repositories {
     mavenCentral()
