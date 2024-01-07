@@ -7,8 +7,8 @@ plugins {
     id("org.flywaydb.flyway") version "8.0.0"
     id("org.springdoc.openapi-gradle-plugin") version "1.8.0"
     id("com.diffplug.spotless") version "6.23.0"
+    jacoco
 }
-
 
 tasks.build {
     dependsOn(tasks.named("compileJava"))
@@ -124,6 +124,24 @@ openApi {
 flyway {
     configFiles = arrayOf("flyway.conf")
 
+}
+jacoco {
+    toolVersion = "0.8.11"
+    reportsDirectory = layout.buildDirectory.dir("reports/jacoco")
+}
+tasks.jacocoTestReport {
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+    }
+
+}
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+}
+tasks.jacocoTestReport {
+    dependsOn(tasks.test) // tests are required to run before generating the report
 }
 tasks.named("compileJava", JavaCompile::class) {
     options.compilerArgs.add("-parameters")
