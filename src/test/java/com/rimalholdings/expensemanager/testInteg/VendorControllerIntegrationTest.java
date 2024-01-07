@@ -25,7 +25,13 @@ private static final String BASE_ENTITY_URL = "/api/v1/vendor/";
 @BeforeEach
 void setUp() {
 	vendorRepository.deleteAll();
-	createAndSaveVendor("test", 12345, "test", "t12345", 1);
+	VendorEntity vendor = new VendorEntity();
+	vendor.setName("test");
+	vendor.setZip(12345);
+	vendor.setAddress1("test");
+	vendor.setExternalId("t12345");
+	vendor.setVendorType(1);
+	vendorRepository.save(vendor);
 }
 
 @AfterEach
@@ -33,38 +39,37 @@ void deleteVendorRepo() {
 	vendorRepository.deleteAll();
 }
 
-private void createAndSaveVendor(
-	String name, int zip, String address, String externalId, int vendorType) {
-	VendorEntity vendor = new VendorEntity();
-	vendor.setName(name);
-	vendor.setZip(zip);
-	vendor.setAddress1(address);
-	vendor.setExternalId(externalId);
-	vendor.setVendorType(vendorType);
-	vendorRepository.save(vendor);
-}
-
 @Test
 void testIntegGetAllVendors() {
-	String responseString = getResponseString(BASE_ENTITY_URL);
-	System.out.println(responseString);
-	assertNotNull(responseString);
+	assertNotNull(getResponseString(BASE_ENTITY_URL));
 }
 
 @Test
 void testIntegGetVendorByIdShouldReturnVendor() {
 	Long vendorId = vendorRepository.findAll().get(0).getId();
 	String url = BASE_ENTITY_URL + vendorId;
-	String responseString = getResponseString(url);
-	System.out.println(responseString);
-	assertNotNull(responseString);
+	assertNotNull(getResponseString(url));
 }
 
-protected String postResponseString(String url, VendorEntity vendor) {
+@Test
+void testIntegPostVendorShouldReturnCreatedVendor() {
+	assertNotNull(postResponseString(BASE_ENTITY_URL));
+}
+
+@Test
+void testIntegDeleteVendorShouldReturnDeletedVendor() {
+	Long vendorId = vendorRepository.findAll().get(0).getId();
+	String url = BASE_ENTITY_URL + vendorId;
+	String responseString = deleteResponseString(url);
+	assertNotNull(responseString);
+	assertEquals("Vendor deleted", responseString);
+}
+
+protected String postResponseString(String url) {
 	return given()
 		.header("Authorization", "Bearer " + getToken())
 		.contentType(ContentType.JSON)
-		.body(vendor)
+		.body(postVendorBody())
 		.when()
 		.post(url)
 		.then()
@@ -73,27 +78,17 @@ protected String postResponseString(String url, VendorEntity vendor) {
 		.asString();
 }
 
-@Test
-void testIntegPostVendorShouldReturnCreatedVendor() {
-	VendorEntity vendor = new VendorEntity();
-	vendor.setName("test2");
-	vendor.setZip(12336);
-	vendor.setAddress1("test2");
-	vendor.setExternalId("t12336");
-	vendor.setVendorType(1);
-
-	String responseString = postResponseString(BASE_ENTITY_URL, vendor);
-	System.out.println(responseString);
-	assertNotNull(responseString);
-}
-
-@Test
-void testIntegDeleteVendorShouldReturnDeletedVendor() {
-	Long vendorId = vendorRepository.findAll().get(0).getId();
-	String url = BASE_ENTITY_URL + vendorId;
-	String responseString = deleteResponseString(url);
-	System.out.println(responseString);
-	assertNotNull(responseString);
-	assertEquals("Vendor deleted", responseString);
+private String postVendorBody() {
+	return "{\n"
+		+ "    \"name\": \"Apple Inc\",\n"
+		+ "    \"address1\": \"1 Apple Park Way\",\n"
+		+ "    \"vendorType\": 2,\n"
+		+ "    \"address2\": \"\",\n"
+		+ "    \"city\": \"Cupertino\",\n"
+		+ "    \"state\": \"CA\",\n"
+		+ "    \"zip\": 95014,\n"
+		+ "    \"phone\": \"5106760209\",\n"
+		+ "    \"email\": \"tim@apple.com\"\n"
+		+ "}";
 }
 }
