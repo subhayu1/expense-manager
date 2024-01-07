@@ -39,7 +39,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.projectlombok:lombok")
-    implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-configuration-processor:2.6.2")
     implementation("org.flywaydb:flyway-core")
@@ -47,12 +47,20 @@ dependencies {
     implementation("com.mysql:mysql-connector-j:8.2.0")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    compileOnly ("org.projectlombok:lombok")
+    compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
-    testImplementation ("org.springframework.boot:spring-boot-starter-test")
-    testImplementation( "io.projectreactor:reactor-test")
-    testImplementation ("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("io.projectreactor:reactor-test")
+    testImplementation("io.rest-assured:rest-assured:5.4.0")
+    testImplementation("io.rest-assured:spring-mock-mvc:5.4.0")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:mysql")
+
+    //integTestImplementation(sourceSets.test.get().output)
+    //integTestImplementation(configurations.testImplementation.get())
+   // integTestRuntimeOnly(configurations.testRuntimeOnly.get())
 }
 
 group = "com.rimalholdings"
@@ -102,6 +110,12 @@ openApi {
     outputFileName.set("swagger.yml") // Output file name
 }
 flyway {
-  configFiles = arrayOf("flyway.conf")
+    configFiles = arrayOf("flyway.conf")
 
+}
+tasks.named("compileJava", JavaCompile::class) {
+    options.compilerArgs.add("-parameters")
+}
+tasks.named("compileTestJava", JavaCompile::class) {
+    options.compilerArgs.add("-parameters")
 }

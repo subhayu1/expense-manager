@@ -14,8 +14,8 @@ target/
 .settings
 .springBeans
 .sts4-cache
-.gradle/buildOutputCleanup
-.gradle/*
+.gradle/
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
@@ -35,3 +35,4 @@ out/
 ### VS Code ###
 .vscode/
 /.gradle/
+/.gradle/buildOutputCleanup/buildOutputCleanup.lock

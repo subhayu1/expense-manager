@@ -54,11 +54,15 @@ public VendorEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	vendorEntity.setCity(vendorDTO.getCity());
 	vendorEntity.setState(vendorDTO.getState());
 	vendorEntity.setZip(vendorDTO.getZip());
-	vendorEntity.setPhone(VendorHelper.sanitizePhoneNumber(vendorDTO.getPhone()));
-
-	if (VendorHelper.isValidEmail(vendorDTO.getEmail())) {
-	vendorEntity.setEmail(vendorDTO.getEmail());
+	if (vendorDTO.getPhone() != null) {
+		vendorEntity.setPhone(VendorHelper.sanitizePhoneNumber(vendorDTO.getPhone()));
 	}
+
+if(vendorDTO.getEmail() != null) {
+	if (VendorHelper.isValidEmail(vendorDTO.getEmail())) {
+		vendorEntity.setEmail(vendorDTO.getEmail());
+	}
+}
 
 	return vendorEntity;
 }

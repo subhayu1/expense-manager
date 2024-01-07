@@ -41,6 +41,9 @@ public ExpenseEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	expenseEntity.setDueDate(Timestamp.valueOf(expenseDTO.getDueDate()));
 	expenseEntity.setVendor(vendorEntity);
 	expenseEntity.setTotalAmount(expenseDTO.getTotalAmount());
+	if (expenseDTO.getPaymentAmount() == null) {
+	expenseDTO.setPaymentAmount(BigDecimal.ZERO);
+	}
 	expenseEntity.setPaymentAmount(expenseDTO.getPaymentAmount());
 
 	expenseEntity.setAmountDue(
@@ -51,6 +54,9 @@ public ExpenseEntity mapToDTO(BaseDTOInterface dtoInterface) {
 }
 
 protected BigDecimal calculateAmountDue(BigDecimal totalAmount, BigDecimal paymentAmount) {
+	if (paymentAmount == null) {
+	paymentAmount = BigDecimal.ZERO;
+	}
 	if (paymentAmount.compareTo(totalAmount) > 0) {
 	throw new CannotOverpayExpenseException("Payment amount cannot be greater than total amount");
 	}
