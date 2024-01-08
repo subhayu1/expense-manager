@@ -1,0 +1,31 @@
+version: 2.1
+
+orbs:
+  gradle: circleci/gradle@1.0.3  # Make sure this is the correct and latest version
+
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build_and_test
+
+jobs:
+  build_and_test:
+    docker:
+      - image: amazoncorretto:17  # Amazon Corretto JDK 17 image
+    steps:
+      - checkout
+      - restore_cache:  # Replace gradle/load-cache with explicit caching commands
+          keys:
+            - gradle-cache-{{ checksum "build.gradle" }}  # adjust for your build file
+      - run:
+          name: Run Unit Tests
+          command: ./gradlew test
+     # - run:
+      #    name: Run Integration Tests
+       #   command: ./gradlew testInteg
+       #disable integration test for now 
+      - save_cache:  # Replace gradle/save-cache with explicit caching commands
+          paths:
+            - ~/.gradle
+          key: gradle-cache-{{ checksum "build.gradle" }}  # adjust for your build file
