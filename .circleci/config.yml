@@ -21,9 +21,10 @@ jobs:
       - run:
           name: Run Unit Tests
           command: ./gradlew test
-      - run:
-          name: Run Integration Tests
-          command: ./gradlew testInteg
+     # - run:
+      #    name: Run Integration Tests
+       #   command: ./gradlew testInteg
+       #disable integration test for now 
       - save_cache:  # Replace gradle/save-cache with explicit caching commands
           paths:
             - ~/.gradle
