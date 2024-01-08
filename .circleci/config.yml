@@ -25,7 +25,7 @@ jobs:
       
       - restore_cache:
           keys:
-            - gradle-cache-{{ checksum "build.gradle" }}
+            - gradle-cache-{{ checksum "build.gradle.kts" }}
      # - run:
       #    name: clean
        #   command: ./gradlew clean build 
@@ -50,4 +50,4 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: gradle-cache-{{ checksum "build.gradle" }}
+          key: gradle-cache-{{ checksum "build.gradle.kts" }}
