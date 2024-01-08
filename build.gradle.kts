@@ -129,19 +129,33 @@ jacoco {
     toolVersion = "0.8.11"
     reportsDirectory = layout.buildDirectory.dir("reports/jacoco")
 }
+
 tasks.jacocoTestReport {
+    dependsOn(tasks.test) // tests are required to run before generating the report
+
     reports {
         xml.required = false
         csv.required = false
         html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
     }
-
 }
+
+afterEvaluate {
+    tasks.jacocoTestReport {
+        classDirectories.setFrom(files(classDirectories.files.map {
+            fileTree(it) {
+                exclude("com/rimalholdings/expensemanager/config/**")
+                exclude("com/rimalholdings/expensemanager/data/**")
+                exclude("com/rimalholdings/expensemanager/exception/**")
+                exclude("com/rimalholdings/controller/apiError/**")
+
+            }
+        }))
+    }
+}
+
 tasks.test {
     finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
-}
-tasks.jacocoTestReport {
-    dependsOn(tasks.test) // tests are required to run before generating the report
 }
 tasks.named("compileJava", JavaCompile::class) {
     options.compilerArgs.add("-parameters")

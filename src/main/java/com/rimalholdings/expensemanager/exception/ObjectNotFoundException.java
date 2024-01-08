@@ -1,5 +1,5 @@
 /* (C)1 */
-package com.rimalholdings.expensemanager.Exception;
+package com.rimalholdings.expensemanager.exception;
 
 import java.util.NoSuchElementException;
 

@@ -2,9 +2,9 @@ package com.rimalholdings.expensemanager.service;
 
 import java.util.Optional;
 
-import com.rimalholdings.expensemanager.Exception.ObjectNotFoundException;
 import com.rimalholdings.expensemanager.data.dao.BaseRepository;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
+import com.rimalholdings.expensemanager.exception.ObjectNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

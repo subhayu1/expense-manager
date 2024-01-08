@@ -1,3 +1,3 @@
-package com.rimalholdings.expensemanager.Exception;
+package com.rimalholdings.expensemanager.exception;
 
 public interface ExpenseManagerExceptionInterface {}

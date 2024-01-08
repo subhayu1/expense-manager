@@ -1,5 +1,5 @@
 /* (C)1 */
-package com.rimalholdings.expensemanager.Exception;
+package com.rimalholdings.expensemanager.exception;
 
 public class UpdateNotAllowedException extends RuntimeException
 	implements ExpenseManagerExceptionInterface {

@@ -1,9 +1,9 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.controller;
 
-import com.rimalholdings.expensemanager.Exception.UpdateNotAllowedException;
 import com.rimalholdings.expensemanager.data.dto.BillPaymentDTO;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
+import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
 import com.rimalholdings.expensemanager.model.mapper.BillPaymentServiceMapper;
 
 import lombok.extern.slf4j.Slf4j;
