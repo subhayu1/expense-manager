@@ -55,14 +55,14 @@ public VendorEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	vendorEntity.setState(vendorDTO.getState());
 	vendorEntity.setZip(vendorDTO.getZip());
 	if (vendorDTO.getPhone() != null) {
-		vendorEntity.setPhone(VendorHelper.sanitizePhoneNumber(vendorDTO.getPhone()));
+	vendorEntity.setPhone(VendorHelper.sanitizePhoneNumber(vendorDTO.getPhone()));
 	}
 
-if(vendorDTO.getEmail() != null) {
+	if (vendorDTO.getEmail() != null) {
 	if (VendorHelper.isValidEmail(vendorDTO.getEmail())) {
 		vendorEntity.setEmail(vendorDTO.getEmail());
 	}
-}
+	}
 
 	return vendorEntity;
 }

@@ -7,8 +7,8 @@ plugins {
     id("org.flywaydb.flyway") version "8.0.0"
     id("org.springdoc.openapi-gradle-plugin") version "1.8.0"
     id("com.diffplug.spotless") version "6.23.0"
+    jacoco
 }
-
 
 tasks.build {
     dependsOn(tasks.named("compileJava"))
@@ -17,14 +17,25 @@ tasks.build {
 }
 tasks.test {
     useJUnitPlatform()
+    exclude("com/rimalholdings/expensemanager/testInteg/*")
+
+
     maxHeapSize = "1g"
     testLogging {
         events("passed", "skipped", "failed")
     }
 }
-
-
-
+tasks.register(
+    "testInteg",
+    Test::class
+) {
+    useJUnitPlatform()
+    include("com/rimalholdings/expensemanager/testInteg/*")
+    maxHeapSize = "1g"
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
+}
 
 repositories {
     mavenCentral()
@@ -56,7 +67,8 @@ dependencies {
     testImplementation("io.rest-assured:spring-mock-mvc:5.4.0")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation("org.testcontainers:mysql")
+    testImplementation("org.testcontainers:mysql")// Use the latest version
+
 
     //integTestImplementation(sourceSets.test.get().output)
     //integTestImplementation(configurations.testImplementation.get())
@@ -112,6 +124,39 @@ openApi {
 flyway {
     configFiles = arrayOf("flyway.conf")
 
+}
+jacoco {
+    toolVersion = "0.8.11"
+    reportsDirectory = layout.buildDirectory.dir("reports/jacoco")
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test) // tests are required to run before generating the report
+
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+    }
+}
+
+afterEvaluate {
+    tasks.jacocoTestReport {
+        classDirectories.setFrom(files(classDirectories.files.map {
+            fileTree(it) {
+                exclude("com/rimalholdings/expensemanager/config/**")
+                exclude("com/rimalholdings/expensemanager/data/**")
+                exclude("com/rimalholdings/expensemanager/exception/**")
+                exclude("com/rimalholdings/controller/apiError/*Handler")
+
+
+            }
+        }))
+    }
+}
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }
 tasks.named("compileJava", JavaCompile::class) {
     options.compilerArgs.add("-parameters")

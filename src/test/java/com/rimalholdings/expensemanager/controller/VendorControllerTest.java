@@ -1,8 +1,8 @@
 package com.rimalholdings.expensemanager.controller;
 
-import com.rimalholdings.expensemanager.Exception.DuplicateIdException;
 import com.rimalholdings.expensemanager.data.dto.VendorDTO;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
+import com.rimalholdings.expensemanager.exception.DuplicateIdException;
 import com.rimalholdings.expensemanager.model.mapper.VendorServiceMapper;
 
 import org.junit.jupiter.api.BeforeEach;

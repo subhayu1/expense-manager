@@ -47,9 +47,9 @@ void testMapToDTO() {
 	billPaymentDTO.setPaymentReference("123456");
 	billPaymentDTO.setVendorId(1L);
 
-	Map<Long, BigDecimal> expensePaymentMap = new HashMap<>();
-	expensePaymentMap.put(1L, BigDecimal.valueOf(50));
-	expensePaymentMap.put(2L, BigDecimal.valueOf(50));
+	Map<String, BigDecimal> expensePaymentMap = new HashMap<>();
+	expensePaymentMap.put("1", BigDecimal.valueOf(50));
+	expensePaymentMap.put("2", BigDecimal.valueOf(50));
 	billPaymentDTO.setExpensePayments(expensePaymentMap);
 
 	ExpenseEntity expenseEntity1 = new ExpenseEntity();

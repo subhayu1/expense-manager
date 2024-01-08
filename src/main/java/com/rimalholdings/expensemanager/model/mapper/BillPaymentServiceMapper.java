@@ -4,12 +4,12 @@ package com.rimalholdings.expensemanager.model.mapper;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import com.rimalholdings.expensemanager.Exception.CannotOverpayExpenseException;
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.BillPaymentDTO;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
+import com.rimalholdings.expensemanager.exception.CannotOverpayExpenseException;
 import com.rimalholdings.expensemanager.service.BillPaymentService;
 import com.rimalholdings.expensemanager.service.ExpenseService;
 
@@ -36,6 +36,13 @@ protected BillPaymentServiceMapper(
 	this.expenseService = expenseService;
 }
 
+private Long parseLongFromString(Map<String, Long> expenseId) {
+	for (Map.Entry<String, Long> entry : expenseId.entrySet()) {
+	return Long.parseLong(entry.getKey());
+	}
+	return null;
+}
+
 @Override
 public BillPaymentEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	BillPaymentDTO billpaymentDTO = (BillPaymentDTO) dtoInterface;
@@ -47,11 +54,11 @@ public BillPaymentEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	vendorEntity.setId(billpaymentDTO.getVendorId());
 	billPaymentEntity.setVendor(vendorEntity);
 
-	Map<Long, BigDecimal> expensePaymentMap = billpaymentDTO.getExpensePayments();
+	Map<String, BigDecimal> expensePaymentMap = billpaymentDTO.getExpensePayments();
 	if (expensePaymentMap != null) {
 	expensePaymentMap.forEach(
 		(expenseId, paymentAmount) -> {
-			ExpenseEntity expenseEntity = expenseService.findById(expenseId);
+			ExpenseEntity expenseEntity = expenseService.findById(Long.parseLong(expenseId));
 			expenseEntity.setPaymentAmount(paymentAmount);
 			log.info("amount due: {}", expenseEntity.getAmountDue());
 			log.info("payment amount: {}", paymentAmount);
@@ -76,20 +83,19 @@ public void deleteEntity(Long id) {}
 
 @Override
 public String getEntity(Long id) {
-	return billPaymentService.findById(id).toString();
+	return convertDtoToString(billPaymentService.findById(id));
 }
 
 @Override
 public String saveOrUpdateEntity(BaseDTOInterface dtoInterface) {
 	BillPaymentDTO billpaymentDTO = (BillPaymentDTO) dtoInterface;
 	BillPaymentEntity billPaymentEntity = mapToDTO(billpaymentDTO);
-
 	BillPaymentEntity savedBillPaymentEntity = billPaymentService.save(billPaymentEntity);
 	return convertDtoToString(savedBillPaymentEntity);
 }
 
 @Override
 public Page<BillPaymentEntity> getAllEntities(Pageable pageable) {
-	return null;
+	return billPaymentService.findAll(pageable);
 }
 }

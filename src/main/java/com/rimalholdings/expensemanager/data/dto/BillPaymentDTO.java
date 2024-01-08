@@ -14,5 +14,5 @@ private Long vendorId;
 private BigDecimal paymentAmount;
 private String paymentMethod;
 private String paymentReference;
-private Map<Long, BigDecimal> expensePayments;
+private Map<String, BigDecimal> expensePayments;
 }

@@ -3,8 +3,8 @@ package com.rimalholdings.expensemanager.model.mapper;
 
 import java.util.List;
 
-import com.rimalholdings.expensemanager.Exception.DuplicateIdException;
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
+import com.rimalholdings.expensemanager.exception.DuplicateIdException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

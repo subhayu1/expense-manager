@@ -4,12 +4,12 @@ package com.rimalholdings.expensemanager.controller.apiError;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.rimalholdings.expensemanager.Exception.CannotOverpayExpenseException;
-import com.rimalholdings.expensemanager.Exception.DuplicateIdException;
-import com.rimalholdings.expensemanager.Exception.ExceptionConstant;
-import com.rimalholdings.expensemanager.Exception.IdNotSuppliedException;
-import com.rimalholdings.expensemanager.Exception.ObjectNotFoundException;
-import com.rimalholdings.expensemanager.Exception.UpdateNotAllowedException;
+import com.rimalholdings.expensemanager.exception.CannotOverpayExpenseException;
+import com.rimalholdings.expensemanager.exception.DuplicateIdException;
+import com.rimalholdings.expensemanager.exception.ExceptionConstant;
+import com.rimalholdings.expensemanager.exception.IdNotSuppliedException;
+import com.rimalholdings.expensemanager.exception.ObjectNotFoundException;
+import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

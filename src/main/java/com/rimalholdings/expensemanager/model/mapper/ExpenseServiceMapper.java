@@ -1,10 +1,8 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.model.mapper;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-import com.rimalholdings.expensemanager.Exception.CannotOverpayExpenseException;
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.ExpenseDTO;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
@@ -30,37 +28,29 @@ protected ExpenseServiceMapper(ObjectMapper objectMapper, ExpenseService expense
 
 @Override
 public ExpenseEntity mapToDTO(BaseDTOInterface dtoInterface) {
-	if (!(dtoInterface instanceof ExpenseDTO expenseDTO)) {
-	throw new IllegalArgumentException("Invalid DTO type");
-	}
+	ExpenseDTO expenseDTO = (ExpenseDTO) dtoInterface;
+
 	VendorEntity vendorEntity = new VendorEntity();
 	vendorEntity.setId(expenseDTO.getVendorId());
 
 	ExpenseEntity expenseEntity = new ExpenseEntity();
 	expenseEntity.setId(expenseDTO.getId());
+
+	if (expenseDTO.getDueDate() != null) {
 	expenseEntity.setDueDate(Timestamp.valueOf(expenseDTO.getDueDate()));
+	} else {
+	ExpenseEntity existingEntity = getExistingEntity(expenseDTO.getId());
+	expenseEntity.setDueDate(existingEntity.getDueDate());
+	}
 	expenseEntity.setVendor(vendorEntity);
 	expenseEntity.setTotalAmount(expenseDTO.getTotalAmount());
-	if (expenseDTO.getPaymentAmount() == null) {
-	expenseDTO.setPaymentAmount(BigDecimal.ZERO);
-	}
-	expenseEntity.setPaymentAmount(expenseDTO.getPaymentAmount());
-
-	expenseEntity.setAmountDue(
-		calculateAmountDue(expenseDTO.getTotalAmount(), expenseDTO.getPaymentAmount()));
-
+	expenseEntity.setAmountDue(expenseDTO.getTotalAmount());
 	expenseEntity.setDescription(expenseDTO.getDescription());
 	return expenseEntity;
 }
 
-protected BigDecimal calculateAmountDue(BigDecimal totalAmount, BigDecimal paymentAmount) {
-	if (paymentAmount == null) {
-	paymentAmount = BigDecimal.ZERO;
-	}
-	if (paymentAmount.compareTo(totalAmount) > 0) {
-	throw new CannotOverpayExpenseException("Payment amount cannot be greater than total amount");
-	}
-	return totalAmount.subtract(paymentAmount);
+protected ExpenseEntity getExistingEntity(Long id) {
+	return expenseService.findById(id);
 }
 
 @Override
