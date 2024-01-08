@@ -25,9 +25,9 @@ jobs:
       - run:
           name: Decode Keys
           command: |
-            mkdir -p ./src/main/resources/certs
-            echo $JWT_PRIVATE_KEY_BASE64 | base64 --decode > /expenseManager/src/main/resources/certs/private_key.pem
-            echo $JWT_PUBLIC_KEY_BASE64 | base64 --decode > /expenseManager/src/main/resources/certs/public_key.pem
+            sudo apt-get update
+            sudo apt-get install -y tree
+            tree
       - restore_cache:
           keys:
             - gradle-cache-{{ checksum "build.gradle" }}
