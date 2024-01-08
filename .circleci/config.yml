@@ -33,7 +33,7 @@ jobs:
           #  - gradle-cache-{{ checksum "build.gradle" }}
       - run:
           name: clean
-          command: ./gradlew clan build 
+          command: ./gradlew clean build 
       - run:
           name: Run Unit Tests
           command: ./gradlew test
