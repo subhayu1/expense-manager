@@ -36,7 +36,7 @@ jobs:
           name: Decode Keys
           command: |
             mkdir -p ./src/main/resources/certs
-            mkdir -p .src/test/resources/certs
+            mkdir -p ./src/test/resources/certs
             echo $JWT_PRIVATE_KEY_BASE64 | base64 --decode > ./src/main/resources/certs/private_key.pem
             echo $JWT_PUBLIC_KEY_BASE64 | base64 --decode > ./src/main/resources/certs/public_key.pem
             echo $JWT_PRIVATE_KEY_BASE64 | base64 --decode > ./src/test/resources/certs/private_key.pem
