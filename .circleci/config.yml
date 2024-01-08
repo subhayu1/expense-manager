@@ -25,7 +25,7 @@ jobs:
       - run:
           name: Decode Keys
           command: |
-            mkdir -p ./expenseManager/src/main/resources/certs
+            mkdir -p ./src/main/resources/certs
             echo $JWT_PRIVATE_KEY_BASE64 | base64 --decode > /expenseManager/src/main/resources/certs/private_key.pem
             echo $JWT_PUBLIC_KEY_BASE64 | base64 --decode > /expenseManager/src/main/resources/certs/public_key.pem
       - restore_cache:
