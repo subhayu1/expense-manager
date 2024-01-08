@@ -43,7 +43,7 @@ jobs:
       # Uncomment the following lines when you want to enable integration tests
       - run:
           name: Run Integration Tests with Testcontainers
-          command: ./gradlew testInteg
+          command: ./gradlew testInteg --scan
       - save_cache:
           paths:
             - ~/.gradle
