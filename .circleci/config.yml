@@ -3,23 +3,19 @@ version: 2.1
 orbs:
   gradle: circleci/gradle@1.0.3
 
-executors:
-  machine_executor_amd64:
-    machine:
-      image: ubuntu-2204:2022.04.2
-    environment:
-      architecture: "amd64"
-      platform: "linux/amd64"
-
 workflows:
   version: 2
   build-and-test:
     jobs:
-      - build_and_test:
-          executor: machine_executor_amd64
+      - build_and_test
 
 jobs:
   build_and_test:
+    machine:
+      image: ubuntu-2204:2022.04.2  # Specifying the machine image
+    environment:
+      architecture: "amd64"
+      platform: "linux/amd64"
     steps:
       - checkout
       - restore_cache:
