@@ -23,12 +23,12 @@ jobs:
     steps:
       - checkout
       
-      #- restore_cache:
-        #  keys:
-          #  - gradle-cache-{{ checksum "build.gradle" }}
-      - run:
-          name: clean
-          command: ./gradlew clean build 
+      - restore_cache:
+          keys:
+            - gradle-cache-{{ checksum "build.gradle" }}
+     # - run:
+      #    name: clean
+       #   command: ./gradlew clean build 
       - run:
           name: Run Unit Tests
           command: ./gradlew test
@@ -36,6 +36,7 @@ jobs:
           name: Decode Keys
           command: |
             mkdir -p ./src/main/resources/certs
+            mkdir -p .src/test/resources/certs
             echo $JWT_PRIVATE_KEY_BASE64 | base64 --decode > ./src/main/resources/certs/private_key.pem
             echo $JWT_PUBLIC_KEY_BASE64 | base64 --decode > ./src/main/resources/certs/public_key.pem
             echo $JWT_PRIVATE_KEY_BASE64 | base64 --decode > ./src/test/resources/certs/private_key.pem
