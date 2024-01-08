@@ -28,9 +28,12 @@ jobs:
             mkdir -p ./src/main/resources/certs
             echo $JWT_PRIVATE_KEY_BASE64 | base64 --decode > ./src/main/resources/certs/private_key.pem
             echo $JWT_PUBLIC_KEY_BASE64 | base64 --decode > ./src/main/resources/certs/public_key.pem
-      - restore_cache:
-          keys:
-            - gradle-cache-{{ checksum "build.gradle" }}
+      #- restore_cache:
+        #  keys:
+          #  - gradle-cache-{{ checksum "build.gradle" }}
+      - run:
+          name: clean
+          command: ./gradlew clan build 
       - run:
           name: Run Unit Tests
           command: ./gradlew test
