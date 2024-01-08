@@ -22,6 +22,7 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
 - Java Development Kit (JDK) 17 or higher
 - Docker engine (Docker Desktop-optional)
 ## Getting Started
+- Recommended build tool is `Gradle` using the Gradle wrapper.
 
 1. Clone the repository using either HTTPS or SSH:
 
