@@ -22,15 +22,7 @@ jobs:
     executor: machine_executor_amd64
     steps:
       - checkout
-      - run:
-          name: Decode Keys
-          command: |
-            mkdir -p ./src/main/resources/certs
-            echo $JWT_PRIVATE_KEY_BASE64 | base64 --decode > ./src/main/resources/certs/private_key.pem
-            echo $JWT_PUBLIC_KEY_BASE64 | base64 --decode > ./src/main/resources/certs/public_key.pem
-            echo $JWT_KEY_PAIR | base64 --decode > ./src/main/resources/certs/keypaid.pem
-            cat ./src/main/resources/certs/public_key.pem
-            cat ./src/main/resources/certs/private_key.pem
+      
       #- restore_cache:
         #  keys:
           #  - gradle-cache-{{ checksum "build.gradle" }}
@@ -40,6 +32,15 @@ jobs:
       - run:
           name: Run Unit Tests
           command: ./gradlew test
+      - run:
+          name: Decode Keys
+          command: |
+            mkdir -p ./src/main/resources/certs
+            echo $JWT_PRIVATE_KEY_BASE64 | base64 --decode > ./src/main/resources/certs/private_key.pem
+            echo $JWT_PUBLIC_KEY_BASE64 | base64 --decode > ./src/main/resources/certs/public_key.pem
+            echo $JWT_KEY_PAIR | base64 --decode > ./src/main/resources/certs/keypaid.pem
+            cat ./src/main/resources/certs/public_key.pem
+            cat ./src/main/resources/certs/private_key.pem
       # Uncomment the following lines when you want to enable integration tests
       - run:
           name: Run Integration Tests with Testcontainers
