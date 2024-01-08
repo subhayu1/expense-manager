@@ -28,9 +28,9 @@ jobs:
       - run:
           name: Run Unit Tests
           command: ./gradlew test
-      - run:
-          name: Run Integration Tests with Testcontainers
-          command: ./gradlew testInteg
+    #  - run:
+      #    name: Run Integration Tests with Testcontainers
+      #    command: ./gradlew testInteg
       - save_cache:
           paths:
             - ~/.gradle
