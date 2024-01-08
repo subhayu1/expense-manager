@@ -1,3 +1,6 @@
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/subhayu1/expense-manager/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/subhayu1/expense-manager/tree/main)
+
+
 # Expense Manager
 
 Expense Manager is a Java-based Spring-Boot project for managing expenses.
