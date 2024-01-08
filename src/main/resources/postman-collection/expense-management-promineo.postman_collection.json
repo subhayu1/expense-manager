@@ -4,7 +4,7 @@
 		"name": "expense-management-promineo",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "9714675",
-		"_collection_link": "https://cloudy-crescent-918423.postman.co/workspace/e452b3c0-02df-4d29-8696-6f25acd758e0/collection/9714675-dac75db9-246b-4a8d-9021-f45d66a118a1?action=share&source=collection_link&creator=9714675"
+		"_collection_link": "https://cloudy-crescent-918423.postman.co/workspace/bdc-test~e452b3c0-02df-4d29-8696-6f25acd758e0/collection/9714675-dac75db9-246b-4a8d-9021-f45d66a118a1?action=share&source=collection_link&creator=9714675"
 	},
 	"item": [
 		{
@@ -23,7 +23,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\":1,\n    \"externalId\":\"arao12345\",\n    \"name\": \"Amrita Rao\",\n    \"address1\": \"new address \",\n    \"address2\": null,\n    \"city\": \"Zuni\",\n    \"state\": \"NM\",\n    \"zip\": 12345,\n    \"phone\": \"(510)-676-0209\",\n    \"email\": \"Amrita@gmail.com\"\n}",
+							"raw": "{\n    \"id\": 2,\n    \"name\": \"Ska Brewing\",\n    \"address1\": \"21 Durango Park Way\",\n    \"vendorType\": 2,\n    \"address2\": \"\",\n    \"city\": \"Durango\",\n    \"state\": \"CO\",\n    \"zip\": 85112,\n    \"phone\": \"5106760209\",\n    \"email\": \"ska@skabrewing.com\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -31,11 +31,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base-url}}{{vendor}}/",
+							"raw": "{{base-url}}/{{vendor}}/",
 							"host": [
-								"{{base-url}}{{vendor}}"
+								"{{base-url}}"
 							],
 							"path": [
+								"{{vendor}}",
 								""
 							],
 							"query": [
@@ -61,12 +62,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{base-url}}{{vendor}}/1",
+							"raw": "{{base-url}}/{{vendor}}/2",
 							"host": [
-								"{{base-url}}{{vendor}}"
+								"{{base-url}}"
 							],
 							"path": [
-								"1"
+								"{{vendor}}",
+								"2"
 							]
 						}
 					},
@@ -84,16 +86,12 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/api/v1/vendor/1",
-							"protocol": "http",
+							"raw": "{{base-url}}/{{vendor}}/1",
 							"host": [
-								"localhost"
+								"{{base-url}}"
 							],
-							"port": "8080",
 							"path": [
-								"api",
-								"v1",
-								"vendor",
+								"{{vendor}}",
 								"1"
 							]
 						}
@@ -103,6 +101,16 @@
 				{
 					"name": "create-vendor",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -113,7 +121,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Rajni Rao Rimal\",\n    \"address1\": \"236 main st \",\n    \"vendorType\": 1,\n    \"address2\": \"apt 23\",\n    \"city\": \"Zuni\",\n    \"state\": \"NM\",\n    \"zip\": 87327,\n    \"phone\": \"5106760209\",\n    \"email\": \"rimal@gmail.com\"\n}",
+							"raw": "{\n    \"name\": \"Ska Brewing\",\n    \"address1\": \"1 Durango Park Way\",\n    \"vendorType\": 2,\n    \"address2\": \"\",\n    \"city\": \"Durango\",\n    \"state\": \"CO\",\n    \"zip\": 85112,\n    \"phone\": \"5106760209\",\n    \"email\": \"ska@skabrewing.com\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -121,11 +129,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base-url}}{{vendor}}/",
+							"raw": "{{base-url}}/{{vendor}}/",
 							"host": [
-								"{{base-url}}{{vendor}}"
+								"{{base-url}}"
 							],
 							"path": [
+								"{{vendor}}",
 								""
 							]
 						}
@@ -138,7 +147,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base-url}}{{vendor}}/?page=0&size=3",
+							"raw": "{{base-url}}{{vendor}}/?page=0&size=10&sort=id,desc",
 							"host": [
 								"{{base-url}}{{vendor}}"
 							],
@@ -152,7 +161,11 @@
 								},
 								{
 									"key": "size",
-									"value": "3"
+									"value": "10"
+								},
+								{
+									"key": "sort",
+									"value": "id,desc"
 								}
 							]
 						}
@@ -177,7 +190,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"vendorId\": 1,\n    \"totalAmount\": 250.00,\n    \"amountPaid\": 0,\n    \"amountDue\": 250.00,\n    \"description\": \"utility expense\",\n    \"dueDate\": \"2024-01-22 12:00:00.0\"\n\n}",
+							"raw": "{\n    \"vendorId\": 3,\n    \"totalAmount\": 60.00,\n    \"description\": \"6 6-packs of IPA\",\n    \"dueDate\": \"2024-02-22 12:00:00.0\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -185,11 +198,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base-url}}{{expense}}/",
+							"raw": "{{base-url}}/{{expense}}/",
 							"host": [
-								"{{base-url}}{{expense}}"
+								"{{base-url}}"
 							],
 							"path": [
+								"{{expense}}",
 								""
 							]
 						}
@@ -199,7 +213,7 @@
 				{
 					"name": "update-expense",
 					"request": {
-						"method": "POST",
+						"method": "PUT",
 						"header": [
 							{
 								"key": "Accept",
@@ -209,7 +223,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": 1,\n    \"vendorId\": 1,\n    \"totalAmount\": 1500.00,\n    \"amountPaid\": 0,\n    \"amountDue\": 1500.00,\n    \"description\": \"rent espense\"\n}",
+							"raw": "{\n    \"id\": 2,\n    \"vendorId\": 3,\n    \"totalAmount\": 70.00\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -217,11 +231,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base-url}}{{expense}}/",
+							"raw": "{{base-url}}/{{expense}}/",
 							"host": [
-								"{{base-url}}{{expense}}"
+								"{{base-url}}"
 							],
 							"path": [
+								"{{expense}}",
 								""
 							]
 						}
@@ -240,11 +255,12 @@
 							}
 						],
 						"url": {
-							"raw": "{{base-url}}{{expense}}/1",
+							"raw": "{{base-url}}/{{expense}}/1",
 							"host": [
-								"{{base-url}}{{expense}}"
+								"{{base-url}}"
 							],
 							"path": [
+								"{{expense}}",
 								"1"
 							]
 						}
@@ -268,12 +284,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{base-url}}{{expense}}/1",
+							"raw": "{{base-url}}/{{expense}}/2",
 							"host": [
-								"{{base-url}}{{expense}}"
+								"{{base-url}}"
 							],
 							"path": [
-								"1"
+								"{{expense}}",
+								"2"
 							]
 						}
 					},
@@ -285,11 +302,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base-url}}{{expense}}/?page=0&size=3",
+							"raw": "{{base-url}}/{{expense}}/?page=0&size=3",
 							"host": [
-								"{{base-url}}{{expense}}"
+								"{{base-url}}"
 							],
 							"path": [
+								"{{expense}}",
 								""
 							],
 							"query": [
@@ -324,7 +342,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"vendorId\": 1,\n    \"paymentAmount\": 200.00,\n    \"paymentMethod\": \"Credit Card\",\n    \"paymentReference\": \"Payment for expenses\",\n    \"expensePaymentMap\": {\n        \"1\": 200.00\n    }\n}",
+							"raw": "{\n    \"vendorId\": 1,\n    \"paymentAmount\": 300.00,\n    \"paymentMethod\": \"Credit Card\",\n    \"paymentReference\": \"Payment for BSBS purchase\",\n    \"expensePayments\": {\n        \"1\": 300\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -332,11 +350,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base-url}}bill-payment/",
+							"raw": "{{base-url}}/{{bill-payment}}/",
 							"host": [
-								"{{base-url}}bill-payment"
+								"{{base-url}}"
 							],
 							"path": [
+								"{{bill-payment}}",
 								""
 							]
 						}
@@ -349,15 +368,166 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base-url}}{{bill-payment}}",
+							"raw": "{{base-url}}/{{bill-payment}}/?page=0&size=3",
 							"host": [
-								"{{base-url}}{{bill-payment}}"
+								"{{base-url}}"
+							],
+							"path": [
+								"{{bill-payment}}",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-bill-payments-by-id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base-url}}/{{bill-payment}}/1",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"{{bill-payment}}",
+								"1"
 							]
 						}
 					},
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "auth-operations",
+			"item": [
+				{
+					"name": "get-jwt-token",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "ADMIN",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/auth/token",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create-user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"srimal\",\n    \"password\": \"password1\",\n    \"role\": \"ADMIN\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/user",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }

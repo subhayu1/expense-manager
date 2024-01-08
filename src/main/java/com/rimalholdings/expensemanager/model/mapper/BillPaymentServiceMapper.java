@@ -83,7 +83,7 @@ public void deleteEntity(Long id) {}
 
 @Override
 public String getEntity(Long id) {
-	return billPaymentService.findById(id).toString();
+	return convertDtoToString(billPaymentService.findById(id));
 }
 
 @Override
@@ -96,6 +96,6 @@ public String saveOrUpdateEntity(BaseDTOInterface dtoInterface) {
 
 @Override
 public Page<BillPaymentEntity> getAllEntities(Pageable pageable) {
-	return null;
+	return billPaymentService.findAll(pageable);
 }
 }

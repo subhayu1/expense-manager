@@ -147,7 +147,8 @@ afterEvaluate {
                 exclude("com/rimalholdings/expensemanager/config/**")
                 exclude("com/rimalholdings/expensemanager/data/**")
                 exclude("com/rimalholdings/expensemanager/exception/**")
-                exclude("com/rimalholdings/controller/apiError/**")
+                exclude("com/rimalholdings/controller/apiError/*Handler")
+
 
             }
         }))

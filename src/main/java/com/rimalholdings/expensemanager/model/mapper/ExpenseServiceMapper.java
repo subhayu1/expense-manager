@@ -29,17 +29,28 @@ protected ExpenseServiceMapper(ObjectMapper objectMapper, ExpenseService expense
 @Override
 public ExpenseEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	ExpenseDTO expenseDTO = (ExpenseDTO) dtoInterface;
+
 	VendorEntity vendorEntity = new VendorEntity();
 	vendorEntity.setId(expenseDTO.getVendorId());
 
 	ExpenseEntity expenseEntity = new ExpenseEntity();
 	expenseEntity.setId(expenseDTO.getId());
+
+	if (expenseDTO.getDueDate() != null) {
 	expenseEntity.setDueDate(Timestamp.valueOf(expenseDTO.getDueDate()));
+	} else {
+	ExpenseEntity existingEntity = getExistingEntity(expenseDTO.getId());
+	expenseEntity.setDueDate(existingEntity.getDueDate());
+	}
 	expenseEntity.setVendor(vendorEntity);
 	expenseEntity.setTotalAmount(expenseDTO.getTotalAmount());
 	expenseEntity.setAmountDue(expenseDTO.getTotalAmount());
 	expenseEntity.setDescription(expenseDTO.getDescription());
 	return expenseEntity;
+}
+
+protected ExpenseEntity getExistingEntity(Long id) {
+	return expenseService.findById(id);
 }
 
 @Override
