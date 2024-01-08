@@ -7,6 +7,7 @@ import com.rimalholdings.expensemanager.exception.DuplicateIdException;
 import com.rimalholdings.expensemanager.exception.IdNotSuppliedException;
 import com.rimalholdings.expensemanager.model.mapper.VendorServiceMapper;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -66,7 +67,8 @@ public ResponseEntity<String> updateVendor(@RequestBody Vendor vendor)
 @DeleteMapping("/{vendorId}")
 public ResponseEntity<String> deleteVendor(@PathVariable Long vendorId) {
 	log.info("Deleting vendor with ID {}", vendorId);
-	vendorMapper.deleteEntity(vendorId);
+		vendorMapper.deleteEntity(vendorId);
+
 	return ResponseEntity.ok("Vendor deleted");
 }
 }

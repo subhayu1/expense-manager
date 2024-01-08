@@ -4,11 +4,14 @@ package com.rimalholdings.expensemanager.model.mapper;
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.Vendor;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
+import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
 import com.rimalholdings.expensemanager.helper.VendorHelper;
 import com.rimalholdings.expensemanager.service.VendorService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.sql.SQLIntegrityConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ public VendorServiceMapper(VendorService vendorService, ObjectMapper objectMappe
 	super(objectMapper);
 	this.vendorService = vendorService;
 }
+//check the dto to see which fields are empty and if they are empty, then use the existing entity's values for those fields
 
 @Override
 public String saveOrUpdateEntity(BaseDTOInterface dtoInterface) {
@@ -69,6 +73,7 @@ public VendorEntity mapToDTO(BaseDTOInterface dtoInterface) {
 @Override
 public void deleteEntity(Long id) {
 	vendorService.deleteById(id);
+
 }
 
 @Override

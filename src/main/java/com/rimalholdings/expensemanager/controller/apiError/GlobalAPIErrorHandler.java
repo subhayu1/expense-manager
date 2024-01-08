@@ -12,6 +12,7 @@ import com.rimalholdings.expensemanager.exception.ObjectNotFoundException;
 import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,7 +37,6 @@ public Map<String, String> handleObjectNotFoundException(ObjectNotFoundException
 @ExceptionHandler({
 	IdNotSuppliedException.class,
 	DuplicateIdException.class,
-	UpdateNotAllowedException.class,
 	CannotOverpayExpenseException.class
 })
 @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -48,4 +48,14 @@ public Map<String, String> handleException(RuntimeException e) {
 	log.info("Stacktrace: {}", e.getMessage(), e);
 	return errorMap;
 }
+@ExceptionHandler(UpdateNotAllowedException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	public Map<String, String> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+		Map<String, String> errorMap = new LinkedHashMap<>();
+		errorMap.put("status", String.valueOf(ExceptionConstant.ERROR));
+		errorMap.put("message", e.getMessage());
+		log.info("Handled DataIntegrityViolationException: {}", e.getMessage());
+		log.info("Stacktrace: {}", e.getMessage(), e);
+		return errorMap;
+	}
 }

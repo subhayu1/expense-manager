@@ -6,6 +6,8 @@ import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.exception.ExceptionConstant;
 import com.rimalholdings.expensemanager.exception.ObjectNotFoundException;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +18,7 @@ public VendorService(BaseRepository<VendorEntity> repository) {
 }
 
 @Override
-public void deleteById(Long vendorId) {
+public void deleteById(Long vendorId) throws DataIntegrityViolationException {
 	VendorEntity vendorEntity =
 		getRepository()
 			.findById(vendorId)

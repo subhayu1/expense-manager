@@ -55,7 +55,8 @@ public BillPaymentEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	billPaymentEntity.setVendor(vendorEntity);
 
 	Map<String, BigDecimal> expensePaymentMap = billpayment.getExpensePayments();
-	if (expensePaymentMap != null) {
+
+	if (!expensePaymentMap.isEmpty()) {
 	expensePaymentMap.forEach(
 		(expenseId, paymentAmount) -> {
 			ExpenseEntity expenseEntity = expenseService.findById(Long.parseLong(expenseId));
@@ -73,6 +74,12 @@ public BillPaymentEntity mapToDTO(BaseDTOInterface dtoInterface) {
 			}
 			billPaymentEntity.getExpenses().add(expenseEntity);
 		});
+
+
+	} else {
+		log.info("expensePaymentMap is null, throwing exception");
+		// TODO: Handle situations where expensePaymentMap is null
+		throw new RuntimeException("no expense payments specified. Please specify expense payments");
 	}
 
 	return billPaymentEntity;
