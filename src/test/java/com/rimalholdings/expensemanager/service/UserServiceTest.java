@@ -1,7 +1,7 @@
 package com.rimalholdings.expensemanager.service;
 
 import com.rimalholdings.expensemanager.data.dao.UserRepository;
-import com.rimalholdings.expensemanager.data.dto.CreateUserDTO;
+import com.rimalholdings.expensemanager.data.dto.CreateUser;
 import com.rimalholdings.expensemanager.data.entity.UserEntity;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -61,12 +61,12 @@ public void shouldThrowExceptionWhenLoadingNonExistingUser() {
 
 @Test
 public void shouldCreateUserWhenUserDoesNotExist() {
-	CreateUserDTO createUserDTO = new CreateUserDTO();
-	createUserDTO.setUsername("testUser");
-	createUserDTO.setPassword("testPassword");
-	createUserDTO.setRole("USER");
+	CreateUser createUser = new CreateUser();
+	createUser.setUsername("testUser");
+	createUser.setPassword("testPassword");
+	createUser.setRole("USER");
 
-	userService.createUser(createUserDTO);
+	userService.createUser(createUser);
 
 	verify(userRepository).save(any(UserEntity.class));
 }

@@ -1,7 +1,7 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.controller;
 
-import com.rimalholdings.expensemanager.data.dto.BillPaymentDTO;
+import com.rimalholdings.expensemanager.data.dto.BillPayment;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
 import com.rimalholdings.expensemanager.model.mapper.BillPaymentServiceMapper;
@@ -31,12 +31,12 @@ public BillPaymentController(BillPaymentServiceMapper billPaymentMapper) {
 }
 
 @PostMapping("/")
-public ResponseEntity<String> createBillPayment(@RequestBody BillPaymentDTO billPaymentDTO) {
-	log.info("Creating new bill payment: {}", billPaymentDTO);
-	if (billPaymentDTO.getId() != null) {
+public ResponseEntity<String> createBillPayment(@RequestBody BillPayment billPayment) {
+	log.info("Creating new bill payment: {}", billPayment);
+	if (billPayment.getId() != null) {
 	throw new UpdateNotAllowedException("Not allowed to update bill payment");
 	}
-	String createdBillPayment = billPaymentMapper.saveOrUpdateEntity(billPaymentDTO);
+	String createdBillPayment = billPaymentMapper.saveOrUpdateEntity(billPayment);
 	return ResponseEntity.status(HttpStatus.CREATED).body(createdBillPayment);
 }
 

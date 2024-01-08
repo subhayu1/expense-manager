@@ -7,7 +7,7 @@ import java.util.Map;
 import lombok.Data;
 
 @Data
-public class BillPaymentDTO implements BaseDTOInterface {
+public class BillPayment implements BaseDTOInterface {
 
 private Long id;
 private Long vendorId;

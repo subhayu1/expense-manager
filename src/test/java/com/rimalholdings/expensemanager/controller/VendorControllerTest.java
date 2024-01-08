@@ -1,6 +1,6 @@
 package com.rimalholdings.expensemanager.controller;
 
-import com.rimalholdings.expensemanager.data.dto.VendorDTO;
+import com.rimalholdings.expensemanager.data.dto.Vendor;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.exception.DuplicateIdException;
 import com.rimalholdings.expensemanager.model.mapper.VendorServiceMapper;
@@ -29,12 +29,12 @@ void setUp() {
 
 @Test
 void testShouldReturnCreatedVendorWhenVendorDTOIsValid() {
-	VendorDTO vendorDTO = new VendorDTO();
-	vendorDTO.setId(null);
-	when(vendorMapper.saveOrUpdateEntity(vendorDTO)).thenReturn("createdVendor");
+	Vendor vendor = new Vendor();
+	vendor.setId(null);
+	when(vendorMapper.saveOrUpdateEntity(vendor)).thenReturn("createdVendor");
 	ResponseEntity<String> responseEntity = null;
 	try {
-	responseEntity = vendorController.createVendor(vendorDTO);
+	responseEntity = vendorController.createVendor(vendor);
 	} catch (DuplicateIdException e) {
 	throw new RuntimeException(e);
 	}
@@ -43,15 +43,15 @@ void testShouldReturnCreatedVendorWhenVendorDTOIsValid() {
 
 @Test
 void shouldThrowDuplicateIdExceptionWhenVendorDTOHasId() throws DuplicateIdException {
-	VendorDTO vendorDTO = new VendorDTO();
-	vendorDTO.setId(1L);
-	when(vendorMapper.saveOrUpdateEntity(vendorDTO))
+	Vendor vendor = new Vendor();
+	vendor.setId(1L);
+	when(vendorMapper.saveOrUpdateEntity(vendor))
 		.thenThrow(new DuplicateIdException("Expected message"));
 
 	DuplicateIdException thrown =
 		assertThrows(
 			DuplicateIdException.class,
-			() -> vendorController.createVendor(vendorDTO),
+			() -> vendorController.createVendor(vendor),
 			"Expected createVendor() to throw, but it didn't");
 
 	// You can then make assertions about the exception, if needed.

@@ -4,7 +4,7 @@ package com.rimalholdings.expensemanager.model.mapper;
 import java.sql.Timestamp;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
-import com.rimalholdings.expensemanager.data.dto.ExpenseDTO;
+import com.rimalholdings.expensemanager.data.dto.Expense;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.service.ExpenseService;
@@ -28,24 +28,24 @@ protected ExpenseServiceMapper(ObjectMapper objectMapper, ExpenseService expense
 
 @Override
 public ExpenseEntity mapToDTO(BaseDTOInterface dtoInterface) {
-	ExpenseDTO expenseDTO = (ExpenseDTO) dtoInterface;
+	Expense expense = (Expense) dtoInterface;
 
 	VendorEntity vendorEntity = new VendorEntity();
-	vendorEntity.setId(expenseDTO.getVendorId());
+	vendorEntity.setId(expense.getVendorId());
 
 	ExpenseEntity expenseEntity = new ExpenseEntity();
-	expenseEntity.setId(expenseDTO.getId());
+	expenseEntity.setId(expense.getId());
 
-	if (expenseDTO.getDueDate() != null) {
-	expenseEntity.setDueDate(Timestamp.valueOf(expenseDTO.getDueDate()));
+	if (expense.getDueDate() != null) {
+	expenseEntity.setDueDate(Timestamp.valueOf(expense.getDueDate()));
 	} else {
-	ExpenseEntity existingEntity = getExistingEntity(expenseDTO.getId());
+	ExpenseEntity existingEntity = getExistingEntity(expense.getId());
 	expenseEntity.setDueDate(existingEntity.getDueDate());
 	}
 	expenseEntity.setVendor(vendorEntity);
-	expenseEntity.setTotalAmount(expenseDTO.getTotalAmount());
-	expenseEntity.setAmountDue(expenseDTO.getTotalAmount());
-	expenseEntity.setDescription(expenseDTO.getDescription());
+	expenseEntity.setTotalAmount(expense.getTotalAmount());
+	expenseEntity.setAmountDue(expense.getTotalAmount());
+	expenseEntity.setDescription(expense.getDescription());
 	return expenseEntity;
 }
 
@@ -65,10 +65,10 @@ public String getEntity(Long id) {
 
 @Override
 public String saveOrUpdateEntity(BaseDTOInterface dtoInterface) {
-	if (!(dtoInterface instanceof ExpenseDTO expenseDTO)) {
+	if (!(dtoInterface instanceof Expense expense)) {
 	throw new IllegalArgumentException("Invalid DTO type");
 	}
-	ExpenseEntity expenseEntity = mapToDTO(expenseDTO);
+	ExpenseEntity expenseEntity = mapToDTO(expense);
 	ExpenseEntity savedExpense = expenseService.save(expenseEntity);
 
 	return convertDtoToString(savedExpense);

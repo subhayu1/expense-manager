@@ -2,7 +2,7 @@
 package com.rimalholdings.expensemanager.service;
 
 import com.rimalholdings.expensemanager.data.dao.UserRepository;
-import com.rimalholdings.expensemanager.data.dto.CreateUserDTO;
+import com.rimalholdings.expensemanager.data.dto.CreateUser;
 import com.rimalholdings.expensemanager.data.entity.UserEntity;
 
 import org.springframework.security.core.userdetails.User;
@@ -33,12 +33,12 @@ public UserDetails loadUserByUsername(String clientId) throws UsernameNotFoundEx
 		.build();
 }
 
-public void createUser(CreateUserDTO createUserDTO) {
+public void createUser(CreateUser createUser) {
 	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	UserEntity userEntity = new UserEntity();
-	userEntity.setUsername(createUserDTO.getUsername());
-	userEntity.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
-	userEntity.setRole(createUserDTO.getRole());
+	userEntity.setUsername(createUser.getUsername());
+	userEntity.setPassword(passwordEncoder.encode(createUser.getPassword()));
+	userEntity.setRole(createUser.getRole());
 	userRepository.save(userEntity);
 }
 }

@@ -1,7 +1,7 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.controller;
 
-import com.rimalholdings.expensemanager.data.dto.VendorDTO;
+import com.rimalholdings.expensemanager.data.dto.Vendor;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.exception.DuplicateIdException;
 import com.rimalholdings.expensemanager.exception.IdNotSuppliedException;
@@ -34,10 +34,10 @@ public VendorController(VendorServiceMapper vendorMapper) {
 }
 
 @PostMapping("/")
-public ResponseEntity<String> createVendor(@RequestBody VendorDTO vendorDTO)
+public ResponseEntity<String> createVendor(@RequestBody Vendor vendor)
 	throws DuplicateIdException {
-	log.info("Creating new vendor: {}", vendorDTO);
-	String createdVendor = vendorMapper.saveOrUpdateEntity(vendorDTO);
+	log.info("Creating new vendor: {}", vendor);
+	String createdVendor = vendorMapper.saveOrUpdateEntity(vendor);
 	return ResponseEntity.status(HttpStatus.CREATED).body(createdVendor);
 }
 
@@ -54,12 +54,12 @@ public ResponseEntity<Page<VendorEntity>> getAllVendors(@ParameterObject Pageabl
 }
 
 @PutMapping("/")
-public ResponseEntity<String> updateVendor(@RequestBody VendorDTO vendorDTO)
+public ResponseEntity<String> updateVendor(@RequestBody Vendor vendor)
 	throws DuplicateIdException, IdNotSuppliedException {
-	if (vendorDTO.getId() == null) {
+	if (vendor.getId() == null) {
 	throw new IdNotSuppliedException("Vendor ID not supplied");
 	}
-	String updatedVendor = vendorMapper.saveOrUpdateEntity(vendorDTO);
+	String updatedVendor = vendorMapper.saveOrUpdateEntity(vendor);
 	return ResponseEntity.ok(updatedVendor);
 }
 

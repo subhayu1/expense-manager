@@ -6,7 +6,7 @@ import java.math.MathContext;
 import java.sql.Timestamp;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
-import com.rimalholdings.expensemanager.data.dto.ExpenseDTO;
+import com.rimalholdings.expensemanager.data.dto.Expense;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.service.ExpenseService;
 
@@ -36,24 +36,24 @@ void setUp() {
 
 @Test
 void mapToDTO_ValidExpenseDTO_ReturnsExpenseEntity() {
-	ExpenseDTO expenseDTO = new ExpenseDTO();
-	expenseDTO.setDueDate("2022-01-01 12:00:00");
+	Expense expense = new Expense();
+	expense.setDueDate("2022-01-01 12:00:00");
 	BigDecimal totalAmount = BigDecimal.valueOf(100).round(new MathContext(2));
-	expenseDTO.setTotalAmount(totalAmount);
-	expenseDTO.setId(1L);
-	expenseDTO.setDueDate("2022-01-01 12:00:00");
-	expenseDTO.setVendorId(1L);
-	expenseDTO.setDescription("Test Expense");
+	expense.setTotalAmount(totalAmount);
+	expense.setId(1L);
+	expense.setDueDate("2022-01-01 12:00:00");
+	expense.setVendorId(1L);
+	expense.setDescription("Test Expense");
 	// Act
-	ExpenseEntity expenseEntity = expenseMapper.mapToDTO(expenseDTO);
+	ExpenseEntity expenseEntity = expenseMapper.mapToDTO(expense);
 
 	// Assert
 	assertNotNull(expenseEntity);
-	assertEquals(expenseDTO.getId(), expenseEntity.getId());
-	assertEquals(Timestamp.valueOf(expenseDTO.getDueDate()), expenseEntity.getDueDate());
-	assertEquals(expenseDTO.getVendorId(), expenseEntity.getVendor().getId());
-	assertEquals(expenseDTO.getTotalAmount(), expenseEntity.getTotalAmount());
-	assertEquals(expenseDTO.getDescription(), expenseEntity.getDescription());
+	assertEquals(expense.getId(), expenseEntity.getId());
+	assertEquals(Timestamp.valueOf(expense.getDueDate()), expenseEntity.getDueDate());
+	assertEquals(expense.getVendorId(), expenseEntity.getVendor().getId());
+	assertEquals(expense.getTotalAmount(), expenseEntity.getTotalAmount());
+	assertEquals(expense.getDescription(), expenseEntity.getDescription());
 }
 
 @Test
@@ -94,17 +94,17 @@ void getEntity_ValidId_ReturnsConvertedDtoToString() {
 @Test
 void saveOrUpdateEntity_ValidExpenseDTO_ReturnsConvertedDtoToString() {
 
-	ExpenseDTO expenseDTO = new ExpenseDTO();
-	expenseDTO.setDueDate("2022-01-01 12:00:00");
+	Expense expense = new Expense();
+	expense.setDueDate("2022-01-01 12:00:00");
 	BigDecimal totalAmount = BigDecimal.valueOf(100).round(new MathContext(2));
-	expenseDTO.setTotalAmount(totalAmount);
+	expense.setTotalAmount(totalAmount);
 	ExpenseEntity expenseEntity = new ExpenseEntity();
 
-	expenseEntity.setDueDate(Timestamp.valueOf(expenseDTO.getDueDate()));
+	expenseEntity.setDueDate(Timestamp.valueOf(expense.getDueDate()));
 	when(expenseService.save(any(ExpenseEntity.class))).thenReturn(expenseEntity);
 
 	// Act
-	String result = expenseMapper.saveOrUpdateEntity(expenseDTO);
+	String result = expenseMapper.saveOrUpdateEntity(expense);
 
 	// Assert
 	assertEquals(expenseMapper.convertDtoToString(expenseEntity), result);

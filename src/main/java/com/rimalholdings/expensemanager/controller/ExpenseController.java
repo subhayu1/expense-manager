@@ -1,7 +1,7 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.controller;
 
-import com.rimalholdings.expensemanager.data.dto.ExpenseDTO;
+import com.rimalholdings.expensemanager.data.dto.Expense;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.model.mapper.ExpenseServiceMapper;
 
@@ -32,17 +32,17 @@ public ExpenseController(ExpenseServiceMapper expenseMapper) {
 }
 
 @PostMapping("/")
-public ResponseEntity<String> createExpense(@RequestBody ExpenseDTO expenseDTO) {
-	log.info("Creating new expense: {}", expenseDTO);
-	String createdExpense = expenseMapper.saveOrUpdateEntity(expenseDTO);
+public ResponseEntity<String> createExpense(@RequestBody Expense expense) {
+	log.info("Creating new expense: {}", expense);
+	String createdExpense = expenseMapper.saveOrUpdateEntity(expense);
 
 	return ResponseEntity.status(HttpStatus.CREATED).body(createdExpense);
 }
 
 @PutMapping("/")
-public ResponseEntity<String> updateExpense(@RequestBody ExpenseDTO expenseDTO) {
-	log.info("Updating expense: {}", expenseDTO);
-	String updatedExpense = expenseMapper.saveOrUpdateEntity(expenseDTO);
+public ResponseEntity<String> updateExpense(@RequestBody Expense expense) {
+	log.info("Updating expense: {}", expense);
+	String updatedExpense = expenseMapper.saveOrUpdateEntity(expense);
 	return ResponseEntity.ok(updatedExpense);
 }
 

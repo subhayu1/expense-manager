@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
-import com.rimalholdings.expensemanager.data.dto.BillPaymentDTO;
+import com.rimalholdings.expensemanager.data.dto.BillPayment;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
@@ -45,16 +45,16 @@ private Long parseLongFromString(Map<String, Long> expenseId) {
 
 @Override
 public BillPaymentEntity mapToDTO(BaseDTOInterface dtoInterface) {
-	BillPaymentDTO billpaymentDTO = (BillPaymentDTO) dtoInterface;
+	BillPayment billpayment = (BillPayment) dtoInterface;
 	BillPaymentEntity billPaymentEntity = new BillPaymentEntity();
-	billPaymentEntity.setPaymentAmount(billpaymentDTO.getPaymentAmount());
-	billPaymentEntity.setPaymentMethod(billpaymentDTO.getPaymentMethod());
-	billPaymentEntity.setPaymentReference(billpaymentDTO.getPaymentReference());
+	billPaymentEntity.setPaymentAmount(billpayment.getPaymentAmount());
+	billPaymentEntity.setPaymentMethod(billpayment.getPaymentMethod());
+	billPaymentEntity.setPaymentReference(billpayment.getPaymentReference());
 	VendorEntity vendorEntity = new VendorEntity();
-	vendorEntity.setId(billpaymentDTO.getVendorId());
+	vendorEntity.setId(billpayment.getVendorId());
 	billPaymentEntity.setVendor(vendorEntity);
 
-	Map<String, BigDecimal> expensePaymentMap = billpaymentDTO.getExpensePayments();
+	Map<String, BigDecimal> expensePaymentMap = billpayment.getExpensePayments();
 	if (expensePaymentMap != null) {
 	expensePaymentMap.forEach(
 		(expenseId, paymentAmount) -> {
@@ -88,8 +88,8 @@ public String getEntity(Long id) {
 
 @Override
 public String saveOrUpdateEntity(BaseDTOInterface dtoInterface) {
-	BillPaymentDTO billpaymentDTO = (BillPaymentDTO) dtoInterface;
-	BillPaymentEntity billPaymentEntity = mapToDTO(billpaymentDTO);
+	BillPayment billpayment = (BillPayment) dtoInterface;
+	BillPaymentEntity billPaymentEntity = mapToDTO(billpayment);
 	BillPaymentEntity savedBillPaymentEntity = billPaymentService.save(billPaymentEntity);
 	return convertDtoToString(savedBillPaymentEntity);
 }
