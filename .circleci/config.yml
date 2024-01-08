@@ -1,0 +1,30 @@
+version: 2.1
+
+orbs:
+  gradle: circleci/gradle@1.0.3
+
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build_and_test
+
+jobs:
+  build_and_test:
+    docker:
+      - image: amazoncorretto:17  # Using Amazon Corretto JDK 17 image
+    steps:
+      - checkout
+      - gradle/load-cache
+      - run:
+          name: Set Up Environment
+          command: |
+            java -version
+            ./gradlew --version
+      - run:
+          name: Run Unit Tests
+          command: ./gradlew test
+      - run:
+          name: Run Integration Tests
+          command: ./gradlew testInteg
+      - gradle/save-cache
