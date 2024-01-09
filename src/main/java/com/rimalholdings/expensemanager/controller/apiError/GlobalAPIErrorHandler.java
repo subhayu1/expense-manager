@@ -48,14 +48,16 @@ public Map<String, String> handleException(RuntimeException e) {
 	log.info("Stacktrace: {}", e.getMessage(), e);
 	return errorMap;
 }
+
 @ExceptionHandler(UpdateNotAllowedException.class)
-	@ResponseStatus(HttpStatus.CONFLICT)
-	public Map<String, String> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
-		Map<String, String> errorMap = new LinkedHashMap<>();
-		errorMap.put("status", String.valueOf(ExceptionConstant.ERROR));
-		errorMap.put("message", e.getMessage());
-		log.info("Handled DataIntegrityViolationException: {}", e.getMessage());
-		log.info("Stacktrace: {}", e.getMessage(), e);
-		return errorMap;
-	}
+@ResponseStatus(HttpStatus.CONFLICT)
+public Map<String, String> handleDataIntegrityViolationException(
+	DataIntegrityViolationException e) {
+	Map<String, String> errorMap = new LinkedHashMap<>();
+	errorMap.put("status", String.valueOf(ExceptionConstant.ERROR));
+	errorMap.put("message", e.getMessage());
+	log.info("Handled DataIntegrityViolationException: {}", e.getMessage());
+	log.info("Stacktrace: {}", e.getMessage(), e);
+	return errorMap;
+}
 }

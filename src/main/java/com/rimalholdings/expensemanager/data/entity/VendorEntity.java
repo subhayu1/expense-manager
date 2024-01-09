@@ -42,4 +42,10 @@ private String phone;
 
 @Column(name = "email")
 private String email;
+
+@Column(name = "createddate", nullable = false)
+private java.sql.Timestamp createdDate;
+
+@Column(name = "updateddate", nullable = false)
+private java.sql.Timestamp updatedDate;
 }

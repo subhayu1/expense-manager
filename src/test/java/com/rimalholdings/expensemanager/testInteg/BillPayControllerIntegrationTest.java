@@ -6,6 +6,7 @@ import java.math.MathContext;
 import com.rimalholdings.expensemanager.data.dao.*;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
+import com.rimalholdings.expensemanager.util.DateTimeUtil;
 
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,8 +59,9 @@ private String billPaymentBody() {
 	String expenseId = expenseRepository.findAll().get(0).getId().toString();
 	return "{\n"
 		+ "  \"paymentAmount\": 100,\n"
-		+ "  \"paymentMethod\": \"CASH\",\n"
+		+ "  \"paymentMethod\": 1,\n"
 		+ "  \"paymentReference\": \"123\",\n"
+		+ "  \"paymentDate\": \"2021-09-01 00:00:00.0\",\n"
 		+ "  \"vendorId\": "
 		+ vendorEntity
 		+ ",\n"
@@ -90,8 +92,11 @@ private void createBllPaymentEntity() {
 	BillPaymentEntity billPaymentEntity = new BillPaymentEntity();
 	billPaymentEntity.setId(1L);
 	billPaymentEntity.setPaymentAmount(new BigDecimal(100).round(new MathContext(2)));
-	billPaymentEntity.setPaymentMethod("CASH");
+	billPaymentEntity.setPaymentMethod(3);
 	billPaymentEntity.setPaymentReference("123");
+	billPaymentEntity.setPaymentDate(DateTimeUtil.getCurrentTimeInUTC());
+	billPaymentEntity.setCreatedDate(DateTimeUtil.getCurrentTimeInUTC());
+	billPaymentEntity.setPaymentApplicationStatus(1);
 	billPaymentEntity.setVendor(vendorEntity);
 	billPaymentEntity.setExpenses(expenseRepository.findAll());
 	billPaymentRepository.saveAndFlush(billPaymentEntity);

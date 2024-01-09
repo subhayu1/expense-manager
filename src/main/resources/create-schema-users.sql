@@ -1,10 +1,10 @@
+CREATE DATABASE IF NOT EXISTS expense_manager;
+USE expense_manager;
+
 DELIMITER //
 CREATE PROCEDURE CreateDatabaseAndUsers()
 BEGIN
   DECLARE _exists INT;
-
-  CREATE DATABASE IF NOT EXISTS expense_manager;
-  USE expense_manager;
 
   SELECT COUNT(*) INTO _exists FROM mysql.user WHERE user = 'flyway_admin';
   IF _exists = 0 THEN
@@ -22,5 +22,6 @@ BEGIN
 END//
 DELIMITER ;
 
+CALL CreateDatabaseAndUsers();
 
 

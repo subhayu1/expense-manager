@@ -2,10 +2,12 @@
 package com.rimalholdings.expensemanager.data.entity;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -32,9 +34,23 @@ public class BillPaymentEntity extends BaseEntity {
 @JsonManagedReference
 private List<ExpenseEntity> expenses = new ArrayList<>();
 
+@Column(name = "paymentamount", nullable = false)
 private BigDecimal paymentAmount;
-private String paymentMethod;
+
+@Column(name = "paymentmethod")
+private Integer paymentMethod;
+
+@Column(name = "paymentreference")
 private String paymentReference;
+
+@Column(name = "createddate")
+private Timestamp createdDate;
+
+@Column(name = "paymentapplicationstatus")
+private Integer paymentApplicationStatus;
+
+@Column(name = "paymentdate")
+private Timestamp paymentDate;
 
 @JoinColumn(name = "vendorid", referencedColumnName = "id")
 @ManyToOne

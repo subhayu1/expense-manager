@@ -43,9 +43,10 @@ void testMapToDTO() {
 	// Arrange
 	BillPayment billPayment = new BillPayment();
 	billPayment.setPaymentAmount(BigDecimal.valueOf(100));
-	billPayment.setPaymentMethod("Credit Card");
+	billPayment.setPaymentMethod(2);
 	billPayment.setPaymentReference("123456");
 	billPayment.setVendorId(1L);
+	billPayment.setPaymentDate("2021-09-01 00:00:00.0");
 
 	Map<String, BigDecimal> expensePaymentMap = new HashMap<>();
 	expensePaymentMap.put("1", BigDecimal.valueOf(50));
@@ -70,7 +71,7 @@ void testMapToDTO() {
 
 	// Assert
 	assertEquals(BigDecimal.valueOf(100), billPaymentEntity.getPaymentAmount());
-	assertEquals("Credit Card", billPaymentEntity.getPaymentMethod());
+	assertEquals(2, billPaymentEntity.getPaymentMethod());
 	assertEquals("123456", billPaymentEntity.getPaymentReference());
 
 	VendorEntity vendorEntity = billPaymentEntity.getVendor();
@@ -94,18 +95,36 @@ void testMapToDTO() {
 
 @Test
 void testSaveOrUpdateEntity() {
+	ExpenseEntity expenseEntity = new ExpenseEntity();
+	expenseEntity.setId(1L);
+	expenseEntity.setAmountDue(BigDecimal.valueOf(100));
+	expenseEntity.setTotalAmount(BigDecimal.valueOf(100));
+
+	ExpenseEntity expenseEntity2 = new ExpenseEntity();
+	expenseEntity2.setId(2L);
+	expenseEntity2.setAmountDue(BigDecimal.valueOf(200));
+	expenseEntity2.setTotalAmount(BigDecimal.valueOf(200));
+
+	when(expenseService.findById(1L)).thenReturn(expenseEntity);
+	when(expenseService.findById(2L)).thenReturn(expenseEntity2);
+
 	// Your test code here
+	Map<String, BigDecimal> expensePaymentMap = new HashMap<>();
+	expensePaymentMap.put("1", BigDecimal.valueOf(50));
+	expensePaymentMap.put("2", BigDecimal.valueOf(50));
 
 	// Arrange
 	BillPayment billPayment = new BillPayment();
 	billPayment.setPaymentAmount(BigDecimal.valueOf(100));
-	billPayment.setPaymentMethod("Credit Card");
+	billPayment.setPaymentMethod(2);
 	billPayment.setPaymentReference("123456");
 	billPayment.setVendorId(1L);
+	billPayment.setPaymentDate("2021-09-01 00:00:00.0");
+	billPayment.setExpensePayments(expensePaymentMap);
 
 	BillPaymentEntity billPaymentEntity = new BillPaymentEntity();
 	billPaymentEntity.setPaymentAmount(BigDecimal.valueOf(100));
-	billPaymentEntity.setPaymentMethod("Credit Card");
+	billPaymentEntity.setPaymentMethod(2);
 	billPaymentEntity.setPaymentReference("123456");
 	billPaymentEntity.setVendor(new VendorEntity());
 	billPaymentEntity.getVendor().setId(1L);

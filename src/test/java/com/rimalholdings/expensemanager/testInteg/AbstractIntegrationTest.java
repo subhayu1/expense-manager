@@ -10,6 +10,7 @@ import com.rimalholdings.expensemanager.data.dao.VendorRepository;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.helper.VendorHelper;
+import com.rimalholdings.expensemanager.util.DateTimeUtil;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -79,7 +80,7 @@ protected String authenticateAndGetToken(String username, String password) {
 			.encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
 
 	Response response =
-		RestAssured.given()
+		given()
 			.header("Authorization", "Basic " + base64Credentials)
 			.header("Accept", "application/json")
 			.contentType(ContentType.JSON)
@@ -124,6 +125,10 @@ protected VendorEntity saveVendorEntity() {
 	vendorEntity.setName("test");
 	vendorEntity.setAddress1("test");
 	vendorEntity.setZip(12345);
+	vendorEntity.setCity("test");
+	vendorEntity.setCreatedDate(DateTimeUtil.getCurrentTimeInUTC());
+	vendorEntity.setUpdatedDate(DateTimeUtil.getCurrentTimeInUTC());
+
 	vendorEntity.setExternalId(
 		VendorHelper.generateVendorId(vendorEntity.getName(), vendorEntity.getZip()));
 	vendorEntity.setVendorType(1);
@@ -135,6 +140,7 @@ protected void createExpenseEntity() {
 	ExpenseEntity expenseEntity = new ExpenseEntity();
 	expenseEntity.setId(1L);
 	expenseEntity.setTotalAmount(new BigDecimal(100).round(new MathContext(2)));
+	expenseEntity.setPaymentStatus(3);
 	expenseEntity.setAmountDue(new BigDecimal(100).round(new MathContext(2)));
 	expenseEntity.setVendor(vendorEntity);
 	expenseRepository.saveAndFlush(expenseEntity);

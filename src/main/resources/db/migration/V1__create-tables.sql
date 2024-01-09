@@ -1,65 +1,56 @@
 create table user
 (
-    id       bigint auto_increment
-        primary key,
-    password varchar(255) null,
-    role     varchar(255) null,
-    username varchar(255) null,
-    constraint UK_sb8bbouer5wak8vyiiy4pf2bx
-        unique (username)
+    id       bigint auto_increment primary key,
+    password varchar(255),
+    role     varchar(255),
+    username varchar(255) unique
 );
 
 create table vendor
 (
-    state      varchar(2)   null,
-    vendortype int          null,
-    zip        int          null,
-    id         bigint auto_increment
-        primary key,
-    phone      varchar(10)  null,
-    externalid varchar(30)  not null,
-    address1   varchar(255) null,
-    address2   varchar(255) null,
-    city       varchar(255) null,
-    email      varchar(255) null,
-    name       varchar(255) null,
-    constraint UK_ly8anka6nkirsxjhwg06jvy6e
-        unique (externalid)
+    id         bigint auto_increment primary key,
+    name       varchar(255) not null,
+    externalid varchar(30)  not null unique,
+    vendortype int          comment '1=individual,2=company',
+    address1   varchar(255),
+    address2   varchar(255),
+    city       varchar(255),
+    state      varchar(2),
+    zip        int,
+    phone      varchar(10),
+    email      varchar(255),
+    createddate TIMESTAMP,
+    updateddate TIMESTAMP
 );
 
 create table billpayment
 (
-    payment_amount    decimal(38, 2) null,
-    id                bigint auto_increment
-        primary key,
-    vendorid          bigint         null,
-    payment_method    varchar(255)   null,
-    payment_reference varchar(255)   null,
-    constraint FK1485novi0k3735wp6rsrg7spv
-        foreign key (vendorid) references vendor (id)
+    id                bigint auto_increment primary key,
+    vendorid          bigint         not null references vendor (id),
+    paymentmethod     int   comment '1=check,2=credit-card,3=cash,4=ACH,5=other',
+    paymentreference  varchar(255),
+    paymentdate       timestamp,
+    createddate       timestamp,
+    paymentamount decimal(38,2),
+    paymentapplicationstatus int not null COMMENT '1=partially applied ,2=fully applied ,3=unapplied'
 );
 
 create table expense
 (
-    amountdue     decimal(38, 2) null,
-    paymentamount decimal(38, 2) null,
-    totalamount   decimal(38, 2) null,
-    duedate       datetime(6)    null,
-    id            bigint auto_increment
-        primary key,
-    vendorid      bigint         null,
-    description   varchar(255)   null,
-    constraint FKcrk6vkvsix98rpwrkuij9itin
-        foreign key (vendorid) references vendor (id)
+    id            bigint auto_increment primary key,
+    vendorid      bigint         not null references vendor (id),
+    totalamount   decimal(38, 2) not null,
+    amountdue     decimal(38, 2) not null,
+    paymentamount decimal(38, 2),
+    duedate       datetime(6),
+    description   varchar(255),
+    createddate   timestamp,
+    updateddate   timestamp,
+    paymentstatus int not null COMMENT '1=partially paid ,2=fully paid ,3=unpaid 4=unknown'
 );
 
 create table billpayment_expense
 (
-    billpaymentid bigint not null,
-    expenseid     bigint not null,
-    constraint FKlp2xevaxatlv2hvnlwynssjwy
-        foreign key (expenseid) references expense (id),
-    constraint FKqeosptqx6vyygn8pla6vwiqhy
-        foreign key (billpaymentid) references billpayment (id)
+    billpaymentid bigint not null references billpayment (id),
+    expenseid     bigint not null references expense (id)
 );
-

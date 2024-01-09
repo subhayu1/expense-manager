@@ -29,28 +29,37 @@ protected ExpenseServiceMapper(ObjectMapper objectMapper, ExpenseService expense
 @Override
 public ExpenseEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	Expense expense = (Expense) dtoInterface;
-
 	VendorEntity vendorEntity = new VendorEntity();
 	vendorEntity.setId(expense.getVendorId());
 
-	ExpenseEntity expenseEntity = new ExpenseEntity();
-	expenseEntity.setId(expense.getId());
-
-	if (expense.getDueDate() != null) {
-	expenseEntity.setDueDate(Timestamp.valueOf(expense.getDueDate()));
-	} else {
-	ExpenseEntity existingEntity = getExistingEntity(expense.getId());
-	expenseEntity.setDueDate(existingEntity.getDueDate());
+	ExpenseEntity expenseEntity = getEntityForUpdate(expense.getId());
+	if (expenseEntity == null) {
+	expenseEntity = new ExpenseEntity();
+	expenseEntity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	}
+
+	expenseEntity.setId(expense.getId());
+	expenseEntity.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
 	expenseEntity.setVendor(vendorEntity);
 	expenseEntity.setTotalAmount(expense.getTotalAmount());
 	expenseEntity.setAmountDue(expense.getTotalAmount());
 	expenseEntity.setDescription(expense.getDescription());
+	expenseEntity.setPaymentStatus(3);
+
+	if (expense.getDueDate() != null) {
+	expenseEntity.setDueDate(Timestamp.valueOf(expense.getDueDate()));
+	}
+
 	return expenseEntity;
 }
 
 protected ExpenseEntity getExistingEntity(Long id) {
+	try {
 	return expenseService.findById(id);
+
+	} catch (Exception e) {
+	return null;
+	}
 }
 
 @Override
@@ -77,5 +86,14 @@ public String saveOrUpdateEntity(BaseDTOInterface dtoInterface) {
 @Override
 public Page<ExpenseEntity> getAllEntities(Pageable pageable) {
 	return expenseService.findAll(pageable);
+}
+
+@Override
+public ExpenseEntity getEntityForUpdate(Long id) {
+	try {
+	return expenseService.findById(id);
+	} catch (Exception e) {
+	return null;
+	}
 }
 }
