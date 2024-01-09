@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
-public class ExpenseDTO implements BaseDTOInterface {
+public class Expense implements BaseDTOInterface {
 
 private Long id;
 private Long vendorId;

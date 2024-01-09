@@ -3,7 +3,7 @@ package com.rimalholdings.expensemanager.controller;
 
 import java.util.Map;
 
-import com.rimalholdings.expensemanager.data.dto.CreateUserDTO;
+import com.rimalholdings.expensemanager.data.dto.CreateUser;
 import com.rimalholdings.expensemanager.service.TokenService;
 import com.rimalholdings.expensemanager.service.UserService;
 
@@ -37,9 +37,9 @@ public ResponseEntity<Map<String, String>> token(Authentication authentication) 
 }
 
 @PostMapping("/user")
-public ResponseEntity<Map<String, String>> user(@RequestBody CreateUserDTO createUserDTO) {
-	Map<String, String> user = Map.of("user", createUserDTO.getUsername());
-	userService.createUser(createUserDTO);
+public ResponseEntity<Map<String, String>> user(@RequestBody CreateUser createUser) {
+	Map<String, String> user = Map.of("user", createUser.getUsername());
+	userService.createUser(createUser);
 
 	log.info("user generated for user: '{}' ", user);
 	return ResponseEntity.ok(user);

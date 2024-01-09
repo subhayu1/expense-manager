@@ -1,6 +1,6 @@
 package com.rimalholdings.expensemanager.controller;
 
-import com.rimalholdings.expensemanager.data.dto.ExpenseDTO;
+import com.rimalholdings.expensemanager.data.dto.Expense;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.model.mapper.ExpenseServiceMapper;
 
@@ -28,10 +28,10 @@ void setUp() {
 
 @Test
 void testShouldReturnCreatedExpenseWhenExpenseDTOIsValid() {
-	ExpenseDTO expenseDTO = new ExpenseDTO();
-	expenseDTO.setId(null);
-	when(expenseServiceMapper.saveOrUpdateEntity(expenseDTO)).thenReturn("createdExpense");
-	ResponseEntity<String> response = expenseController.createExpense(expenseDTO);
+	Expense expense = new Expense();
+	expense.setId(null);
+	when(expenseServiceMapper.saveOrUpdateEntity(expense)).thenReturn("createdExpense");
+	ResponseEntity<String> response = expenseController.createExpense(expense);
 	assertEquals("createdExpense", response.getBody());
 }
 
@@ -53,10 +53,10 @@ void testShouldReturnExpenseWhenExpenseIdIsValid() {
 
 @Test
 void testShouldReturnUpdatedExpenseWhenExpenseDTOIsValid() {
-	ExpenseDTO expenseDTO = new ExpenseDTO();
-	expenseDTO.setId(1L);
-	when(expenseServiceMapper.saveOrUpdateEntity(expenseDTO)).thenReturn("updatedExpense");
-	ResponseEntity<String> response = expenseController.updateExpense(expenseDTO);
+	Expense expense = new Expense();
+	expense.setId(1L);
+	when(expenseServiceMapper.saveOrUpdateEntity(expense)).thenReturn("updatedExpense");
+	ResponseEntity<String> response = expenseController.updateExpense(expense);
 	assertEquals("updatedExpense", response.getBody());
 }
 

@@ -4,7 +4,7 @@ package com.rimalholdings.expensemanager.data.dto;
 import lombok.Data;
 
 @Data
-public class VendorDTO implements BaseDTOInterface {
+public class Vendor implements BaseDTOInterface {
 
 private Long id;
 private String name;

@@ -15,6 +15,14 @@ public class OpenApiConfiguration {
 public OpenAPI customOpenAPI() {
 	final String securitySchemeName = "bearerAuth";
 	return new OpenAPI()
+		.info(
+			new io.swagger.v3.oas.models.info.Info()
+				.title("Expense Manager API")
+				.description("API endpoints for Expense Manager application.")
+				.summary("CRUD operations for Expense Manager application.")
+				.contact(
+					new io.swagger.v3.oas.models.info.Contact().email("srimal@rimalholdings.com"))
+				.version("1.0.0"))
 		.addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
 		.components(
 			new Components()

@@ -47,4 +47,13 @@ private List<BillPaymentEntity> payments = new ArrayList<>();
 
 @Column(name = "paymentamount")
 private BigDecimal paymentAmount;
+
+@Column(name = "paymentstatus")
+private Integer paymentStatus;
+
+@Column(name = "createddate")
+private Timestamp createdDate;
+
+@Column(name = "updateddate")
+private Timestamp updatedDate;
 }

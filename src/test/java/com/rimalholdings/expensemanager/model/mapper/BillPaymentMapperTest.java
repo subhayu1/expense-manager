@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.rimalholdings.expensemanager.data.dto.BillPaymentDTO;
+import com.rimalholdings.expensemanager.data.dto.BillPayment;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
@@ -41,16 +41,17 @@ void setUp() {
 @Test
 void testMapToDTO() {
 	// Arrange
-	BillPaymentDTO billPaymentDTO = new BillPaymentDTO();
-	billPaymentDTO.setPaymentAmount(BigDecimal.valueOf(100));
-	billPaymentDTO.setPaymentMethod("Credit Card");
-	billPaymentDTO.setPaymentReference("123456");
-	billPaymentDTO.setVendorId(1L);
+	BillPayment billPayment = new BillPayment();
+	billPayment.setPaymentAmount(BigDecimal.valueOf(100));
+	billPayment.setPaymentMethod(2);
+	billPayment.setPaymentReference("123456");
+	billPayment.setVendorId(1L);
+	billPayment.setPaymentDate("2021-09-01 00:00:00.0");
 
 	Map<String, BigDecimal> expensePaymentMap = new HashMap<>();
 	expensePaymentMap.put("1", BigDecimal.valueOf(50));
 	expensePaymentMap.put("2", BigDecimal.valueOf(50));
-	billPaymentDTO.setExpensePayments(expensePaymentMap);
+	billPayment.setExpensePayments(expensePaymentMap);
 
 	ExpenseEntity expenseEntity1 = new ExpenseEntity();
 	expenseEntity1.setId(1L);
@@ -66,11 +67,11 @@ void testMapToDTO() {
 	when(expenseService.findById(2L)).thenReturn(expenseEntity2);
 
 	// Act
-	BillPaymentEntity billPaymentEntity = billPaymentMapper.mapToDTO(billPaymentDTO);
+	BillPaymentEntity billPaymentEntity = billPaymentMapper.mapToDTO(billPayment);
 
 	// Assert
 	assertEquals(BigDecimal.valueOf(100), billPaymentEntity.getPaymentAmount());
-	assertEquals("Credit Card", billPaymentEntity.getPaymentMethod());
+	assertEquals(2, billPaymentEntity.getPaymentMethod());
 	assertEquals("123456", billPaymentEntity.getPaymentReference());
 
 	VendorEntity vendorEntity = billPaymentEntity.getVendor();
@@ -94,18 +95,36 @@ void testMapToDTO() {
 
 @Test
 void testSaveOrUpdateEntity() {
+	ExpenseEntity expenseEntity = new ExpenseEntity();
+	expenseEntity.setId(1L);
+	expenseEntity.setAmountDue(BigDecimal.valueOf(100));
+	expenseEntity.setTotalAmount(BigDecimal.valueOf(100));
+
+	ExpenseEntity expenseEntity2 = new ExpenseEntity();
+	expenseEntity2.setId(2L);
+	expenseEntity2.setAmountDue(BigDecimal.valueOf(200));
+	expenseEntity2.setTotalAmount(BigDecimal.valueOf(200));
+
+	when(expenseService.findById(1L)).thenReturn(expenseEntity);
+	when(expenseService.findById(2L)).thenReturn(expenseEntity2);
+
 	// Your test code here
+	Map<String, BigDecimal> expensePaymentMap = new HashMap<>();
+	expensePaymentMap.put("1", BigDecimal.valueOf(50));
+	expensePaymentMap.put("2", BigDecimal.valueOf(50));
 
 	// Arrange
-	BillPaymentDTO billPaymentDTO = new BillPaymentDTO();
-	billPaymentDTO.setPaymentAmount(BigDecimal.valueOf(100));
-	billPaymentDTO.setPaymentMethod("Credit Card");
-	billPaymentDTO.setPaymentReference("123456");
-	billPaymentDTO.setVendorId(1L);
+	BillPayment billPayment = new BillPayment();
+	billPayment.setPaymentAmount(BigDecimal.valueOf(100));
+	billPayment.setPaymentMethod(2);
+	billPayment.setPaymentReference("123456");
+	billPayment.setVendorId(1L);
+	billPayment.setPaymentDate("2021-09-01 00:00:00.0");
+	billPayment.setExpensePayments(expensePaymentMap);
 
 	BillPaymentEntity billPaymentEntity = new BillPaymentEntity();
 	billPaymentEntity.setPaymentAmount(BigDecimal.valueOf(100));
-	billPaymentEntity.setPaymentMethod("Credit Card");
+	billPaymentEntity.setPaymentMethod(2);
 	billPaymentEntity.setPaymentReference("123456");
 	billPaymentEntity.setVendor(new VendorEntity());
 	billPaymentEntity.getVendor().setId(1L);
@@ -115,7 +134,7 @@ void testSaveOrUpdateEntity() {
 	when(billPaymentService.save(any(BillPaymentEntity.class))).thenReturn(billPaymentEntity);
 
 	// Act
-	String result = billPaymentMapper.saveOrUpdateEntity(billPaymentDTO);
+	String result = billPaymentMapper.saveOrUpdateEntity(billPayment);
 
 	// Assert
 	assertNotNull(result);

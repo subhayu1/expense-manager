@@ -1,3 +1,4 @@
+import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.CategoryFilter.include
 
 plugins {
     `java-library`
@@ -9,7 +10,6 @@ plugins {
     id("com.diffplug.spotless") version "6.23.0"
     jacoco
 }
-
 tasks.build {
     dependsOn(tasks.named("compileJava"))
     dependsOn(tasks.named("test"))

@@ -2,12 +2,11 @@
 package com.rimalholdings.expensemanager.data.dto;
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
 @Data
-@Component
-public class LoginRequestDTO {
+public class CreateUser {
 
 private String username;
 private String password;
+private String role;
 }

@@ -2,6 +2,7 @@ package com.rimalholdings.expensemanager.testInteg;
 
 import com.rimalholdings.expensemanager.data.dao.VendorRepository;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
+import com.rimalholdings.expensemanager.util.DateTimeUtil;
 
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.AfterEach;
@@ -31,6 +32,9 @@ void setUp() {
 	vendor.setAddress1("test");
 	vendor.setExternalId("t12345");
 	vendor.setVendorType(1);
+	vendor.setCreatedDate(DateTimeUtil.getCurrentTimeInUTC());
+	vendor.setUpdatedDate(DateTimeUtil.getCurrentTimeInUTC());
+
 	vendorRepository.save(vendor);
 }
 

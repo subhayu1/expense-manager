@@ -46,4 +46,6 @@ public abstract String saveOrUpdateEntity(BaseDTOInterface dtoInterface)
 	throws DuplicateIdException;
 
 public abstract Page<T> getAllEntities(Pageable pageable);
+
+public abstract T getEntityForUpdate(Long id);
 }

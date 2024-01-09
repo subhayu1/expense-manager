@@ -131,6 +131,65 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
     ./gradlew flywayMigrate
     
     ```
+## CI Pipeline
+- CircleCI is used for CI pipeline.
+- The pipeline is configured to run the unit and integration tests and build the application.
+
+## Database fields
+
+### User Table
+
+| Column   | Type         | Description |
+|----------|--------------|-------------|
+| id       | bigint       | A unique identifier for each user. It's a primary key and auto-increments with each new entry. |
+| password | varchar(255) | The password for the user. |
+| role     | varchar(255) | The role of the user. |
+| username | varchar(255) | The username of the user. It's unique for each user. |
+
+### Vendor Table
+
+| Column       | Type         | Description |
+|--------------|--------------|-------------|
+| id           | bigint       | A unique identifier for each vendor. It's a primary key and auto-increments with each new entry. |
+| name         | varchar(255) | The name of the vendor. It's a required field. |
+| externalid   | varchar(30)  | An external identifier for the vendor. It's unique and required. |
+| vendortype   | int          | The type of the vendor. 1 for individual, 2 for company. |
+| address1     | varchar(255) | The first line of the vendor's address. |
+| address2     | varchar(255) | The second line of the vendor's address. |
+| city         | varchar(255) | The city of the vendor's address. |
+| state        | varchar(2)   | The state of the vendor's address. |
+| zip          | int          | The zip code of the vendor's address. |
+| phone        | varchar(10)  | The phone number of the vendor. |
+| email        | varchar(255) | The email of the vendor. |
+| createddate  | TIMESTAMP    | The date when the vendor was created. |
+| updateddate  | TIMESTAMP    | The date when the vendor was last updated. |
+
+### Bill Payment Table
+
+| Column                  | Type          | Description |
+|-------------------------|---------------|-------------|
+| id                      | bigint        | A unique identifier for each bill payment. It's a primary key and auto-increments with each new entry. |
+| vendorid                | bigint        | The id of the vendor to whom the payment is made. It's a foreign key referencing the vendor table. |
+| paymentmethod           | int           | The method of payment. 1 for check, 2 for credit card, 3 for cash, 4 for ACH, 5 for other. |
+| paymentreference        | varchar(255)  | The reference for the payment. |
+| paymentdate             | timestamp     | The date when the payment was made. |
+| createddate             | timestamp     | The date when the payment was created. |
+| paymentamount           | decimal(38,2) | The amount of the payment. |
+| paymentapplicationstatus| int           | The status of the payment application. 1 for partially applied, 2 for fully applied, 3 for unapplied. |
+
+### Expense Table
+
+| Column       | Type          | Description |
+|--------------|---------------|-------------|
+| id           | bigint        | A unique identifier for each expense. It's a primary key and auto-increments with each new entry. |
+| vendorid     | bigint        | The id of the vendor who is associated with the expense. It's a foreign key referencing the vendor table. |
+| totalamount  | decimal(38,2) | The total amount of the expense. It's a required field. |
+| amountdue    | decimal(38,2) | The amount due of the expense. It's a required field. |
+| paymentamount| decimal(38,2) | The amount of the payment for the expense. |
+| duedate      | datetime(6)   | The due date of the expense. |
+| description  | varchar(255)  | The description of the expense. |
+| createddate  | timestamp     | The date when the expense was created. |
+
 ## Contributing
 
 Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.

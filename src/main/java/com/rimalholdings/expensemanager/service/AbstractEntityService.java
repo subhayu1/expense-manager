@@ -5,7 +5,9 @@ import com.rimalholdings.expensemanager.data.dao.BaseRepository;
 import com.rimalholdings.expensemanager.data.entity.BaseEntity;
 import com.rimalholdings.expensemanager.exception.ExceptionConstant;
 import com.rimalholdings.expensemanager.exception.ObjectNotFoundException;
+import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,22 +35,24 @@ public T findById(Long id) {
 		.findById(id)
 		.orElseThrow(
 			() ->
-				new ObjectNotFoundException(
-					String.format(
-						ExceptionConstant.OBJECT_NOT_FOUND, ExceptionConstant.VENDOR, id)));
+				new ObjectNotFoundException(String.format(ExceptionConstant.OBJECT_NOT_FOUND, id)));
 }
 
 @Transactional
-public void deleteById(Long id) {
+public void deleteById(Long id) throws DataIntegrityViolationException {
+	try {
 	T entity =
 		repository
 			.findById(id)
 			.orElseThrow(
 				() ->
 					new ObjectNotFoundException(
-						String.format(
-							ExceptionConstant.OBJECT_NOT_FOUND, ExceptionConstant.VENDOR, id)));
+						String.format(ExceptionConstant.OBJECT_NOT_FOUND, id)));
 	repository.deleteById(entity.getId());
+	} catch (DataIntegrityViolationException e) {
+	throw new UpdateNotAllowedException(
+		String.format(ExceptionConstant.OBJECT_INTEGRITY_VIOLATION, id));
+	}
 }
 
 public Page<T> findAll(Pageable pageable) {

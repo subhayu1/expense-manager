@@ -7,12 +7,13 @@ import java.util.Map;
 import lombok.Data;
 
 @Data
-public class BillPaymentDTO implements BaseDTOInterface {
+public class BillPayment implements BaseDTOInterface {
 
 private Long id;
 private Long vendorId;
 private BigDecimal paymentAmount;
-private String paymentMethod;
+private String paymentDate;
+private Integer paymentMethod;
 private String paymentReference;
 private Map<String, BigDecimal> expensePayments;
 }

@@ -1,6 +1,6 @@
 package com.rimalholdings.expensemanager.controller;
 
-import com.rimalholdings.expensemanager.data.dto.BillPaymentDTO;
+import com.rimalholdings.expensemanager.data.dto.BillPayment;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.model.mapper.BillPaymentServiceMapper;
 
@@ -31,11 +31,11 @@ void setUp() {
 
 @Test
 void shouldReturnCreatedBillPaymentWhenBillPaymentDTOIsValid() {
-	BillPaymentDTO billPaymentDTO = new BillPaymentDTO();
-	billPaymentDTO.setId(null);
-	when(billPaymentMapper.saveOrUpdateEntity(billPaymentDTO)).thenReturn("createdBillPayment");
+	BillPayment billPayment = new BillPayment();
+	billPayment.setId(null);
+	when(billPaymentMapper.saveOrUpdateEntity(billPayment)).thenReturn("createdBillPayment");
 
-	ResponseEntity<String> response = billPaymentController.createBillPayment(billPaymentDTO);
+	ResponseEntity<String> response = billPaymentController.createBillPayment(billPayment);
 
 	assertEquals("createdBillPayment", response.getBody());
 }
