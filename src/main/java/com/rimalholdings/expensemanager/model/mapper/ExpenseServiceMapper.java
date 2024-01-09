@@ -4,6 +4,7 @@ package com.rimalholdings.expensemanager.model.mapper;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.Optional;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.Expense;
@@ -35,33 +36,41 @@ protected ExpenseServiceMapper(ObjectMapper objectMapper, ExpenseService expense
 @Override
 public ExpenseEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	Expense expense = (Expense) dtoInterface;
-	VendorEntity vendorEntity = new VendorEntity();
-	vendorEntity.setId(expense.getVendorId());
 
+	ExpenseEntity expenseEntity = getOrCreateExpenseEntity(expense);
+	setExpenseEntityFields(expenseEntity, expense);
+
+	return expenseEntity;
+}
+
+private ExpenseEntity getOrCreateExpenseEntity(Expense expense) {
 	ExpenseEntity expenseEntity = getEntityForUpdate(expense.getId());
-
 	if (expenseEntity == null) {
 	expenseEntity = new ExpenseEntity();
 	expenseEntity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	expenseEntity.setPaymentAmount(BigDecimal.ZERO);
+	expenseEntity.setPaymentStatus(UNPAID); // Assuming UNPAID is a constant for default status
 	} else {
 	dontAllowPartiallyPaidOrPaidExpensesToBeUpdated(expenseEntity);
 	}
-
-	expenseEntity.setId(expense.getId());
 	expenseEntity.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
-	expenseEntity.setVendor(vendorEntity);
-	expenseEntity.setTotalAmount(expense.getTotalAmount());
-	expenseEntity.setAmountDue(expense.getTotalAmount());
-	expenseEntity.setDescription(expense.getDescription());
-	// set payment status to unpaid by default when creating expense
-	expenseEntity.setPaymentStatus(UNPAID);
-
-	if (expense.getDueDate() != null) {
-	expenseEntity.setDueDate(Timestamp.valueOf(expense.getDueDate()));
-	}
-
 	return expenseEntity;
+}
+
+private void setExpenseEntityFields(ExpenseEntity expenseEntity, Expense expense) {
+	VendorEntity vendorEntity = new VendorEntity();
+	vendorEntity.setId(expense.getVendorId()); // Assuming vendorId is always set
+	expenseEntity.setVendor(vendorEntity);
+
+	setIfNotNull(expense::getId, expenseEntity::setId);
+	setIfNotNull(expense::getTotalAmount, expenseEntity::setTotalAmount);
+	setIfNotNull(expense::getDescription, expenseEntity::setDescription);
+	setIfNotNull(
+		() -> Optional.ofNullable(expense.getDueDate()).map(Timestamp::valueOf).orElse(null),
+		expenseEntity::setDueDate);
+
+	// Assuming Amount Due is always equal to Total Amount
+	expenseEntity.setAmountDue(expenseEntity.getTotalAmount());
 }
 
 private void dontAllowPartiallyPaidOrPaidExpensesToBeUpdated(ExpenseEntity expenseEntity) {

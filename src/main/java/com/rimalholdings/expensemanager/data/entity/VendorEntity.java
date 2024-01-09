@@ -4,6 +4,8 @@ package com.rimalholdings.expensemanager.data.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -16,6 +18,7 @@ import lombok.ToString;
 @Entity
 @Data
 @Table(name = "vendor")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class VendorEntity extends BaseEntity {
 
 @Column(name = "externalid", length = 30, nullable = false, unique = true)
