@@ -1,6 +1,7 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.model.mapper;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class ExpenseServiceMapper extends AbstractServiceMapper<ExpenseEntity> {
 
 private final ExpenseService expenseService;
+private static final Integer UNPAID = 3;
 
 protected ExpenseServiceMapper(ObjectMapper objectMapper, ExpenseService expenseService) {
 	super(objectMapper);
@@ -28,6 +30,7 @@ protected ExpenseServiceMapper(ObjectMapper objectMapper, ExpenseService expense
 
 @Override
 public ExpenseEntity mapToDTO(BaseDTOInterface dtoInterface) {
+	// TODO: set paymentAmount to BigDecimal.ZERO by default when creating expense
 	Expense expense = (Expense) dtoInterface;
 	VendorEntity vendorEntity = new VendorEntity();
 	vendorEntity.setId(expense.getVendorId());
@@ -37,6 +40,7 @@ public ExpenseEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	expenseEntity = new ExpenseEntity();
 	expenseEntity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	}
+	expenseEntity.setPaymentAmount(BigDecimal.ZERO);
 
 	expenseEntity.setId(expense.getId());
 	expenseEntity.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
@@ -44,7 +48,8 @@ public ExpenseEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	expenseEntity.setTotalAmount(expense.getTotalAmount());
 	expenseEntity.setAmountDue(expense.getTotalAmount());
 	expenseEntity.setDescription(expense.getDescription());
-	expenseEntity.setPaymentStatus(3);
+	// set payment status to unpaid by default when creating expense
+	expenseEntity.setPaymentStatus(UNPAID);
 
 	if (expense.getDueDate() != null) {
 	expenseEntity.setDueDate(Timestamp.valueOf(expense.getDueDate()));
