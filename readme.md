@@ -42,7 +42,21 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
     ```shell
     cd expense-manager
     ```
+3. Create Private and Public Keys for JWT token generation and verification
+    ```shell
+    #create a folder to store the keys
+    mkdir -p ./src/main/resources/certs
+   #navigate to the folder
+    cd ./src/main/resources/certs
+    #create the keys
+   
+    openssl genrsa -out keypair.pem 2048
 
+    openssl rsa -in keypair.pem -pubout -out public.pem
+
+    # create private key in PKCS#8 format
+    openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem
+    ```
 3. Create SQL users and database by running the following script 
     OR use a SQL client like MySQL Workbench to create the users
     and database using the SQL scripts in the `src/main/resources` folder:
