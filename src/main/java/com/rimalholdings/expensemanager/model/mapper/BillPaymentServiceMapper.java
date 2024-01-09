@@ -4,6 +4,7 @@ package com.rimalholdings.expensemanager.model.mapper;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Map;
+import java.util.Objects;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.BillPayment;
@@ -11,11 +12,13 @@ import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.exception.CannotOverpayExpenseException;
+import com.rimalholdings.expensemanager.exception.InvalidObjectException;
 import com.rimalholdings.expensemanager.service.BillPaymentService;
 import com.rimalholdings.expensemanager.service.ExpenseService;
 import com.rimalholdings.expensemanager.util.DateTimeUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,51 +51,96 @@ private Long parseLongFromString(Map<String, Long> expenseId) {
 @Override
 public BillPaymentEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	BillPayment billpayment = (BillPayment) dtoInterface;
+	BillPaymentEntity billPaymentEntity = createBillPaymentEntity(billpayment);
+	Map<String, BigDecimal> expensePaymentMap = billpayment.getExpensePayments();
+
+	if (!expensePaymentMap.isEmpty()) {
+	processExpensePayments(expensePaymentMap, billpayment, billPaymentEntity);
+	} else {
+	handleEmptyExpensePayments();
+	}
+
+	return billPaymentEntity;
+}
+
+protected BillPaymentEntity createBillPaymentEntity(BillPayment billpayment) {
 	BillPaymentEntity billPaymentEntity = new BillPaymentEntity();
 	billPaymentEntity.setPaymentAmount(billpayment.getPaymentAmount());
 	billPaymentEntity.setPaymentMethod(billpayment.getPaymentMethod());
-
 	billPaymentEntity.setPaymentReference(billpayment.getPaymentReference());
 	billPaymentEntity.setPaymentDate(Timestamp.valueOf(billpayment.getPaymentDate()));
 	billPaymentEntity.setCreatedDate(DateTimeUtil.getCurrentTimeInUTC());
+
 	VendorEntity vendorEntity = new VendorEntity();
 	vendorEntity.setId(billpayment.getVendorId());
 	billPaymentEntity.setVendor(vendorEntity);
 
-	Map<String, BigDecimal> expensePaymentMap = billpayment.getExpensePayments();
+	return billPaymentEntity;
+}
 
-	if (!expensePaymentMap.isEmpty()) {
+protected void processExpensePayments(
+	Map<String, BigDecimal> expensePaymentMap,
+	BillPayment billpayment,
+	BillPaymentEntity billPaymentEntity) {
 	expensePaymentMap.forEach(
 		(expenseId, paymentAmount) -> {
-			ExpenseEntity expenseEntity = expenseService.findById(Long.parseLong(expenseId));
-			expenseEntity.setPaymentAmount(paymentAmount);
+		validatePaymentAmount(expensePaymentMap, billpayment);
+		ExpenseEntity expenseEntity = getExpenseEntity(expenseId, billpayment);
+		expenseEntity.setPaymentAmount(paymentAmount);
 
-			log.info("amount due: {}", expenseEntity.getAmountDue());
-			log.info("payment amount: {}", paymentAmount);
-			Integer paymentStatus =
-				paymentApplicationStatus(paymentAmount, expenseEntity.getAmountDue());
-			billPaymentEntity.setPaymentApplicationStatus(paymentStatus);
-			expenseEntity.setPaymentStatus(
-				setPaymentStatusOnExpense(paymentAmount, expenseEntity.getAmountDue()));
-			if (expenseEntity.getAmountDue().compareTo(BigDecimal.ZERO) == ZERO) {
-			// Handle the case when the expense is already paid in full
-			throw new CannotOverpayExpenseException("Expense already paid in full");
-			}
-			if (expenseEntity.getAmountDue().compareTo(paymentAmount) == 0) {
-			expenseEntity.setAmountDue(BigDecimal.ZERO);
-			} else {
-			expenseEntity.setAmountDue(expenseEntity.getTotalAmount().subtract(paymentAmount));
-			}
-			billPaymentEntity.getExpenses().add(expenseEntity);
+		log.info("amount due: {}", expenseEntity.getAmountDue());
+		log.info("payment amount: {}", paymentAmount);
+
+		updatePaymentStatus(paymentAmount, expenseEntity, billPaymentEntity);
+		updateDueAmount(paymentAmount, expenseEntity);
+		billPaymentEntity.getExpenses().add(expenseEntity);
 		});
+}
 
-	} else {
-	log.info("expensePaymentMap is null, throwing exception");
-	// TODO: Handle situations where expensePaymentMap is null
-	throw new RuntimeException("no expense payments specified. Please specify expense payments");
+protected void validatePaymentAmount(
+	Map<String, BigDecimal> expensePaymentMap, BillPayment billpayment) {
+	BigDecimal sumOfExpensePaymentMapValues =
+		expensePaymentMap.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
+	if (sumOfExpensePaymentMapValues.compareTo(billpayment.getPaymentAmount()) != 0) {
+	throw new IllegalArgumentException(
+		"payment amount does not match sum of expense payment amounts");
 	}
+}
 
-	return billPaymentEntity;
+protected ExpenseEntity getExpenseEntity(String expenseId, BillPayment billpayment) {
+	ExpenseEntity expenseEntity = expenseService.findById(Long.parseLong(expenseId));
+	if (expenseEntity == null) {
+	throw new EntityNotFoundException("Expense with id " + expenseId + " not found");
+	}
+	if (!Objects.equals(expenseEntity.getVendor().getId(), billpayment.getVendorId())) {
+
+	throw new InvalidObjectException("expense id does not belong to vendor ");
+	}
+	return expenseEntity;
+}
+
+private void updatePaymentStatus(
+	BigDecimal paymentAmount, ExpenseEntity expenseEntity, BillPaymentEntity billPaymentEntity) {
+	Integer paymentStatus = paymentApplicationStatus(paymentAmount, expenseEntity.getAmountDue());
+	billPaymentEntity.setPaymentApplicationStatus(paymentStatus);
+	expenseEntity.setPaymentStatus(
+		setPaymentStatusOnExpense(paymentAmount, expenseEntity.getAmountDue()));
+}
+
+private void updateDueAmount(BigDecimal paymentAmount, ExpenseEntity expenseEntity) {
+	if (expenseEntity.getAmountDue().compareTo(BigDecimal.ZERO) == ZERO) {
+	throw new CannotOverpayExpenseException("Expense already paid in full");
+	}
+	if (expenseEntity.getAmountDue().compareTo(paymentAmount) == 0) {
+	expenseEntity.setAmountDue(BigDecimal.ZERO);
+	} else {
+	expenseEntity.setAmountDue(expenseEntity.getTotalAmount().subtract(paymentAmount));
+	}
+}
+
+private void handleEmptyExpensePayments() {
+	log.info("expensePaymentMap is null, throwing exception");
+	throw new RuntimeException("no expense payments specified. Please specify expense payments");
 }
 
 @Override
