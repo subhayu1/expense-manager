@@ -2,7 +2,7 @@
 package com.rimalholdings.expensemanager.exception;
 
 public class CannotOverpayExpenseException extends IllegalArgumentException
-	implements ExpenseManagerExceptionInterface {
+	implements ExceptionInterface {
 
 public CannotOverpayExpenseException(String message) {
 	super(message);

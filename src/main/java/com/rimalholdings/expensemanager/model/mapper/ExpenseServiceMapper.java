@@ -3,11 +3,13 @@ package com.rimalholdings.expensemanager.model.mapper;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.Expense;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
+import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
 import com.rimalholdings.expensemanager.service.ExpenseService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +23,8 @@ import org.springframework.stereotype.Service;
 public class ExpenseServiceMapper extends AbstractServiceMapper<ExpenseEntity> {
 
 private final ExpenseService expenseService;
+private static final Integer PARTIALLY_PAID = 1;
+private static final Integer PAID = 2;
 private static final Integer UNPAID = 3;
 
 protected ExpenseServiceMapper(ObjectMapper objectMapper, ExpenseService expenseService) {
@@ -30,17 +34,19 @@ protected ExpenseServiceMapper(ObjectMapper objectMapper, ExpenseService expense
 
 @Override
 public ExpenseEntity mapToDTO(BaseDTOInterface dtoInterface) {
-	// TODO: set paymentAmount to BigDecimal.ZERO by default when creating expense
 	Expense expense = (Expense) dtoInterface;
 	VendorEntity vendorEntity = new VendorEntity();
 	vendorEntity.setId(expense.getVendorId());
 
 	ExpenseEntity expenseEntity = getEntityForUpdate(expense.getId());
+
 	if (expenseEntity == null) {
 	expenseEntity = new ExpenseEntity();
 	expenseEntity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-	}
 	expenseEntity.setPaymentAmount(BigDecimal.ZERO);
+	} else {
+	dontAllowPartiallyPaidOrPaidExpensesToBeUpdated(expenseEntity);
+	}
 
 	expenseEntity.setId(expense.getId());
 	expenseEntity.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
@@ -58,6 +64,15 @@ public ExpenseEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	return expenseEntity;
 }
 
+private void dontAllowPartiallyPaidOrPaidExpensesToBeUpdated(ExpenseEntity expenseEntity) {
+	if (Objects.equals(expenseEntity.getPaymentStatus(), PARTIALLY_PAID)
+		|| Objects.equals(expenseEntity.getPaymentStatus(), PAID)) {
+	// We don't allow updating of expenses that are already paid or partially paid
+	throw new UpdateNotAllowedException(
+		"Expense cannot be updated because it is already paid or partially paid");
+	}
+}
+
 protected ExpenseEntity getExistingEntity(Long id) {
 	try {
 	return expenseService.findById(id);
@@ -69,6 +84,13 @@ protected ExpenseEntity getExistingEntity(Long id) {
 
 @Override
 public void deleteEntity(Long id) {
+	ExpenseEntity expenseEntity = getExistingEntity(id);
+	if (expenseEntity != null
+		&& (Objects.equals(expenseEntity.getPaymentStatus(), PARTIALLY_PAID)
+			|| Objects.equals(expenseEntity.getPaymentStatus(), PAID))) {
+	throw new UpdateNotAllowedException(
+		"Expense cannot be deleted because it is already paid or partially paid");
+	}
 	expenseService.deleteById(id);
 }
 

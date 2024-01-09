@@ -1,11 +1,16 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.data.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -48,4 +53,8 @@ private java.sql.Timestamp createdDate;
 
 @Column(name = "updateddate", nullable = false)
 private java.sql.Timestamp updatedDate;
+
+@OneToMany(mappedBy = "vendor")
+@ToString.Exclude
+private List<ExpenseEntity> expenses = new ArrayList<>();
 }

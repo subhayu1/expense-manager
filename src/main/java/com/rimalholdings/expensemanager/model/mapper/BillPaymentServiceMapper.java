@@ -13,6 +13,7 @@ import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.exception.CannotOverpayExpenseException;
 import com.rimalholdings.expensemanager.exception.InvalidObjectException;
+import com.rimalholdings.expensemanager.exception.NoExpensePaymentsSpecifiedException;
 import com.rimalholdings.expensemanager.service.BillPaymentService;
 import com.rimalholdings.expensemanager.service.ExpenseService;
 import com.rimalholdings.expensemanager.util.DateTimeUtil;
@@ -140,7 +141,8 @@ private void updateDueAmount(BigDecimal paymentAmount, ExpenseEntity expenseEnti
 
 private void handleEmptyExpensePayments() {
 	log.info("expensePaymentMap is null, throwing exception");
-	throw new RuntimeException("no expense payments specified. Please specify expense payments");
+	throw new NoExpensePaymentsSpecifiedException(
+		"no expense payments specified. Please specify expense payments");
 }
 
 @Override

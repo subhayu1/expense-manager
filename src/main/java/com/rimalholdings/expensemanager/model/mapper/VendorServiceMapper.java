@@ -4,6 +4,7 @@ package com.rimalholdings.expensemanager.model.mapper;
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.Vendor;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
+import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
 import com.rimalholdings.expensemanager.helper.VendorHelper;
 import com.rimalholdings.expensemanager.service.VendorService;
 import com.rimalholdings.expensemanager.util.DateTimeUtil;
@@ -78,7 +79,13 @@ public VendorEntity mapToDTO(BaseDTOInterface dtoInterface) {
 
 @Override
 public void deleteEntity(Long id) {
+	VendorEntity vendorEntity = getEntityForUpdate(id);
+	if (vendorEntity != null && vendorEntity.getExpenses().isEmpty()) {
 	vendorService.deleteById(id);
+	} else {
+	throw new UpdateNotAllowedException(
+		"Vendor cannot be deleted because it is already associated with an expense");
+	}
 }
 
 @Override
