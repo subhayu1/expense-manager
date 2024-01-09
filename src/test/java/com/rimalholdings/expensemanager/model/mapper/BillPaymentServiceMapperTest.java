@@ -8,6 +8,7 @@ import com.rimalholdings.expensemanager.data.dto.BillPayment;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
+import com.rimalholdings.expensemanager.exception.NoExpensePaymentsSpecifiedException;
 import com.rimalholdings.expensemanager.service.BillPaymentService;
 import com.rimalholdings.expensemanager.service.ExpenseService;
 
@@ -68,21 +69,30 @@ void shouldMapDtoToEntityAndProcessExpensePaymentsWhenExpensePaymentsAreNotEmpty
 void testShouldThrowRuntimeExceptionWhenExpensePaymentsAreEmpty() {
 	billPayment.setExpensePayments(new HashMap<>());
 
-	assertThrows(RuntimeException.class, () -> billPaymentMapper.mapToDTO(billPayment));
+	assertThrows(
+		NoExpensePaymentsSpecifiedException.class, () -> billPaymentMapper.mapToDTO(billPayment));
 }
 
 @Test
-void testShouldThrowRuntimeExceptionWhenExpensePaymentAmountIsGreaterThanExpenseAmountDue() {
-	expensePaymentMap.put("1", BigDecimal.valueOf(200));
+void
+	testShouldThrowIllegalArgumentExceptionWhenExpensePaymentAmountIsGreaterThanExpenseAmountDue() {
+	expensePaymentMap = new HashMap<>();
+	expensePaymentMap.put("1", BigDecimal.valueOf(150));
+	expensePaymentMap.put("2", BigDecimal.valueOf(50));
+	billPayment.setExpensePayments(expensePaymentMap);
+	billPayment.setPaymentAmount(BigDecimal.valueOf(100));
 
-	assertThrows(RuntimeException.class, () -> billPaymentMapper.mapToDTO(billPayment));
+	assertThrows(IllegalArgumentException.class, () -> billPaymentMapper.mapToDTO(billPayment));
 }
 
 @Test
-void testShouldThrowEntityNotFoundExceptionWhenExpenseIdIsInvalid() {
+void testShouldThrowIllegalArgumentExceptionWhenExpenseIdIsInvalid() {
+	expensePaymentMap = new HashMap<>();
 	expensePaymentMap.put("3", BigDecimal.valueOf(50));
+	billPayment.setExpensePayments(expensePaymentMap);
+	when(expenseService.findById(3L)).thenReturn(null);
 
-	assertThrows(RuntimeException.class, () -> billPaymentMapper.mapToDTO(billPayment));
+	assertThrows(IllegalArgumentException.class, () -> billPaymentMapper.mapToDTO(billPayment));
 }
 
 @Test

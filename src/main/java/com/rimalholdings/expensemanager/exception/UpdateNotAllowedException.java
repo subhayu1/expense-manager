@@ -4,7 +4,7 @@ package com.rimalholdings.expensemanager.exception;
 import org.springframework.dao.DataIntegrityViolationException;
 
 public class UpdateNotAllowedException extends DataIntegrityViolationException
-	implements ExpenseManagerExceptionInterface {
+	implements ExceptionInterface {
 public UpdateNotAllowedException(String message) {
 	super(message);
 }

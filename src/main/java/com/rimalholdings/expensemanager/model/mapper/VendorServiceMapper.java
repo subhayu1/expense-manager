@@ -4,6 +4,7 @@ package com.rimalholdings.expensemanager.model.mapper;
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.Vendor;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
+import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
 import com.rimalholdings.expensemanager.helper.VendorHelper;
 import com.rimalholdings.expensemanager.service.VendorService;
 import com.rimalholdings.expensemanager.util.DateTimeUtil;
@@ -39,46 +40,62 @@ public String saveOrUpdateEntity(BaseDTOInterface dtoInterface) {
 @Override
 public VendorEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	Vendor vendor = (Vendor) dtoInterface;
+	VendorEntity vendorEntity = getOrCreateVendorEntity(vendor);
 
+	updateEntityIfNotNull(vendorEntity, vendor);
+
+	return vendorEntity;
+}
+
+private VendorEntity getOrCreateVendorEntity(Vendor vendor) {
 	VendorEntity vendorEntity = getEntityForUpdate(vendor.getId());
 	if (vendorEntity == null) {
 	vendorEntity = new VendorEntity();
 	vendorEntity.setCreatedDate(DateTimeUtil.getCurrentTimeInUTC());
 	}
-
 	vendorEntity.setUpdatedDate(DateTimeUtil.getCurrentTimeInUTC());
+	return vendorEntity;
+}
 
-	// Map fields from VendorDTO to VendorEntity
-	vendorEntity.setId(vendor.getId());
-	vendorEntity.setName(vendor.getName());
+private void updateEntityIfNotNull(VendorEntity vendorEntity, Vendor vendor) {
+	setIfNotNull(vendor::getId, vendorEntity::setId);
+	setIfNotNull(vendor::getName, vendorEntity::setName);
+	setIfNotNull(vendor::getVendorType, vendorEntity::setVendorType);
+	setIfNotNull(vendor::getAddress1, vendorEntity::setAddress1);
+	setIfNotNull(vendor::getAddress2, vendorEntity::setAddress2);
+	setIfNotNull(vendor::getCity, vendorEntity::setCity);
+	setIfNotNull(vendor::getState, vendorEntity::setState);
+	setIfNotNull(vendor::getZip, vendorEntity::setZip);
 
-	if (vendor.getExternalId() == null) {
-	vendorEntity.setExternalId(VendorHelper.generateVendorId(vendor.getName(), vendor.getZip()));
-	} else {
-	vendorEntity.setExternalId(vendor.getExternalId());
-	}
-	vendorEntity.setVendorType(vendor.getVendorType());
-	vendorEntity.setAddress1(vendor.getAddress1());
-	vendorEntity.setAddress2(vendor.getAddress2());
-	vendorEntity.setCity(vendor.getCity());
-	vendorEntity.setState(vendor.getState());
-	vendorEntity.setZip(vendor.getZip());
 	if (vendor.getPhone() != null) {
 	vendorEntity.setPhone(VendorHelper.sanitizePhoneNumber(vendor.getPhone()));
 	}
 
-	if (vendor.getEmail() != null) {
-	if (VendorHelper.isValidEmail(vendor.getEmail())) {
-		vendorEntity.setEmail(vendor.getEmail());
-	}
+	if (vendor.getEmail() != null && VendorHelper.isValidEmail(vendor.getEmail())) {
+	vendorEntity.setEmail(vendor.getEmail());
 	}
 
-	return vendorEntity;
+	handleExternalId(vendorEntity, vendor);
+}
+
+private void handleExternalId(VendorEntity vendorEntity, Vendor vendor) {
+	if (vendor.getExternalId() == null && vendor.getName() != null && vendor.getZip() != null) {
+	vendorEntity.setExternalId(VendorHelper.generateVendorId(vendor.getName(), vendor.getZip()));
+	} else if (vendor.getExternalId() != null) {
+	vendorEntity.setExternalId(vendor.getExternalId());
+	}
+	// No else part, as we don't update externalId if it's null in DTO
 }
 
 @Override
 public void deleteEntity(Long id) {
+	VendorEntity vendorEntity = getEntityForUpdate(id);
+	if (vendorEntity != null && vendorEntity.getExpenses().isEmpty()) {
 	vendorService.deleteById(id);
+	} else {
+	throw new UpdateNotAllowedException(
+		"Vendor cannot be deleted because it is already associated with an expense");
+	}
 }
 
 @Override

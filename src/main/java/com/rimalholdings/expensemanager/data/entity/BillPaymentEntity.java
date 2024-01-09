@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,6 +23,7 @@ import lombok.ToString;
 @Entity
 @Data
 @Table(name = "billpayment")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BillPaymentEntity extends BaseEntity {
 
 @ManyToMany(cascade = jakarta.persistence.CascadeType.PERSIST)

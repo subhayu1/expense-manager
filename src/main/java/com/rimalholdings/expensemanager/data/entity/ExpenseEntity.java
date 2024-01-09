@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -20,11 +22,16 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "expense")
 public class ExpenseEntity extends BaseEntity {
 
-@JoinColumn(name = "vendorid", referencedColumnName = "id")
+@JsonIdentityReference(
+	alwaysAsId = true) // This annotation changes the serialization from an object to its id
 @ManyToOne
+@ToString.Exclude
+// @JsonManagedReference(value = "vendorid")
+@JoinColumn(name = "vendorid", referencedColumnName = "id")
 private VendorEntity vendor;
 
 @Column(name = "totalamount")

@@ -189,6 +189,8 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
 | duedate      | datetime(6)   | The due date of the expense. |
 | description  | varchar(255)  | The description of the expense. |
 | createddate  | timestamp     | The date when the expense was created. |
+| updateddate  | timestamp     | The date when the expense was last updated. |
+| paymentstatus| int           | The status of the payment. 1 for partially paid, 2 for fully paid, 3 for unpaid. |
 
 ## Contributing
 

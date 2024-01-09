@@ -21,7 +21,3 @@ BEGIN
   FLUSH PRIVILEGES;
 END//
 DELIMITER ;
-
-CALL CreateDatabaseAndUsers();
-
-

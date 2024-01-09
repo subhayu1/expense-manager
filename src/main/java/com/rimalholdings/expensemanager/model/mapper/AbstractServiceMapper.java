@@ -2,6 +2,9 @@
 package com.rimalholdings.expensemanager.model.mapper;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.exception.DuplicateIdException;
@@ -34,6 +37,10 @@ public List<T> convertDtoToString(List<T> dto) {
 	} catch (JsonProcessingException e) {
 	throw new RuntimeException(e);
 	}
+}
+
+public <T> void setIfNotNull(Supplier<T> getter, Consumer<T> setter) {
+	Optional.ofNullable(getter.get()).ifPresent(setter);
 }
 
 public abstract T mapToDTO(BaseDTOInterface dtoInterface);
