@@ -53,18 +53,19 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
     ```
 3. Create Private and Public Keys for JWT token generation and verification
     ```shell
-      chmod -x ./generate-keys-for-auth.sh && ./generate-keys-for-auth.sh
+      chmod -x ./generate-keys-for-auth.sh 
+      bash -x ./generate-keys-for-auth.sh
 
     ```
 4. create the database using docker-compose. this will create the database 
     and the required users by running the init.sql script at startup 
      ```shell:
-    docker-compose up -d
+      docker-compose up -d
     ```
-5. run the Migration manually to create the tables.
-    Make sure the database is up and running and you are in the source root
+5. run the Migration manually to create the tables if needed.
+   However, Spring should auto-run the migration at startup
     ```shell
-    ./gradlew flywayMigrate
+    ./gradlew flywayInfo
     ```
 6. Build the project using Maven or Gradle(recommended)
 
