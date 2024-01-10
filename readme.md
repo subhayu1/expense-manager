@@ -40,11 +40,11 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
 
     ```shell
     # using HTTPS
-    git clone https://github.com/subhayu1/expense-manager.git
+    git clone -b release/v1.5-rc1 https://github.com/subhayu1/expense-manager.git
     ```
     ```shell
     # using SSH
-    git clone git@github.com:subhayu1/expense-manager.git
+    git clone -b release/v1.5-rc1 git@github.com:subhayu1/expense-manager.git
     ```
 
 2. Navigate to the project directory and create the log file.
