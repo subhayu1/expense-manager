@@ -49,7 +49,7 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
 2. Navigate to the project directory:
 
     ```shell
-    cd expense-manager
+    cd expense-manager && touch logs/app.log
     ```
 3. Create Private and Public Keys for JWT token generation and verification
     ```shell

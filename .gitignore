@@ -3,8 +3,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-/logs/app.log
-/logs/*.log.*
+/logs/*
+!/logs/.gitkeep
 .DS_Store
 /src/main/resources/certs/*.pem
 ### STS ###
