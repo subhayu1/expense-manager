@@ -69,6 +69,37 @@ void testIntegDeleteVendorShouldReturnDeletedVendor() {
 	assertEquals("Vendor deleted", responseString);
 }
 
+@Test
+void testIntegUpdateVendorShouldReturnUpdatedVendor() {
+	String responseString = putResponseString();
+	assertNotNull(responseString);
+}
+
+private String putResponseString() {
+	return given()
+		.header("Authorization", "Bearer " + getToken())
+		.contentType(ContentType.JSON)
+		.body(vendorPutRequestString())
+		.when()
+		.put(BASE_ENTITY_URL)
+		.then()
+		.statusCode(200)
+		.extract()
+		.asString();
+}
+
+private String vendorPutRequestString() {
+	Long vendorId = vendorRepository.findAll().get(0).getId();
+	return """
+				{
+						"id": %s,
+						"name": "Apple Inc",
+						"address1": "1 Apple Park Way-updated",
+						"vendorType": 2
+				}"""
+		.formatted(vendorId);
+}
+
 protected String postResponseString(String url) {
 	return given()
 		.header("Authorization", "Bearer " + getToken())
