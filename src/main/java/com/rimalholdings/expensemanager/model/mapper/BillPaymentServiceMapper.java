@@ -99,7 +99,7 @@ protected void processExpensePayments(
 		log.info("amount due: {}", expenseEntity.getAmountDue());
 		log.info("payment amount: {}", paymentAmount);
 
-		//check to see if payment amount is greater than amount due and throw exception if it is
+		// check to see if payment amount is greater than amount due and throw exception if it is
 		handleOverPayment(paymentAmount, expenseEntity.getAmountDue());
 
 		updatePaymentStatus(paymentAmount, expenseEntity, billPaymentEntity);
@@ -142,7 +142,7 @@ private void updateDueAmount(BigDecimal paymentAmount, ExpenseEntity expenseEnti
 	ExpenseEntity existingExpenseEntity = expenseService.findById(expenseEntity.getId());
 	if (expenseEntity.getAmountDue().compareTo(BigDecimal.ZERO) == ZERO) {
 	throw new CannotOverpayExpenseException(
-			String.format("Expense: %s already paid in full", expenseEntity.getId()));
+		String.format("Expense: %s already paid in full", expenseEntity.getId()));
 	}
 	if (existingExpenseEntity.getAmountDue().compareTo(paymentAmount) == 0) {
 	expenseEntity.setAmountDue(BigDecimal.ZERO);
@@ -206,15 +206,14 @@ private Integer setPaymentStatusOnExpense(BigDecimal paymentAmount, BigDecimal a
 	return UNPAID;
 	}
 }
+
 private void handleOverPayment(BigDecimal paymentAmount, BigDecimal amountDue) {
 	if (paymentAmount.compareTo(amountDue) > 0) {
 
-		throw new CannotOverpayExpenseException(
-				String.format(
-						"Payment amount cannot be greater than amount due. Payment amount: %s, amount due: %s",
-						paymentAmount,
-						amountDue)
-		);
+	throw new CannotOverpayExpenseException(
+		String.format(
+			"Payment amount cannot be greater than amount due. Payment amount: %s, amount due: %s",
+			paymentAmount, amountDue));
 	}
 }
 }

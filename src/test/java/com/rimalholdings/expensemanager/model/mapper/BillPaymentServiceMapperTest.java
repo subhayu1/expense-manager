@@ -104,6 +104,15 @@ void testPaymentAmountAndExpensePaymentMismatchShouldThrowIllegalArgumentExcepti
 	assertThrows(RuntimeException.class, () -> billPaymentMapper.mapToDTO(billPayment));
 }
 
+@Test
+void testShouldThrowCannotOverpayExceptionWhenPaymentAmountIsGreaterThanTotalAmount() {
+	expensePaymentMap.put("1", BigDecimal.valueOf(50));
+	expensePaymentMap.put("2", BigDecimal.valueOf(50));
+	billPayment.setPaymentAmount(BigDecimal.valueOf(300));
+
+	assertThrows(RuntimeException.class, () -> billPaymentMapper.mapToDTO(billPayment));
+}
+
 private BillPayment createBillPayment() {
 	BillPayment billPayment = new BillPayment();
 	billPayment.setPaymentAmount(BigDecimal.valueOf(100));
