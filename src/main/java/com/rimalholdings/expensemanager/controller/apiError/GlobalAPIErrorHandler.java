@@ -37,7 +37,8 @@ public Map<String, String> handleObjectNotFoundException(ObjectNotFoundException
 @ExceptionHandler({
 	IdNotSuppliedException.class,
 	DuplicateIdException.class,
-	CannotOverpayExpenseException.class
+	CannotOverpayExpenseException.class,
+	IllegalArgumentException.class
 })
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public Map<String, String> handleException(RuntimeException e) {
