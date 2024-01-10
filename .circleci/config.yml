@@ -27,6 +27,9 @@ jobs:
           keys:
             - gradle-cache-{{ checksum "build.gradle.kts" }}
       - run:
+         name: Run Spotless check
+         command: ./gradlew spotlessCheck
+      - run:
           name: Run Unit Tests
           command: ./gradlew test
       - run:
