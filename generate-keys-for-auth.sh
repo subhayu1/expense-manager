@@ -1,7 +1,6 @@
 #!/usr/bin/env sh
 
 # Create the directory for the keys
-mkdir -p ./src/main/resources/certs
 
 # Navigate to the directory
 cd ./src/main/resources/certs
