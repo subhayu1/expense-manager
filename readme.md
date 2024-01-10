@@ -23,9 +23,18 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
 ## Prerequisites
 
 - Java Development Kit (JDK) 17 or higher
-- Docker engine (Docker Desktop-optional)
+-  install Amazon Corretto 17 JDK from
+   https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html 
+   if needed (optional if you don't currently have JDK 17 installed)
+- Docker engine with docker-compose
+- make sure the following ports are available:
+    - 8080 for the application
+    - 3306 for MySQL database
+- make sure JAVA_HOME is set to the JDK 17 or higher installation directory 
+  if you plan to run it from the command line
+
 ## Getting Started
-- Recommended build tool is `Gradle` using the Gradle wrapper.
+- Recommended build tool is `Gradle` using the Gradle wrapper(`./gradlew`).
 
 1. Clone the repository using either HTTPS or SSH:
 
@@ -44,30 +53,20 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
     ```
 3. Create Private and Public Keys for JWT token generation and verification
     ```shell
-    #create a folder to store the keys
-    mkdir -p ./src/main/resources/certs
-   #navigate to the folder
-    cd ./src/main/resources/certs
-    #create the keys
-   
-    openssl genrsa -out keypair.pem 2048
+      chmod -x ./generate-keys-for-auth.sh && ./generate-keys-for-auth.sh
 
-    openssl rsa -in keypair.pem -pubout -out public.pem
-
-    # create private key in PKCS#8 format
-    openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem
     ```
-3. Create SQL users and database by running the following script 
-    OR use a SQL client like MySQL Workbench to create the users
-    and database using the SQL scripts in the `src/main/resources` folder:
-
-    ```shell
-
-    ```shell
-    chmod +x create-db-schema-and-users.sh
-    ./create-db-schema-and-users.sh
+4. create the database using docker-compose. this will create the database 
+    and the required users by running the init.sql script at startup 
+     ```shell:
+    docker-compose up -d
     ```
-4. Build the project using Maven or Gradle(recommended)
+5. run the Migration manually to create the tables.
+    Make sure the database is up and running and you are in the source root
+    ```shell
+    ./gradlew flywayMigrate
+    ```
+6. Build the project using Maven or Gradle(recommended)
 
     ```shell
     mvn clean install
@@ -77,7 +76,7 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
     ./gradlew clean build
     ```
 
-5. Run the application using Maven or Gradle(recommended). 
+7. Run the application using Maven or Gradle(recommended). 
    Flyway will automatically create the database tables
 
     ```shell
@@ -88,7 +87,7 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
     ./gradlew bootRun
     ```
 
-6. Access the application in your web browser:
+8. Access the application in your web browser:
 
     ```
     http://localhost:8080
@@ -98,12 +97,13 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
 - Import the postman collection from the `src/main/resources` folder.
 - Alternatively the following link can be used to access the collection:
     ```
-  https://cloudy-crescent-918423.postman.co/workspace/bdc-test~e452b3c0-02df-4d29-8696-6f25acd758e0/collection/9714675-dac75db9-246b-4a8d-9021-f45d66a118a1?action=share&creator=9714675&active-environment=9714675-13aefe8b-d67a-4eb4-a9fe-05f075d17236
-    ```
+  https://api.postman.com/collections/9714675-dac75db9-246b-4a8d-9021-f45d66a118a1?access_key=PMAT-01HKRC3JTDZ20ZS57ZBD3GXCH3
+   ```
+  
 - First, get the access token by sending a POST request to the following URL using basic auth with username: admin and password: password:
 
     ```
-    http://localhost:8080/token
+    http://localhost:8080/auth/token
     ```
 
 - Copy the access token from the response if you want to use Swagger UI.
@@ -119,7 +119,7 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
 - Call the APIs to test the functionality.
 
 ## Using Docker Image to run the application
---TBD
+-- Not implemented yet --
 
 ## Testing
 - Unit tests are written using JUnit 5 and Mockito.
@@ -134,7 +134,7 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
     ```shell
     ./gradlew clean test
     ```
-- To run integration test( only implemented with Gradle) run the following command:
+- To run integration test (only implemented with Gradle) run the following command:
 
     ```shell
     ./gradlew  testInteg
@@ -143,7 +143,6 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
  
    ```shell
     ./gradlew flywayMigrate
-    
     ```
 ## CI Pipeline
 - CircleCI is used for CI pipeline.
