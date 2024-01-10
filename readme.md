@@ -41,12 +41,13 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
     ```shell
     # using HTTPS
     git clone https://github.com/subhayu1/expense-manager.git
-
+    ```
+    ```shell
     # using SSH
     git clone git@github.com:subhayu1/expense-manager.git
     ```
 
-2. Navigate to the project directory:
+2. Navigate to the project directory and create the log file.
 
     ```shell
     cd expense-manager && touch logs/app.log
@@ -54,8 +55,9 @@ It provides functionality for tracking and managing expenses, vendors, and bill 
 3. Create Private and Public Keys for JWT token generation and verification
     ```shell
       chmod -x ./generate-keys-for-auth.sh 
+   ```
+   ```shell
       bash -x ./generate-keys-for-auth.sh
-
     ```
 4. create the database using docker-compose. this will create the database 
     and the required users by running the init.sql script at startup 
