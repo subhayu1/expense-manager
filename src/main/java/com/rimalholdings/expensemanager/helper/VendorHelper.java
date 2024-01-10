@@ -14,18 +14,12 @@ public static String generateVendorId(String name, Integer zipCode) {
 	String[] nameParts = name.split(" ");
 	StringBuilder vendorId = new StringBuilder();
 
-	vendorId.append(nameParts[0].charAt(0));
-	vendorId.append(nameParts[0].charAt(nameParts[0].length() - 1));
-
-	if (nameParts.length == 2) {
-	vendorId.setLength(1); // Reset to only first character
-	vendorId.append(nameParts[1]);
-	} else if (nameParts.length != 1) {
-	vendorId.append(nameParts[1].charAt(0));
+	for (String part : nameParts) {
+	vendorId.append(part.charAt(0));
 	}
 
 	vendorId.append(zipCode);
-	return vendorId.toString().toLowerCase();
+	return vendorId.toString().toUpperCase();
 }
 
 private static Integer randomInt() {

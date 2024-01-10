@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.Expense;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
+import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
 import com.rimalholdings.expensemanager.service.ExpenseService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -132,5 +133,43 @@ void getAllEntities_ValidPageable_ReturnsExpenseServiceFindAll() {
 
 	// Assert
 	assertEquals(expectedPage, result);
+}
+
+@Test
+void testUpdatingPartiallyOrFullyPaidExpenseThrowsUpdateNotAllowedException() {
+	// Arrange
+	ExpenseEntity expenseEntity = new ExpenseEntity();
+	Expense expense = new Expense();
+	expense.setId(1L);
+	expense.setDueDate("2022-01-01 12:00:00");
+	BigDecimal totalAmount = BigDecimal.valueOf(100).round(new MathContext(2));
+	expense.setTotalAmount(totalAmount);
+	expense.setVendorId(1L);
+	expense.setDescription("Test Expense");
+
+	expenseEntity.setPaymentStatus(1);
+	expenseEntity.setAmountDue(BigDecimal.valueOf(100.00));
+	when(expenseMapper.getEntityForUpdate(expense.getId())).thenReturn(expenseEntity);
+	when(expenseService.save(expenseEntity)).thenReturn(expenseEntity);
+
+	// Act & Assert
+	assertThrows(UpdateNotAllowedException.class, () -> expenseMapper.saveOrUpdateEntity(expense));
+}
+
+@Test
+void testDeletingPartiallyOrFullyPaidExpenseThrowsUpdateNotAllowedException() {
+	// Arrange
+	ExpenseEntity expenseEntity = new ExpenseEntity();
+	Expense expense = new Expense();
+	expense.setId(1L);
+	expense.setDueDate("2022-01-01 12:00:00");
+	BigDecimal totalAmount = BigDecimal.valueOf(100).round(new MathContext(2));
+	expense.setTotalAmount(totalAmount);
+	expense.setVendorId(1L);
+	expenseEntity.setPaymentStatus(1);
+	expense.setDescription("Test Expense");
+	when(expenseService.findById(expense.getId())).thenReturn(expenseEntity);
+	assertThrows(
+		UpdateNotAllowedException.class, () -> expenseMapper.deleteEntity(expense.getId()));
 }
 }

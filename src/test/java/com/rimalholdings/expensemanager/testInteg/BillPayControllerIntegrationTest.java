@@ -57,20 +57,35 @@ void testIntegGetBillPayByIdShouldReturnBillPay() {
 private String billPaymentBody() {
 	Long vendorEntity = vendorRepository.findAll().get(0).getId();
 	String expenseId = expenseRepository.findAll().get(0).getId().toString();
-	return "{\n"
-		+ "  \"paymentAmount\": 100,\n"
-		+ "  \"paymentMethod\": 1,\n"
-		+ "  \"paymentReference\": \"123\",\n"
-		+ "  \"paymentDate\": \"2021-09-01 00:00:00.0\",\n"
-		+ "  \"vendorId\": "
-		+ vendorEntity
-		+ ",\n"
-		+ "  \"expensePayments\": {\n"
-		+ "    \""
-		+ expenseId
-		+ "\": 100\n"
-		+ "  }\n"
-		+ "}";
+	return """
+						{
+					"paymentAmount": 100,
+					"paymentMethod": 1,
+					"paymentReference": "123",
+					"paymentDate": "2021-09-01 00:00:00.0",
+					"vendorId": %s,
+"expensePayments": {
+						"%s": 100
+					}
+					}
+
+					"""
+		.formatted(vendorEntity, expenseId);
+
+	//	return "{\n"
+	//		+ "  \"paymentAmount\": 100,\n"
+	//		+ "  \"paymentMethod\": 1,\n"
+	//		+ "  \"paymentReference\": \"123\",\n"
+	//		+ "  \"paymentDate\": \"2021-09-01 00:00:00.0\",\n"
+	//		+ "  \"vendorId\": "
+	//		+ vendorEntity
+	//		+ ",\n"
+	//		+ "  \"expensePayments\": {\n"
+	//		+ "    \""
+	//		+ expenseId
+	//		+ "\": 100\n"
+	//		+ "  }\n"
+	//		+ "}";
 }
 
 private String billPayPostResponseString(String url) {

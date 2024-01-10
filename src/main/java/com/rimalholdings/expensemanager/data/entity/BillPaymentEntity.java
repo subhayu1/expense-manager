@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
@@ -56,5 +57,8 @@ private Timestamp paymentDate;
 
 @JoinColumn(name = "vendorid", referencedColumnName = "id")
 @ManyToOne
+@JsonIdentityReference(
+	alwaysAsId = true) // This annotation changes the serialization from an object to its id
+@ToString.Exclude
 private VendorEntity vendor;
 }

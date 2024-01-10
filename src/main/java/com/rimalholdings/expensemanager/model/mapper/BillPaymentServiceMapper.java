@@ -33,6 +33,13 @@ private static final Integer ZERO = 0;
 private final BillPaymentService billPaymentService;
 private final ExpenseService expenseService;
 
+private static final Integer PARTIALLY_PAID = 1;
+private static final Integer PAID = 2;
+private static final Integer UNPAID = 3;
+private static final Integer UNAPPLIED = 3;
+private static final Integer FULLY_APPLIED = 2;
+private static final Integer PARTIALLY_APPLIED = 1;
+
 protected BillPaymentServiceMapper(
 	ObjectMapper objectMapper,
 	BillPaymentService billPaymentService,
@@ -129,13 +136,14 @@ private void updatePaymentStatus(
 }
 
 private void updateDueAmount(BigDecimal paymentAmount, ExpenseEntity expenseEntity) {
+	ExpenseEntity existingExpenseEntity = expenseService.findById(expenseEntity.getId());
 	if (expenseEntity.getAmountDue().compareTo(BigDecimal.ZERO) == ZERO) {
 	throw new CannotOverpayExpenseException("Expense already paid in full");
 	}
-	if (expenseEntity.getAmountDue().compareTo(paymentAmount) == 0) {
+	if (existingExpenseEntity.getAmountDue().compareTo(paymentAmount) == 0) {
 	expenseEntity.setAmountDue(BigDecimal.ZERO);
 	} else {
-	expenseEntity.setAmountDue(expenseEntity.getTotalAmount().subtract(paymentAmount));
+	expenseEntity.setAmountDue(existingExpenseEntity.getAmountDue().subtract(paymentAmount));
 	}
 }
 
@@ -175,23 +183,23 @@ public BillPaymentEntity getEntityForUpdate(Long id) {
 private Integer paymentApplicationStatus(BigDecimal paymentAmount, BigDecimal amountDue) {
 	// paymentapplicationstatus int not null COMMENT '1=partially applied ,2=fully applied
 	// ,3=unapplied'
-	if (paymentAmount.compareTo(amountDue) == 0) {
-	return 2;
-	} else if (paymentAmount.compareTo(amountDue) == 1) {
-	return 1;
+	if (paymentAmount.equals(amountDue)) {
+	return FULLY_APPLIED;
+	} else if (paymentAmount.compareTo(amountDue) < 0) {
+	return PARTIALLY_APPLIED;
 	} else {
-	return 3;
+	return UNAPPLIED;
 	}
 }
 
 private Integer setPaymentStatusOnExpense(BigDecimal paymentAmount, BigDecimal amountDue) {
 	// paymentstatus int not null COMMENT '1=partially paid ,2=fully paid ,3=unpaid, 4=unknown'
-	if (paymentAmount.compareTo(amountDue) == 0) {
-	return 2;
-	} else if (paymentAmount.compareTo(amountDue) == 1) {
-	return 1;
+	if (paymentAmount.equals(amountDue)) {
+	return PAID;
+	} else if (paymentAmount.compareTo(amountDue) < 0) {
+	return PARTIALLY_PAID;
 	} else {
-	return 3;
+	return UNPAID;
 	}
 }
 }

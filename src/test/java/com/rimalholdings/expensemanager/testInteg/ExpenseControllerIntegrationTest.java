@@ -61,6 +61,13 @@ void testIntegDeleteExpenseShouldReturn200() {
 	assertNotNull(deleteResponse);
 }
 
+@Test
+void testIntegUpdateExpenseShouldReturnUpdatedExpense() {
+	createExpenseEntity();
+	String putResponse = putRequest();
+	assertNotNull(putResponse);
+}
+
 private String postRequest() {
 	return given()
 		.header("Authorization", "Bearer " + getToken())
@@ -74,16 +81,42 @@ private String postRequest() {
 		.asString();
 }
 
+private String putRequest() {
+	return given()
+		.header("Authorization", "Bearer " + getToken())
+		.contentType(ContentType.JSON)
+		.body(expensePutRequestString())
+		.when()
+		.put(BASE_ENTITY_URL)
+		.then()
+		.statusCode(200)
+		.extract()
+		.asString();
+}
+
 private String expensePostRequestString() {
 	Long vendorId = vendorRepository.findAll().get(0).getId();
+	return """
+				{
+						"vendorId": %s,
+						"totalAmount": 100,
+						"description": "test",
+						"dueDate": "2024-11-22 12:00:00.0"
+				}"""
+		.formatted(vendorId);
+}
 
-	return "{\n"
-		+ "  \"vendorId\": "
-		+ vendorId
-		+ ",\n"
-		+ "  \"totalAmount\": 100,\n"
-		+ "  \"description\": \"test\",\n"
-		+ "  \"dueDate\": \"2024-11-22 12:00:00.0\"\n"
-		+ "}";
+private String expensePutRequestString() {
+	Long vendorId = vendorRepository.findAll().get(0).getId();
+
+	return """
+							{
+						"id": 1,
+						"vendorId": %s,
+						"totalAmount": 100,
+						"description": "test",
+						"dueDate": "2024-11-22 12:00:00.0"
+				}"""
+		.formatted(vendorId);
 }
 }

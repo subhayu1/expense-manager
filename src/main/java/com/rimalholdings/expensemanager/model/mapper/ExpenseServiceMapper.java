@@ -49,7 +49,7 @@ private ExpenseEntity getOrCreateExpenseEntity(Expense expense) {
 	expenseEntity = new ExpenseEntity();
 	expenseEntity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	expenseEntity.setPaymentAmount(BigDecimal.ZERO);
-	expenseEntity.setPaymentStatus(UNPAID); // Assuming UNPAID is a constant for default status
+	expenseEntity.setPaymentStatus(UNPAID);
 	} else {
 	dontAllowPartiallyPaidOrPaidExpensesToBeUpdated(expenseEntity);
 	}
@@ -97,8 +97,15 @@ public void deleteEntity(Long id) {
 	if (expenseEntity != null
 		&& (Objects.equals(expenseEntity.getPaymentStatus(), PARTIALLY_PAID)
 			|| Objects.equals(expenseEntity.getPaymentStatus(), PAID))) {
+	log.info(
+		"Expense with ID {} cannot be deleted because it is {}",
+		id,
+		expenseEntity.getPaymentStatus().equals(PARTIALLY_PAID) ? "partially paid" : "paid");
 	throw new UpdateNotAllowedException(
-		"Expense cannot be deleted because it is already paid or partially paid");
+		String.format(
+			"Expense with ID %s cannot be deleted because it is %s",
+			id,
+			expenseEntity.getPaymentStatus().equals(PARTIALLY_PAID) ? "partially paid" : "paid"));
 	}
 	expenseService.deleteById(id);
 }
