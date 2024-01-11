@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,34 +25,34 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/bill-payment")
 public class BillPaymentController implements APIControllerInterface {
 
-private final BillPaymentServiceMapper billPaymentMapper;
+	private final BillPaymentServiceMapper billPaymentMapper;
 
-public BillPaymentController(BillPaymentServiceMapper billPaymentMapper) {
-	this.billPaymentMapper = billPaymentMapper;
-}
-
-@PostMapping("/")
-public ResponseEntity<String> createBillPayment(@RequestBody BillPayment billPayment) {
-	log.info("Creating new bill payment: {}", billPayment);
-	if (billPayment.getId() != null) {
-	throw new UpdateNotAllowedException("Not allowed to update bill payment");
+	public BillPaymentController(BillPaymentServiceMapper billPaymentMapper) {
+		this.billPaymentMapper = billPaymentMapper;
 	}
-	String createdBillPayment = billPaymentMapper.saveOrUpdateEntity(billPayment);
-	return ResponseEntity.status(HttpStatus.CREATED).body(createdBillPayment);
-}
 
-@GetMapping("/")
-public ResponseEntity<Page<BillPaymentEntity>> getAllBillPayments(
-	@ParameterObject Pageable pageable) {
-	log.info("Getting all bill payments");
-	Page<BillPaymentEntity> allBillPayments = billPaymentMapper.getAllEntities(pageable);
-	return ResponseEntity.ok(allBillPayments);
-}
+	@PostMapping("/")
+	public ResponseEntity<String> createBillPayment(@RequestBody BillPayment billPayment) {
+		log.info("Creating new bill payment: {}", billPayment);
+		if (billPayment.getId() != null) {
+			throw new UpdateNotAllowedException("Not allowed to update bill payment");
+		}
+		String createdBillPayment = billPaymentMapper.saveOrUpdateEntity(billPayment);
+		return ResponseEntity.status(HttpStatus.CREATED).body(createdBillPayment);
+	}
 
-@GetMapping("/{billPaymentId}")
-public ResponseEntity<String> getBillPayment(@PathVariable Long billPaymentId) {
-	log.info("Getting bill payment with id: {}", billPaymentId);
-	String billPayment = billPaymentMapper.getEntity(billPaymentId);
-	return ResponseEntity.ok(billPayment);
-}
+	@GetMapping("/")
+	public ResponseEntity<Page<BillPaymentEntity>> getAllBillPayments(
+			@ParameterObject Pageable pageable) {
+		log.info("Getting all bill payments");
+		Page<BillPaymentEntity> allBillPayments = billPaymentMapper.getAllEntities(pageable);
+		return ResponseEntity.ok(allBillPayments);
+	}
+
+	@GetMapping("/{billPaymentId}")
+	public ResponseEntity<String> getBillPayment(@PathVariable Long billPaymentId) {
+		log.info("Getting bill payment with id: {}", billPaymentId);
+		String billPayment = billPaymentMapper.getEntity(billPaymentId);
+		return ResponseEntity.ok(billPayment);
+	}
 }
