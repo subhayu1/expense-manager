@@ -124,7 +124,7 @@ protected VendorEntity saveVendorEntity() {
 	vendorEntity.setId(1L);
 	vendorEntity.setName("test");
 	vendorEntity.setAddress1("test");
-	vendorEntity.setZip(12345);
+	vendorEntity.setZip("12345");
 	vendorEntity.setCity("test");
 	vendorEntity.setCreatedDate(DateTimeUtil.getCurrentTimeInUTC());
 	vendorEntity.setUpdatedDate(DateTimeUtil.getCurrentTimeInUTC());

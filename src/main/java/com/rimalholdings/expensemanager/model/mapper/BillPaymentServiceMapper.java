@@ -184,12 +184,12 @@ public BillPaymentEntity getEntityForUpdate(Long id) {
 	return null;
 }
 
-	@Override
-	public String getEntityFromSyncService(Integer externalOrgId) {
-		return null;
-	}
+@Override
+public String getEntityFromSyncService(Integer externalOrgId) {
+	return null;
+}
 
-	private Integer paymentApplicationStatus(BigDecimal paymentAmount, BigDecimal amountDue) {
+private Integer paymentApplicationStatus(BigDecimal paymentAmount, BigDecimal amountDue) {
 	// paymentapplicationstatus int not null COMMENT '1=partially applied ,2=fully applied
 	// ,3=unapplied'
 	if (paymentAmount.equals(amountDue)) {
