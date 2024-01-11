@@ -10,7 +10,7 @@ class VendorHelperTest {
 void testGenerateVendorIdWithTwoNames() {
 
 	String name = "name value";
-	Integer zipCode = 12345;
+	String zipCode = "12345";
 	String result = VendorHelper.generateVendorId(name, zipCode);
 	assertEquals("NV12345", result);
 }
@@ -19,7 +19,7 @@ void testGenerateVendorIdWithTwoNames() {
 void testGenerateVendorIdWithOneName() {
 
 	String name = "name";
-	Integer zipCode = 12345;
+	String zipCode = "12345";
 	String result = VendorHelper.generateVendorId(name, zipCode);
 	assertEquals("N12345", result);
 }
@@ -28,7 +28,7 @@ void testGenerateVendorIdWithOneName() {
 void testGenerateVendorIdWithThreeNames() {
 
 	String name = "name value other";
-	Integer zipCode = 12345;
+	String zipCode = "12345";
 	String result = VendorHelper.generateVendorId(name, zipCode);
 	assertEquals("NVO12345", result);
 }

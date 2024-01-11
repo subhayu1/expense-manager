@@ -10,7 +10,7 @@ public class VendorHelper {
 private static final Integer VENDOR_ID_SEED = 10000;
 private static final Integer VENDOR_ID_MAX = 99999;
 
-public static String generateVendorId(String name, Integer zipCode) {
+public static String generateVendorId(String name, String zipCode) {
 	String[] nameParts = name.split(" ");
 	StringBuilder vendorId = new StringBuilder();
 

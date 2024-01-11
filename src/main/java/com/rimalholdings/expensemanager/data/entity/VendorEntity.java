@@ -42,8 +42,10 @@ private String city;
 @Column(name = "state", length = 2)
 private String state;
 
-@Column(name = "zip", length = 5)
-private int zip;
+@Column(name = "zip", length = 15)
+private String zip;
+@Column(name = "country", length = 100)
+private String country;
 
 @Column(name = "phone", length = 10)
 private String phone;
@@ -56,6 +58,9 @@ private java.sql.Timestamp createdDate;
 
 @Column(name = "updateddate", nullable = false)
 private java.sql.Timestamp updatedDate;
+
+@Column(name="externalorgid")
+private Integer externalOrgId;
 
 @OneToMany(mappedBy = "vendor")
 @ToString.Exclude

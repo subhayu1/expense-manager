@@ -3,6 +3,7 @@ package com.rimalholdings.expensemanager.model.mapper;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.Vendor;
+import com.rimalholdings.expensemanager.data.dto.sync.VendorResponse;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
 import com.rimalholdings.expensemanager.helper.VendorHelper;
@@ -10,10 +11,14 @@ import com.rimalholdings.expensemanager.service.VendorService;
 import com.rimalholdings.expensemanager.util.DateTimeUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 @Slf4j(topic = "VendorServiceMapper")
@@ -66,6 +71,7 @@ private void updateEntityIfNotNull(VendorEntity vendorEntity, Vendor vendor) {
 	setIfNotNull(vendor::getCity, vendorEntity::setCity);
 	setIfNotNull(vendor::getState, vendorEntity::setState);
 	setIfNotNull(vendor::getZip, vendorEntity::setZip);
+	setIfNotNull(vendor::getCountry, vendorEntity::setCountry);
 
 	if (vendor.getPhone() != null) {
 	vendorEntity.setPhone(VendorHelper.sanitizePhoneNumber(vendor.getPhone()));
@@ -116,5 +122,35 @@ public VendorEntity getEntityForUpdate(Long id) {
 	} catch (Exception e) {
 	return null;
 	}
+}
+
+	@Override
+	public String getEntityFromSyncService(Integer externalOrgId) {
+		return null;
+	}
+public void fetchAndSaveVendors(Integer externalOrgId) {
+    RestTemplate restTemplate = new RestTemplate();
+
+    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://localhost:8090/api/v1/sync/get/vendors")
+        .queryParam("organizationId", externalOrgId);
+
+    try {
+        restTemplate.getForEntity(builder.toUriString(), VendorResponse.class);
+    } catch (NullPointerException npe) {
+        throw new RuntimeException("No vendors found for organizationId: " + externalOrgId);
+    }
+    ResponseEntity<VendorResponse> response = restTemplate.getForEntity(builder.toUriString(), VendorResponse.class);
+    if (response.getBody() == null) {
+        throw new RuntimeException("No vendors found for organizationId: " + externalOrgId);
+    }
+
+	List<Vendor> vendors = response.getBody().getVendors();
+    if(vendors.isEmpty()) {
+        throw new RuntimeException("No vendors found for organizationId: " + externalOrgId);
+    }
+
+    for (Vendor vendor : vendors) {
+				 saveOrUpdateEntity(vendor);
+    }
 }
 }
