@@ -10,17 +10,21 @@ create table vendor
 (
     id         bigint auto_increment primary key,
     name       varchar(255) not null,
-    externalid varchar(30)  not null unique,
+    vendornumber varchar(30)  not null unique,
+    externalorgid int null,
+    country varchar(2),
     vendortype int          comment '1=individual,2=company',
     address1   varchar(255),
     address2   varchar(255),
     city       varchar(255),
     state      varchar(2),
-    zip        int,
+    zip        varchar(10),
     phone      varchar(10),
     email      varchar(255),
     createddate TIMESTAMP,
-    updateddate TIMESTAMP
+    updateddate TIMESTAMP,
+    blocked varchar(20),
+    integrationid varchar(36) unique
 );
 
 create table billpayment
@@ -54,3 +58,5 @@ create table billpayment_expense
     billpaymentid bigint not null references billpayment (id),
     expenseid     bigint not null references expense (id)
 );
+ALTER TABLE vendor ADD INDEX idx_vendor_externalorgid (externalorgid);
+ALTER TABLE vendor ADD INDEX idx_vendor_integrationid (integrationId);

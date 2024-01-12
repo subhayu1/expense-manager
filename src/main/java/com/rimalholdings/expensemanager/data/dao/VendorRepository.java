@@ -14,4 +14,6 @@ public interface VendorRepository extends BaseRepository<VendorEntity> {
 Optional<VendorEntity> getVendorByExternalId(String vendorId);
 
 BaseDTOInterface findByExternalId(String vendorId);
+
+VendorEntity findByIntegrationId(String integrationId);
 }

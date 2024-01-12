@@ -28,7 +28,7 @@ void setUp() {
 	vendorRepository.deleteAll();
 	VendorEntity vendor = new VendorEntity();
 	vendor.setName("test");
-	vendor.setZip(12345);
+	vendor.setZip("12345");
 	vendor.setAddress1("test");
 	vendor.setExternalId("t12345");
 	vendor.setVendorType(1);

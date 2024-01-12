@@ -139,4 +139,9 @@ public ExpenseEntity getEntityForUpdate(Long id) {
 	return null;
 	}
 }
+
+@Override
+public String getEntityFromSyncService(Integer externalOrgId) {
+	return null;
+}
 }
