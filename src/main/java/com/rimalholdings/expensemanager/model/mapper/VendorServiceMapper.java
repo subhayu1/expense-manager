@@ -1,6 +1,7 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.model.mapper;
 
+import com.rimalholdings.expensemanager.config.AppConfig;
 import java.util.List;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
@@ -26,10 +27,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class VendorServiceMapper extends AbstractServiceMapper<VendorEntity> {
 
 private final VendorService vendorService;
+private final AppConfig appConfig;
 
-public VendorServiceMapper(VendorService vendorService, ObjectMapper objectMapper) {
+public VendorServiceMapper(VendorService vendorService, ObjectMapper objectMapper,
+    AppConfig appConfig) {
 	super(objectMapper);
 	this.vendorService = vendorService;
+  this.appConfig = appConfig;
 }
 
 // check the dto to see which fields are empty and if they are empty, then use the existing
@@ -153,20 +157,18 @@ public String getEntityFromSyncService(Integer externalOrgId) {
 	return null;
 }
 
-public void fetchAndSaveVendors(Integer externalOrgId) {
+public void fetchAndSaveVendors(Integer externalOrgId,String lastModifiedDateTime) {
 	RestTemplate restTemplate = new RestTemplate();
-
-	UriComponentsBuilder builder =
-		UriComponentsBuilder.fromHttpUrl("http://localhost:8090/api/v1/sync/get/vendors")
-			.queryParam("organizationId", externalOrgId);
-
+	String url = appConfig.getVendorUrl()
+			+ "?organizationId=" + externalOrgId
+			+ "&lastModifiedDateTime=" + lastModifiedDateTime;
 	try {
-	restTemplate.getForEntity(builder.toUriString(), VendorResponse.class);
+	restTemplate.getForEntity(url, VendorResponse.class);
 	} catch (NullPointerException npe) {
 	throw new RuntimeException("No vendors found for organizationId: " + externalOrgId);
 	}
 	ResponseEntity<VendorResponse> response =
-		restTemplate.getForEntity(builder.toUriString(), VendorResponse.class);
+		restTemplate.getForEntity(url, VendorResponse.class);
 	if (response.getBody() == null) {
 	throw new RuntimeException("No vendors found for organizationId: " + externalOrgId);
 	}

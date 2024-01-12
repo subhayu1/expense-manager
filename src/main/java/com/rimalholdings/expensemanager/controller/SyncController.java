@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/sync")
 @Slf4j(topic = "SyncController")
 public class SyncController {
+	private static final String DEFAULT_LAST_MODIFIED_DATE_TIME = "1970-01-01 00:00:00";
 private final VendorServiceMapper vendorMapper;
 
 public SyncController(VendorServiceMapper vendorMapper) {
@@ -20,8 +21,13 @@ public SyncController(VendorServiceMapper vendorMapper) {
 }
 
 @GetMapping("/getVendors")
-public ResponseEntity<String> getVendors(@RequestParam Integer externalOrgId) {
-	vendorMapper.fetchAndSaveVendors(externalOrgId);
+public ResponseEntity<String> getVendors(@RequestParam Integer externalOrgId, @RequestParam(required = false) String lastModifiedDateTime) {
+	//if lastModifiedDateTime is null, then set it to 1970-01-01 00:00:00
+	if (lastModifiedDateTime == null) {
+		lastModifiedDateTime = DEFAULT_LAST_MODIFIED_DATE_TIME;
+	}
+
+	vendorMapper.fetchAndSaveVendors(externalOrgId, lastModifiedDateTime);
 	return ResponseEntity.ok("Vendors fetched and saved successfully");
 }
 // @GetMapping("/syncVendors")
