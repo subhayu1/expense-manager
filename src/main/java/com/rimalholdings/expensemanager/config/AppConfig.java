@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Data
 public class AppConfig {
-  @Value("${sync-service.vendor-url}")
-  private String vendorUrl;
-
+@Value("${sync-service.vendor-url}")
+private String vendorUrl;
 }
