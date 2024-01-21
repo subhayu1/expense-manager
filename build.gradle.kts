@@ -4,7 +4,7 @@ plugins {
     `java-library`
     `maven-publish`
     id("org.springframework.boot") version "3.2.1"
-    id("io.spring.dependency-management") version "1.1.3"
+    id("io.spring.dependency-management") version "1.1.4"
     id("org.flywaydb.flyway") version "8.0.0"
     id("org.springdoc.openapi-gradle-plugin") version "1.8.0"
     id("com.diffplug.spotless") version "6.23.0"
@@ -48,14 +48,17 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation ("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.projectlombok:lombok")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-configuration-processor:2.6.2")
+    implementation("org.springframework.boot:spring-boot-actuator-autoconfigure")
+
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-mysql")
-    implementation("com.mysql:mysql-connector-j:8.2.0")
+    runtimeOnly("com.mysql:mysql-connector-j")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     compileOnly("org.projectlombok:lombok")
@@ -121,10 +124,10 @@ openApi {
     outputDir.set(file(".")) // Output directory
     outputFileName.set("swagger.yml") // Output file name
 }
-flyway {
-    configFiles = arrayOf("flyway.conf")
+//flyway {
+  //  configFiles = arrayOf("flyway.conf")
 
-}
+//}
 jacoco {
     toolVersion = "0.8.11"
     reportsDirectory = layout.buildDirectory.dir("reports/jacoco")
