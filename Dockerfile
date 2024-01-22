@@ -1,41 +1,49 @@
-# Use a different base image
-FROM ubuntu:20.04
 
-# Install dependencies
-RUN apt-get update && apt-get install -y wget gnupg2 software-properties-common
 
-# Install Amazon Corretto JDK
-RUN wget -O- https://apt.corretto.aws/corretto.key | apt-key add -
-RUN add-apt-repository 'deb https://apt.corretto.aws stable main'
-RUN apt-get update && apt-get install -y java-17-amazon-corretto-jdk
-
-# Install MySQL client
-RUN apt-get install -y mysql-client
+FROM amazoncorretto:17-alpine-jdk AS builder
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the Maven wrapper files to the container
-COPY mvnw .
-COPY .mvn .mvn
+# Copy the Gradle Wrapper files
+COPY gradlew /app/
+COPY gradle /app/gradle
+COPY build.gradle.kts /app/
+COPY settings.gradle.kts /app/
 
-# Copy the project configuration files to the container
-COPY pom.xml .
+# Copy the source code
+COPY src /app/src
 
-# Download the project dependencies
-RUN ./mvnw dependency:go-offline -B
+# Grant execution rights on the Gradle Wrapper
+RUN chmod +x ./gradlew
 
-# Copy the project source code to the container
-COPY src ./src
+# Build the application using the Gradle Wrapper
+#RUN ./gradlew clean build -x test
+RUN ./gradlew bootJar
 
-# Build the project
-RUN ./mvnw package -DskipTests
+# Start a new stage for the final image
+FROM amazoncorretto:17-alpine-jdk
 
-# Copy the entrypoint script to the container
-COPY entrypoint.sh .
+# Set the working directory in the container
+WORKDIR /app
 
-# Make the entrypoint script executable
-RUN chmod +x entrypoint.sh
+# Install the MySQL client
+RUN apk add --no-cache mysql-client
 
-# Set the entry point for the container
-ENTRYPOINT ["./entrypoint.sh"]
+# Copy the built JAR file from the builder stage
+COPY --from=builder /app/build/libs/*.jar ./app.jar
+
+# List the contents of the /app directory
+
+# Copy the entrypoint script
+COPY entrypoint.sh /app/
+COPY flyway-container.conf /app/
+
+COPY src/main/resources/db/migration /app/db/migration
+RUN ls -la /app >./app.txt
+
+RUN chmod +x /app/entrypoint.sh
+
+# Run the web service on container startup
+CMD ["java", "-jar", "/app/app.jar", "--spring.profiles.active=container"]
+#ENTRYPOINT ["/app/entrypoint.sh"]
