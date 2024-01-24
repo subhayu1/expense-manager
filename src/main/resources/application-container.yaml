@@ -54,6 +54,8 @@ sync-service:
 server:
   port: 10000
 eureka:
+  instance:
+      prefer-ip-address: true
   client:
     enabled: true
     serviceUrl:
