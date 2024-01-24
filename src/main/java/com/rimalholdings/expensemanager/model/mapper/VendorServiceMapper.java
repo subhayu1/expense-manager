@@ -15,6 +15,7 @@ import com.rimalholdings.expensemanager.util.DateTimeUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ public class VendorServiceMapper extends AbstractServiceMapper<VendorEntity> {
 
 private final VendorService vendorService;
 private final AppConfig appConfig;
+@Autowired private RestTemplate restTemplate;
 
 public VendorServiceMapper(
 	VendorService vendorService, ObjectMapper objectMapper, AppConfig appConfig) {
@@ -157,7 +159,8 @@ public String getEntityFromSyncService(Integer externalOrgId) {
 }
 
 public void fetchAndSaveVendors(Integer externalOrgId, String lastModifiedDateTime) {
-	RestTemplate restTemplate = new RestTemplate();
+	log.info("vendor url: {}", appConfig.getVendorUrl());
+	String vendorUrlGateway = "http://sync-service";
 	String url =
 		appConfig.getVendorUrl()
 			+ "?organizationId="

@@ -44,6 +44,8 @@ repositories {
         url = uri("https://repo.maven.apache.org/maven2/")
     }
 }
+extra["springCloudVersion"] = "2023.0.0"
+
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -55,7 +57,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-configuration-processor:2.6.2")
     implementation("org.springframework.boot:spring-boot-actuator-autoconfigure")
-
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-mysql")
     runtimeOnly("com.mysql:mysql-connector-j")
@@ -157,7 +160,11 @@ afterEvaluate {
         }))
     }
 }
-
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+    }
+}
 tasks.test {
     finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }
