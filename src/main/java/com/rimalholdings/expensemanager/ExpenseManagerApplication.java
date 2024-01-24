@@ -9,9 +9,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @Slf4j(topic = "ExpenseManagerApplication")
@@ -35,5 +37,11 @@ CommandLineRunner setupDefaultUser(UserRepository repository, PasswordEncoder pa
 		log.info("User already exists,skipping default user creation.");
 	}
 	};
+}
+
+@Bean
+@LoadBalanced
+public RestTemplate restTemplate() {
+	return new RestTemplate();
 }
 }
