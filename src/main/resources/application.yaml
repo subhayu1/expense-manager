@@ -30,7 +30,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   docker:
     compose:
-      enabled: true
+      enabled: false
       file: docker-compose.yml
   flyway:
     clean-on-validation-error: true
@@ -42,6 +42,9 @@ spring:
     init:
       mode: never
       data-locations: ./init.sql
+  cloud:
+    loadbalancer:
+      enabled: false
 rsa:
   private-key: classpath:certs/private.pem
   public-key: classpath:certs/public.pem
@@ -56,12 +59,12 @@ management:
 springdoc:
   show-actuator: true
 sync-service:
-  vendor-url: http://SYNC-SERVICE/api/v1/sync/get/vendors
+  vendor-url: http://localhost:9000/api/v1/sync/get/vendors
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka
-    enabled: true
+    enabled: false
 logging:
   include-application-name: true
 server:

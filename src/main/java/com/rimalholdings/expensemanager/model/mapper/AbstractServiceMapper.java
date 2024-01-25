@@ -55,6 +55,4 @@ public abstract String saveOrUpdateEntity(BaseDTOInterface dtoInterface)
 public abstract Page<T> getAllEntities(Pageable pageable);
 
 public abstract T getEntityForUpdate(Long id);
-
-public abstract String getEntityFromSyncService(Integer externalOrgId);
 }
