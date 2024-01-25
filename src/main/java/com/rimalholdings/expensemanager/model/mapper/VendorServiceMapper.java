@@ -3,38 +3,34 @@ package com.rimalholdings.expensemanager.model.mapper;
 
 import java.util.List;
 
-import com.rimalholdings.expensemanager.config.AppConfig;
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.Vendor;
-import com.rimalholdings.expensemanager.data.dto.sync.VendorResponse;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
 import com.rimalholdings.expensemanager.helper.VendorHelper;
+import com.rimalholdings.expensemanager.http.RequestHandler;
 import com.rimalholdings.expensemanager.service.VendorService;
 import com.rimalholdings.expensemanager.util.DateTimeUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 @Slf4j(topic = "VendorServiceMapper")
 public class VendorServiceMapper extends AbstractServiceMapper<VendorEntity> {
 
 private final VendorService vendorService;
-private final AppConfig appConfig;
-@Autowired private RestTemplate restTemplate;
+
+private final RequestHandler requestHandler;
 
 public VendorServiceMapper(
-	VendorService vendorService, ObjectMapper objectMapper, AppConfig appConfig) {
+	VendorService vendorService, ObjectMapper objectMapper, RequestHandler requestHandler) {
 	super(objectMapper);
 	this.vendorService = vendorService;
-	this.appConfig = appConfig;
+	this.requestHandler = requestHandler;
 }
 
 // check the dto to see which fields are empty and if they are empty, then use the existing
@@ -153,36 +149,13 @@ public VendorEntity getEntityForUpdate(Long id) {
 	}
 }
 
-@Override
-public String getEntityFromSyncService(Integer externalOrgId) {
-	return null;
-}
-
 public void fetchAndSaveVendors(Integer externalOrgId, String lastModifiedDateTime) {
-	log.info("vendor url: {}", appConfig.getVendorUrl());
-	String vendorUrlGateway = "http://sync-service";
-	String url =
-		appConfig.getVendorUrl()
-			+ "?organizationId="
-			+ externalOrgId
-			+ "&lastModifiedDateTime="
-			+ lastModifiedDateTime;
-	try {
-	restTemplate.getForEntity(url, VendorResponse.class);
-	} catch (NullPointerException npe) {
-	throw new RuntimeException("No vendors found for organizationId: " + externalOrgId);
-	}
-	ResponseEntity<VendorResponse> response = restTemplate.getForEntity(url, VendorResponse.class);
-	if (response.getBody() == null) {
-	throw new RuntimeException("No vendors found for organizationId: " + externalOrgId);
-	}
-	System.out.println(response.getBody());
-
-	List<Vendor> vendors = response.getBody().getVendors();
+	List<Vendor> vendors =
+		requestHandler.getVendorsFromSyncService(externalOrgId, lastModifiedDateTime);
 	if (vendors.isEmpty()) {
-	throw new RuntimeException("No vendors found for organizationId: " + externalOrgId);
+	log.info("No vendors found for organizationId: {}", externalOrgId);
+	return;
 	}
-
 	for (Vendor vendor : vendors) {
 	saveOrUpdateEntity(vendor);
 	}
