@@ -9,4 +9,13 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfig {
 @Value("${sync-service.vendor-url}")
 private String vendorUrl;
+
+@Value("${rabbit.em.queue.name}")
+private String queue;
+
+@Value("${rabbit.em.exchange.name}")
+private String exchange;
+
+@Value("${rabbit.em.routing.key}")
+private String routingKey;
 }

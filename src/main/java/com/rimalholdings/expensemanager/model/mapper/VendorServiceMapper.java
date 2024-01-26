@@ -3,6 +3,7 @@ package com.rimalholdings.expensemanager.model.mapper;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.Vendor;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
@@ -41,7 +42,7 @@ public String saveOrUpdateEntity(BaseDTOInterface dtoInterface) {
 	Vendor vendor = (Vendor) dtoInterface;
 	VendorEntity vendorEntity = mapToDTO(vendor);
 	VendorEntity savedVendor = vendorService.save(vendorEntity);
-	return convertDtoToString(savedVendor);
+     return convertDtoToString(savedVendor);
 }
 
 @Override
@@ -158,6 +159,17 @@ public void fetchAndSaveVendors(Integer externalOrgId, String lastModifiedDateTi
 	}
 	for (Vendor vendor : vendors) {
 	saveOrUpdateEntity(vendor);
+	}
+}
+
+public void saveVendors(List<Vendor> vendors) {
+	for (Vendor vendor : vendors) {
+	try {
+		saveOrUpdateEntity(vendor);
+	} catch (Exception e) {
+		log.error("Error while saving vendor: " + vendor.getName() + " " + e.getMessage(), e);
+		log.error("Error while saving vendor: " + vendor.getName() + " " + e.getMessage(), e);
+	}
 	}
 }
 }
