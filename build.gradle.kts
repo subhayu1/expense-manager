@@ -128,11 +128,10 @@ openApi {
     outputDir.set(file(".")) // Output directory
     outputFileName.set("swagger.yml") // Output file name
 }
+flyway {
+   configFiles = arrayOf("flyway.conf")
 
-//flyway {
-//   configFiles = arrayOf("flyway.conf")
-//
-//}
+}
 jacoco {
     toolVersion = "0.8.11"
     reportsDirectory = layout.buildDirectory.dir("reports/jacoco")

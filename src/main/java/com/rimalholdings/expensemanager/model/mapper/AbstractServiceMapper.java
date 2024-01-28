@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.exception.DuplicateIdException;
 
@@ -31,9 +30,9 @@ public String convertDtoToString(T dto) {
 	return objectMapper.writeValueAsString(dto);
 
 	} catch (JsonProcessingException e) {
-		log.debug("Error converting VendorDTO to JSON string: {}", e.getMessage());
+	log.debug("Error converting VendorDTO to JSON string: {}", e.getMessage());
 	}
-    return null;
+	return null;
 }
 
 public List<T> convertDtoToString(List<T> dto) {

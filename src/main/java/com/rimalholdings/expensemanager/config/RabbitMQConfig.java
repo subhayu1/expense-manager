@@ -38,7 +38,7 @@ public MessageConverter jsonMessageConverter() {
 	Jackson2JsonMessageConverter jsonConverter = new Jackson2JsonMessageConverter();
 	DefaultJackson2JavaTypeMapper javaTypeMapper = new DefaultJackson2JavaTypeMapper();
 	javaTypeMapper.setTrustedPackages(
-		"java.util", "com.rimalholdings.expensemanager.data.dto.sync");
+		"*");
 	jsonConverter.setJavaTypeMapper(javaTypeMapper);
 	return jsonConverter;
 }

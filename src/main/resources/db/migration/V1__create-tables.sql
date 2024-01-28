@@ -17,7 +17,7 @@ create table vendor
     address1   varchar(255),
     address2   varchar(255),
     city       varchar(255),
-    state      varchar(2),
+    state      varchar(20),
     zip        varchar(10),
     phone      varchar(10),
     email      varchar(255),
@@ -41,16 +41,23 @@ create table billpayment
 
 create table expense
 (
-    id            bigint auto_increment primary key,
-    vendorid      bigint         not null references vendor (id),
+    id            bigint auto_increment
+        primary key,
+    vendorid      bigint         not null,
+    externalinvoicenumber varchar(255)   null,
+    vendorinvoicenumber varchar(255)   null,
+    integrationid varchar(255)   null,
+    externalorgid int null,
     totalamount   decimal(38, 2) not null,
     amountdue     decimal(38, 2) not null,
-    paymentamount decimal(38, 2),
-    duedate       datetime(6),
-    description   varchar(255),
-    createddate   timestamp,
-    updateddate   timestamp,
-    paymentstatus int not null COMMENT '1=partially paid ,2=fully paid ,3=unpaid 4=unknown'
+    paymentamount decimal(38, 2) null,
+    invoicedate  datetime(6)    null,
+
+    duedate       datetime(6)    null,
+    description   varchar(255)   null,
+    createddate   timestamp      null,
+    updateddate   timestamp      null,
+    paymentstatus int            not null comment '1=partially paid ,2=fully paid ,3=unpaid 4=unknown'
 );
 
 create table billpayment_expense

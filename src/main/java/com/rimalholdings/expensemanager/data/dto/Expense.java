@@ -13,4 +13,12 @@ private Long vendorId;
 private BigDecimal totalAmount;
 private String description;
 private String dueDate;
+private String invoiceDate;
+private String externalInvoiceNumber;
+private String vendorInvoiceNumber;
+private String integrationId;
+private Integer externalOrgId;
+private BigDecimal amountDue;
+private String invoiceNumber;
+
 }
