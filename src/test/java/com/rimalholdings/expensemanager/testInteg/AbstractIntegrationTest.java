@@ -3,6 +3,7 @@ package com.rimalholdings.expensemanager.testInteg;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.nio.charset.StandardCharsets;
+import java.sql.Date;
 import java.util.Base64;
 
 import com.rimalholdings.expensemanager.data.dao.ExpenseRepository;
@@ -142,6 +143,15 @@ protected void createExpenseEntity() {
 	expenseEntity.setTotalAmount(new BigDecimal(100).round(new MathContext(2)));
 	expenseEntity.setPaymentStatus(3);
 	expenseEntity.setAmountDue(new BigDecimal(100).round(new MathContext(2)));
+	expenseEntity.setIntegrationId("integrationId");
+	expenseEntity.setVendorInvoiceNumber("vendorInvoiceNumber");
+	expenseEntity.setExternalInvoiceNumber("externalInvoiceNumber");
+	expenseEntity.setCreatedDate(DateTimeUtil.getCurrentTimeInUTC());
+	expenseEntity.setUpdatedDate(DateTimeUtil.getCurrentTimeInUTC());
+	expenseEntity.setDueDate(Date.valueOf("2022-01-01"));
+	expenseEntity.setInvoiceDate(Date.valueOf("2022-01-01"));
+	expenseEntity.setDescription("Test Expense");
+	expenseEntity.setExternalOrgId(1);
 	expenseEntity.setVendor(vendorEntity);
 	expenseRepository.saveAndFlush(expenseEntity);
 }
