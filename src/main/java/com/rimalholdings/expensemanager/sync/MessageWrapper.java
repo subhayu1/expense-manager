@@ -1,12 +1,12 @@
 package com.rimalholdings.expensemanager.sync;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class MessageWrapper<T> {
-    private String entityName;
-    private List<T> message;
-    private String externalOrgId;
+private String entityName;
+private List<T> message;
+private String externalOrgId;
 }

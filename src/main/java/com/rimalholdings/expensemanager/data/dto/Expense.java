@@ -20,5 +20,4 @@ private String integrationId;
 private Integer externalOrgId;
 private BigDecimal amountDue;
 private String invoiceNumber;
-
 }
