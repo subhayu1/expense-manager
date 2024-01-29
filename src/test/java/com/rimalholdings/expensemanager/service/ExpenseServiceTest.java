@@ -18,8 +18,7 @@ import static org.mockito.Mockito.*;
 public class ExpenseServiceTest {
 
 @Mock private BaseRepository<ExpenseEntity> repository;
-@Mock
-private ExpenseRepository expenseRepository;
+@Mock private ExpenseRepository expenseRepository;
 
 private ExpenseService expenseService;
 

@@ -16,9 +16,10 @@ public class SyncManager<T> {
 private final VendorServiceMapper vendorServiceMapper;
 private final ExpenseServiceMapper expenseServiceMapper;
 
-public SyncManager(VendorServiceMapper vendorServiceMapper, ExpenseServiceMapper expenseServiceMapper) {
+public SyncManager(
+	VendorServiceMapper vendorServiceMapper, ExpenseServiceMapper expenseServiceMapper) {
 	this.vendorServiceMapper = vendorServiceMapper;
-    this.expenseServiceMapper = expenseServiceMapper;
+	this.expenseServiceMapper = expenseServiceMapper;
 }
 
 public void sync(MessageWrapper<T> messageWrapper) {

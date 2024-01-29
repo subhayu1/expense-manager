@@ -16,5 +16,4 @@ Optional<VendorEntity> getVendorByExternalId(String vendorId);
 BaseDTOInterface findByExternalId(String vendorId);
 
 VendorEntity findByIntegrationId(String integrationId);
-
 }
