@@ -2,6 +2,7 @@
 package com.rimalholdings.expensemanager.data.entity;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +67,7 @@ private BigDecimal amountDue;
 private String description;
 
 @Column(name = "duedate")
-private Timestamp dueDate;
+private Date dueDate;
 
 @ToString.Exclude
 @EqualsAndHashCode.Exclude
@@ -87,7 +88,7 @@ private Timestamp createdDate;
 private Timestamp updatedDate;
 
 @Column(name = "invoicedate")
-private Timestamp invoiceDate;
+private Date invoiceDate;
 
 @Column(name = "externalinvoicenumber")
 private String externalInvoiceNumber;

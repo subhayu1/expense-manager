@@ -2,6 +2,7 @@
 package com.rimalholdings.expensemanager.model.mapper;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
@@ -12,6 +13,7 @@ import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
 import com.rimalholdings.expensemanager.service.ExpenseService;
+import com.rimalholdings.expensemanager.util.DateTimeUtil;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -71,16 +73,28 @@ private void setExpenseEntityFields(ExpenseEntity expenseEntity, Expense expense
 	setIfNotNull(expense::getId, expenseEntity::setId);
 	setIfNotNull(expense::getTotalAmount, expenseEntity::setTotalAmount);
 	setIfNotNull(expense::getDescription, expenseEntity::setDescription);
-	// setIfNotNull(
-	//	() -> Optional.ofNullable(expense.getDueDate()).map(Timestamp::valueOf).orElse(null),
-	//	expenseEntity::setDueDate);
 	setIfNotNull(expense::getExternalOrgId, expenseEntity::setExternalOrgId);
 	setIfNotNull(expense::getVendorInvoiceNumber, expenseEntity::setVendorInvoiceNumber);
 	setIfNotNull(expense::getExternalInvoiceNumber, expenseEntity::setExternalInvoiceNumber);
+	setIfNotNull(expense::getIntegrationId, expenseEntity::setIntegrationId);
+
+	setInvoiceAndDueDate(expenseEntity, expense);
 
 	// Assuming Amount Due is always equal to Total Amount
 	expenseEntity.setAmountDue(expenseEntity.getTotalAmount());
 }
+
+private void setInvoiceAndDueDate(ExpenseEntity expenseEntity, Expense expense) {
+	if (expense.getInvoiceDate() != null) {
+	expenseEntity.setInvoiceDate(Date.valueOf(expense.getInvoiceDate()));
+
+	}
+	if (expense.getDueDate() != null) {
+	expenseEntity.setDueDate(Date.valueOf(expense.getDueDate()));
+	}
+}
+
+
 
 private void dontAllowPartiallyPaidOrPaidExpensesToBeUpdated(ExpenseEntity expenseEntity) {
 	if (Objects.equals(expenseEntity.getPaymentStatus(), PARTIALLY_PAID)
