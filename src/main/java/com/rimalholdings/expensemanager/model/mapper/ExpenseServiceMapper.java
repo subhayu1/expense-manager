@@ -3,8 +3,9 @@ package com.rimalholdings.expensemanager.model.mapper;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.sql.Date;
+import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.Expense;
@@ -12,7 +13,9 @@ import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
 import com.rimalholdings.expensemanager.service.ExpenseService;
+import com.rimalholdings.expensemanager.util.DateTimeUtil;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -59,19 +62,39 @@ private ExpenseEntity getOrCreateExpenseEntity(Expense expense) {
 
 private void setExpenseEntityFields(ExpenseEntity expenseEntity, Expense expense) {
 	VendorEntity vendorEntity = new VendorEntity();
-	vendorEntity.setId(expense.getVendorId()); // Assuming vendorId is always set
+	if (expense.getVendorId() == null) {
+	// If vendorId is not set, then we need to find the vendorId from the vendorIntegrationId
+	vendorEntity.setId(getVendorIdFromVendorIntegrationId(expense.getVendorIntegrationId()));
+	} else {
+	vendorEntity.setId(expense.getVendorId());
+	}
 	expenseEntity.setVendor(vendorEntity);
 
 	setIfNotNull(expense::getId, expenseEntity::setId);
 	setIfNotNull(expense::getTotalAmount, expenseEntity::setTotalAmount);
 	setIfNotNull(expense::getDescription, expenseEntity::setDescription);
-	setIfNotNull(
-		() -> Optional.ofNullable(expense.getDueDate()).map(Timestamp::valueOf).orElse(null),
-		expenseEntity::setDueDate);
+	setIfNotNull(expense::getExternalOrgId, expenseEntity::setExternalOrgId);
+	setIfNotNull(expense::getVendorInvoiceNumber, expenseEntity::setVendorInvoiceNumber);
+	setIfNotNull(expense::getExternalInvoiceNumber, expenseEntity::setExternalInvoiceNumber);
+	setIfNotNull(expense::getIntegrationId, expenseEntity::setIntegrationId);
+
+	setInvoiceAndDueDate(expenseEntity, expense);
 
 	// Assuming Amount Due is always equal to Total Amount
 	expenseEntity.setAmountDue(expenseEntity.getTotalAmount());
 }
+
+private void setInvoiceAndDueDate(ExpenseEntity expenseEntity, Expense expense) {
+	if (expense.getInvoiceDate() != null) {
+	expenseEntity.setInvoiceDate(Date.valueOf(expense.getInvoiceDate()));
+
+	}
+	if (expense.getDueDate() != null) {
+	expenseEntity.setDueDate(Date.valueOf(expense.getDueDate()));
+	}
+}
+
+
 
 private void dontAllowPartiallyPaidOrPaidExpensesToBeUpdated(ExpenseEntity expenseEntity) {
 	if (Objects.equals(expenseEntity.getPaymentStatus(), PARTIALLY_PAID)
@@ -137,6 +160,33 @@ public ExpenseEntity getEntityForUpdate(Long id) {
 	return expenseService.findById(id);
 	} catch (Exception e) {
 	return null;
+	}
+}
+
+public void saveExpenses(List<Expense> expenses) {
+	// Convert the List<Expense> to the correct type
+	List<Expense> expenseEntities = convertMessageToExpenseResponse(expenses);
+	for (Expense expense : expenseEntities) {
+	try {
+		saveOrUpdateEntity(expense);
+	} catch (Exception e) {
+		log.error("Error while saving expense: " + e.getMessage(), e);
+	}
+	}
+}
+
+// find vendorId from vendorIntegrationId
+public Long getVendorIdFromVendorIntegrationId(String vendorIntegrationId) {
+	return expenseService.getVendorIdFromVendorIntegrationId(vendorIntegrationId);
+}
+
+private List<Expense> convertMessageToExpenseResponse(List<Expense> messageWrapper) {
+	ObjectMapper objectMapper = new ObjectMapper();
+	try {
+	return objectMapper.convertValue(messageWrapper, new TypeReference<>() {});
+	} catch (Exception e) {
+	log.error("Error while mapping json to Object: " + e.getMessage(), e);
+	throw new RuntimeException("Failed to map json to Expense", e);
 	}
 }
 }
