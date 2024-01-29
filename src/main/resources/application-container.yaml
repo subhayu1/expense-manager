@@ -28,11 +28,14 @@ spring:
       enabled: true
       file: docker-compose.yml
   flyway:
-    clean-on-validation-error: true
+    clean-on-validation-error: false
     enabled: true
     locations: classpath:db/migration
     schemas: expense_manager
     create-schemas: true
+    url: jdbc:mysql://db:3306/expense_manager
+    user: root
+    password: password
   sql:
     init:
       mode: never

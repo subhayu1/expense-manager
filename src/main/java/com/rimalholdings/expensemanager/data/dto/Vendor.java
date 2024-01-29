@@ -1,9 +1,11 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.data.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Vendor implements BaseDTOInterface {
 
 private Long id;
