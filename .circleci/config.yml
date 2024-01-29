@@ -40,7 +40,7 @@ jobs:
             echo $JWT_KEY_PAIR | base64 --decode > ./src/main/resources/certs/keypair.pem
       - run:
           name: copy flyway.conf file
-          command: cp ./src/main/resources/flyway.conf ./build/resources/main/flyway.conf
+          command: cp ./flyway.conf ./build/resources/main/flyway.conf
       - run:
           name: Run Integration Tests with Testcontainers
           command: ./gradlew testInteg 
