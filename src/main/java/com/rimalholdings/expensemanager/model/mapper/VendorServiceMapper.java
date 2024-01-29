@@ -12,6 +12,7 @@ import com.rimalholdings.expensemanager.http.RequestHandler;
 import com.rimalholdings.expensemanager.service.VendorService;
 import com.rimalholdings.expensemanager.util.DateTimeUtil;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -158,6 +159,29 @@ public void fetchAndSaveVendors(Integer externalOrgId, String lastModifiedDateTi
 	}
 	for (Vendor vendor : vendors) {
 	saveOrUpdateEntity(vendor);
+	}
+}
+
+public void saveVendors(List<Vendor> vendors) {
+	// Convert the List<Vendor> to the correct type
+	List<Vendor> convertedVendors = convertMessageToVendorResponse(vendors);
+
+	for (Vendor vendor : convertedVendors) {
+	try {
+		saveOrUpdateEntity(vendor);
+	} catch (Exception e) {
+		log.error("Error while saving vendor: " + vendor.getName() + " " + e.getMessage(), e);
+	}
+	}
+}
+
+private List<Vendor> convertMessageToVendorResponse(List<Vendor> messageWrapper) {
+	ObjectMapper objectMapper = new ObjectMapper();
+	try {
+	return objectMapper.convertValue(messageWrapper, new TypeReference<>() {});
+	} catch (Exception e) {
+	log.error("Error while mapping json to Object: " + e.getMessage(), e);
+	throw new RuntimeException("Failed to map json to Vendor", e);
 	}
 }
 }

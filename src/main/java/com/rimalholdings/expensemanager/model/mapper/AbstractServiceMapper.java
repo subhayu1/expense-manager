@@ -11,9 +11,11 @@ import com.rimalholdings.expensemanager.exception.DuplicateIdException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+@Slf4j(topic = "AbstractServiceMapper")
 public abstract class AbstractServiceMapper<T> {
 
 private final ObjectMapper objectMapper;
@@ -26,9 +28,11 @@ public String convertDtoToString(T dto) {
 	try {
 	// Convert the VendorDTO object to a JSON string
 	return objectMapper.writeValueAsString(dto);
+
 	} catch (JsonProcessingException e) {
-	throw new RuntimeException(e);
+	log.debug("Error converting VendorDTO to JSON string: {}", e.getMessage());
 	}
+	return null;
 }
 
 public List<T> convertDtoToString(List<T> dto) {
