@@ -15,4 +15,8 @@ public static Timestamp getCurrentTimeInUTC() {
 public static String convertTimestampToISO8601(Timestamp timestamp) {
 	return timestamp.toLocalDateTime().format(DateTimeFormatter.ISO_DATE_TIME) + "Z";
 }
+
+public static Timestamp convertStringToTimestamp(String invoiceDate) {
+	return Timestamp.valueOf(invoiceDate);
+}
 }
