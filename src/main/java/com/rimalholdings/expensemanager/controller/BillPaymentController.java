@@ -1,6 +1,9 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.controller;
 
+import java.util.HashMap;
+import java.util.List;
+
 import com.rimalholdings.expensemanager.data.dto.BillPayment;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
@@ -12,12 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j(topic = "BillPaymentController")
@@ -52,6 +50,14 @@ public ResponseEntity<Page<BillPaymentEntity>> getAllBillPayments(
 public ResponseEntity<String> getBillPayment(@PathVariable Long billPaymentId) {
 	log.info("Getting bill payment with id: {}", billPaymentId);
 	String billPayment = billPaymentMapper.getEntity(billPaymentId);
+	return ResponseEntity.ok(billPayment);
+}
+
+@GetMapping("/prepareObject")
+public ResponseEntity<List<HashMap<String, Object>>> prepareObject(@RequestParam Integer id) {
+	log.info("Getting bill payment with id: {}", id);
+	List<HashMap<String, Object>> billPayment =
+		billPaymentMapper.prepareBillPayObjectForSync(Long.valueOf(id));
 	return ResponseEntity.ok(billPayment);
 }
 }

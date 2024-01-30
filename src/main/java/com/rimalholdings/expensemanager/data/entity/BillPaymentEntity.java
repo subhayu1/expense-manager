@@ -1,4 +1,3 @@
-/* (C)1 */
 package com.rimalholdings.expensemanager.data.entity;
 
 import java.math.BigDecimal;
@@ -9,13 +8,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -23,6 +16,21 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
+// private String vendorId;
+//
+// private String vendorNumber;
+//
+// private String documentNumber;
+//
+// private String externalDocumentNumber;
+//
+// private String appliesToInvoiceId;
+//
+// private String appliesToInvoiceNumber;
+//
+// private String description;
+//
+// private BigDecimal paymentAmount;
 @Table(name = "billpayment")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BillPaymentEntity extends BaseEntity {
@@ -54,6 +62,9 @@ private Integer paymentApplicationStatus;
 
 @Column(name = "paymentdate")
 private Timestamp paymentDate;
+
+@Column(name = "tosync")
+private Boolean toSync;
 
 @JoinColumn(name = "vendorid", referencedColumnName = "id")
 @ManyToOne

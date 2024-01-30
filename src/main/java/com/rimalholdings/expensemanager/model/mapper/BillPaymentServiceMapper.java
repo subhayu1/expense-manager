@@ -3,11 +3,11 @@ package com.rimalholdings.expensemanager.model.mapper;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.BillPayment;
+import com.rimalholdings.expensemanager.data.dto.VendorPaymentResults;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
@@ -18,6 +18,8 @@ import com.rimalholdings.expensemanager.service.BillPaymentService;
 import com.rimalholdings.expensemanager.service.ExpenseService;
 import com.rimalholdings.expensemanager.util.DateTimeUtil;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -215,5 +217,41 @@ private void handleOverPayment(BigDecimal paymentAmount, BigDecimal amountDue) {
 			"Payment amount cannot be greater than amount due. Payment amount: %s, amount due: %s",
 			paymentAmount, amountDue));
 	}
+}
+
+public List<HashMap<String, Object>> prepareBillPayObjectForSync(Long id) {
+	List<VendorPaymentResults> vendorPaymentResult =
+		billPaymentService.findExpenseAndVendorByBillPaymentId(id);
+	List<String> jsonStrings = convertDtoInterfaceToString(vendorPaymentResult);
+	return convertJsonStringToHashMap(jsonStrings);
+}
+
+private List<String> convertDtoInterfaceToString(List<VendorPaymentResults> vendorPaymentResult) {
+	ObjectMapper mapper = new ObjectMapper();
+	List<String> result = new ArrayList<>();
+	for (VendorPaymentResults vpr : vendorPaymentResult) {
+	try {
+		String json = mapper.writeValueAsString(vpr);
+		result.add(json);
+	} catch (JsonProcessingException e) {
+		log.error("Error converting VendorPaymentResults to JSON string: {}", e.getMessage());
+	}
+	}
+	return result;
+}
+
+private List<HashMap<String, Object>> convertJsonStringToHashMap(List<String> jsonStrings) {
+	ObjectMapper mapper = new ObjectMapper();
+	List<HashMap<String, Object>> result = new ArrayList<>();
+	for (String jsonString : jsonStrings) {
+	try {
+		HashMap<String, Object> map =
+			mapper.readValue(jsonString, new TypeReference<HashMap<String, Object>>() {});
+		result.add(map);
+	} catch (JsonProcessingException e) {
+		log.error("Error converting JSON string to HashMap: {}", e.getMessage());
+	}
+	}
+	return result;
 }
 }
