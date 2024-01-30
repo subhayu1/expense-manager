@@ -13,7 +13,6 @@ import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
 import com.rimalholdings.expensemanager.service.ExpenseService;
-import com.rimalholdings.expensemanager.util.DateTimeUtil;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -87,14 +86,11 @@ private void setExpenseEntityFields(ExpenseEntity expenseEntity, Expense expense
 private void setInvoiceAndDueDate(ExpenseEntity expenseEntity, Expense expense) {
 	if (expense.getInvoiceDate() != null) {
 	expenseEntity.setInvoiceDate(Date.valueOf(expense.getInvoiceDate()));
-
 	}
 	if (expense.getDueDate() != null) {
 	expenseEntity.setDueDate(Date.valueOf(expense.getDueDate()));
 	}
 }
-
-
 
 private void dontAllowPartiallyPaidOrPaidExpensesToBeUpdated(ExpenseEntity expenseEntity) {
 	if (Objects.equals(expenseEntity.getPaymentStatus(), PARTIALLY_PAID)

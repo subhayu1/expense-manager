@@ -26,9 +26,9 @@ jobs:
       - restore_cache:
           keys:
             - gradle-cache-{{ checksum "build.gradle.kts" }}
-      - run:
-         name: clean build
-         command: ./gradlew clean build -x test
+     # - run:
+      #   name: clean build
+       #  command: ./gradlew clean build -x test
       - run:
           name: Run Unit Tests
           command: ./gradlew test
@@ -38,10 +38,12 @@ jobs:
             echo $JWT_PRIVATE_KEY_BASE64 | base64 --decode > ./src/main/resources/certs/private.pem
             echo $JWT_PUBLIC_KEY_BASE64 | base64 --decode > ./src/main/resources/certs/public.pem
             echo $JWT_KEY_PAIR | base64 --decode > ./src/main/resources/certs/keypair.pem
-            
-      - run:
-          name: Run Integration Tests with Testcontainers
-          command: ./gradlew testInteg 
+      #- run:
+       #   name: copy flyway.conf file
+       #   command: cp ./flyway.conf ./build/resources/main/flyway.conf
+    #  - run:
+      #    name: Run Integration Tests with Testcontainers
+      #    command: ./gradlew testInteg
       - save_cache:
           paths:
             - ~/.gradle

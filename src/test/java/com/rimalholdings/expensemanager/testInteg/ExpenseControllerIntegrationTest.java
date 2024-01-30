@@ -1,5 +1,7 @@
 package com.rimalholdings.expensemanager.testInteg;
 
+import java.sql.Date;
+
 import com.rimalholdings.expensemanager.data.dao.ExpenseRepository;
 import com.rimalholdings.expensemanager.data.dao.VendorRepository;
 
@@ -96,12 +98,15 @@ private String putRequest() {
 
 private String expensePostRequestString() {
 	Long vendorId = vendorRepository.findAll().get(0).getId();
+	Date dueDate = Date.valueOf("2024-11-22");
+	Date invoiceDate = Date.valueOf("2024-11-22");
 	return """
 				{
 						"vendorId": %s,
 						"totalAmount": 100,
 						"description": "test",
-						"dueDate": "2024-11-22 12:00:00.0"
+						"dueDate": "2024-11-22",
+						"invoiceDate": "2024-11-22"
 				}"""
 		.formatted(vendorId);
 }
@@ -115,7 +120,8 @@ private String expensePutRequestString() {
 						"vendorId": %s,
 						"totalAmount": 100,
 						"description": "test",
-						"dueDate": "2024-11-22 12:00:00.0"
+						"dueDate": "2024-11-22",
+						"invoiceDate": "2024-11-22"
 				}"""
 		.formatted(vendorId);
 }

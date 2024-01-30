@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 public class SyncManager<T> {
 private final VendorServiceMapper vendorServiceMapper;
 private final ExpenseServiceMapper expenseServiceMapper;
+public static final String VENDORS = "vendors";
+public static final String PURCHASE_INVOICES = "purchaseInvoices";
 
 public SyncManager(
 	VendorServiceMapper vendorServiceMapper, ExpenseServiceMapper expenseServiceMapper) {
@@ -25,13 +27,11 @@ public SyncManager(
 public void sync(MessageWrapper<T> messageWrapper) {
 	String entityName = messageWrapper.getEntityName();
 	List<T> message = messageWrapper.getMessage();
-
 	switch (entityName) {
-	case "vendors":
+	case VENDORS:
 		vendorServiceMapper.saveVendors((List<Vendor>) message);
 		break;
-	case "purchaseInvoices":
-		log.info("Purchase Invoices");
+	case PURCHASE_INVOICES:
 		expenseServiceMapper.saveExpenses((List<Expense>) message);
 		break;
 	default:

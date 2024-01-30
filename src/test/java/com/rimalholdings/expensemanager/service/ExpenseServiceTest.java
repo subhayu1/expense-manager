@@ -3,7 +3,7 @@ package com.rimalholdings.expensemanager.service;
 import java.util.Optional;
 
 import com.rimalholdings.expensemanager.data.dao.BaseRepository;
-import com.rimalholdings.expensemanager.data.dao.ExpenseRepository;
+import com.rimalholdings.expensemanager.data.dao.VendorRepository;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.exception.ObjectNotFoundException;
 
@@ -18,14 +18,14 @@ import static org.mockito.Mockito.*;
 public class ExpenseServiceTest {
 
 @Mock private BaseRepository<ExpenseEntity> repository;
-@Mock private ExpenseRepository expenseRepository;
+@Mock private VendorRepository vendorRepository;
 
 private ExpenseService expenseService;
 
 @BeforeEach
 public void setup() {
 	MockitoAnnotations.openMocks(this);
-	expenseService = new ExpenseService(repository, expenseRepository);
+	expenseService = new ExpenseService(repository, vendorRepository);
 }
 
 @Test

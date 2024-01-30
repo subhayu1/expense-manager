@@ -3,7 +3,7 @@ package com.rimalholdings.expensemanager.model.mapper;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.sql.Timestamp;
+import java.sql.Date;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.Expense;
@@ -38,11 +38,11 @@ void setUp() {
 @Test
 void mapToDTO_ValidExpenseDTO_ReturnsExpenseEntity() {
 	Expense expense = new Expense();
-	expense.setDueDate("2022-01-01 12:00:00");
+	expense.setInvoiceDate("2022-01-02");
 	BigDecimal totalAmount = BigDecimal.valueOf(100).round(new MathContext(2));
 	expense.setTotalAmount(totalAmount);
 	expense.setId(1L);
-	expense.setDueDate("2022-01-01 12:00:00");
+	expense.setDueDate("2022-01-01");
 	expense.setVendorId(1L);
 	expense.setDescription("Test Expense");
 	// Act
@@ -51,7 +51,7 @@ void mapToDTO_ValidExpenseDTO_ReturnsExpenseEntity() {
 	// Assert
 	assertNotNull(expenseEntity);
 	assertEquals(expense.getId(), expenseEntity.getId());
-	assertEquals(Timestamp.valueOf(expense.getDueDate()), expenseEntity.getDueDate());
+	assertEquals(Date.valueOf(expense.getDueDate()), expenseEntity.getDueDate());
 	assertEquals(expense.getVendorId(), expenseEntity.getVendor().getId());
 	assertEquals(expense.getTotalAmount(), expenseEntity.getTotalAmount());
 	assertEquals(expense.getDescription(), expenseEntity.getDescription());
@@ -99,9 +99,11 @@ void saveOrUpdateEntity_ValidExpenseDTO_ReturnsConvertedDtoToString() {
 	expense.setDueDate("2022-01-01 12:00:00");
 	BigDecimal totalAmount = BigDecimal.valueOf(100).round(new MathContext(2));
 	expense.setTotalAmount(totalAmount);
+	expense.setInvoiceDate("2022-01-01");
+	expense.setDueDate("2022-01-01");
 	ExpenseEntity expenseEntity = new ExpenseEntity();
 
-	expenseEntity.setDueDate(Timestamp.valueOf(expense.getDueDate()));
+	expenseEntity.setDueDate(Date.valueOf(expense.getDueDate()));
 	when(expenseService.save(any(ExpenseEntity.class))).thenReturn(expenseEntity);
 
 	// Act

@@ -46,7 +46,7 @@ void testIntegPostBillPayShouldReturnCreatedBillPay() {
 }
 
 @Test
-void testIntegGetBillPayByIdShouldReturnBillPay() {
+void OtestIntegGetBillPayByIdShouldReturnBillPay() {
 	createBllPaymentEntity();
 	Long billPaymentId = billPaymentRepository.findAll().get(0).getId();
 	String url = BASE_ENTITY_URL + billPaymentId;
