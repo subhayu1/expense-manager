@@ -1,13 +1,12 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.controller;
 
-import java.util.HashMap;
-import java.util.List;
-
 import com.rimalholdings.expensemanager.data.dto.BillPayment;
+import com.rimalholdings.expensemanager.data.dto.VendorPaymentResults;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
 import com.rimalholdings.expensemanager.model.mapper.BillPaymentServiceMapper;
+import com.rimalholdings.expensemanager.sync.MessageWrapper;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
@@ -53,11 +52,12 @@ public ResponseEntity<String> getBillPayment(@PathVariable Long billPaymentId) {
 	return ResponseEntity.ok(billPayment);
 }
 
-@GetMapping("/prepareObject")
-public ResponseEntity<List<HashMap<String, Object>>> prepareObject(@RequestParam Integer id) {
-	log.info("Getting bill payment with id: {}", id);
-	List<HashMap<String, Object>> billPayment =
-		billPaymentMapper.prepareBillPayObjectForSync(Long.valueOf(id));
+@GetMapping("/prepareObjectWrapper")
+public ResponseEntity<MessageWrapper<VendorPaymentResults>> prepareObjectWrapper(
+	@RequestParam Integer orgId) {
+	log.info("Getting bill payments");
+	MessageWrapper<VendorPaymentResults> billPayment =
+		billPaymentMapper.mapToMessageWrapper(Long.valueOf(orgId));
 	return ResponseEntity.ok(billPayment);
 }
 }

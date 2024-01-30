@@ -19,7 +19,7 @@ public BillPaymentService(BillPaymentRepository billPaymentRepository) {
 	this.billPaymentRepository = billPaymentRepository;
 }
 
-public List<VendorPaymentResults> findExpenseAndVendorByBillPaymentId(Long id) {
-	return billPaymentRepository.findExpenseAndVendorByBillPaymentId(id);
+public List<VendorPaymentResults> findExpenseAndVendorByBillPaymentId(Long orgId) {
+	return billPaymentRepository.findExpenseAndVendorByBillPaymentId(orgId);
 }
 }

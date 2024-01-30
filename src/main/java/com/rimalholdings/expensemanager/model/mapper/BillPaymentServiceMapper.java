@@ -16,10 +16,9 @@ import com.rimalholdings.expensemanager.exception.InvalidObjectException;
 import com.rimalholdings.expensemanager.exception.NoExpensePaymentsSpecifiedException;
 import com.rimalholdings.expensemanager.service.BillPaymentService;
 import com.rimalholdings.expensemanager.service.ExpenseService;
+import com.rimalholdings.expensemanager.sync.MessageWrapper;
 import com.rimalholdings.expensemanager.util.DateTimeUtil;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -80,6 +79,7 @@ protected BillPaymentEntity createBillPaymentEntity(BillPayment billpayment) {
 	billPaymentEntity.setPaymentReference(billpayment.getPaymentReference());
 	billPaymentEntity.setPaymentDate(Timestamp.valueOf(billpayment.getPaymentDate()));
 	billPaymentEntity.setCreatedDate(DateTimeUtil.getCurrentTimeInUTC());
+	billPaymentEntity.setToSync(billpayment.getToSync());
 
 	VendorEntity vendorEntity = new VendorEntity();
 	vendorEntity.setId(billpayment.getVendorId());
@@ -219,39 +219,13 @@ private void handleOverPayment(BigDecimal paymentAmount, BigDecimal amountDue) {
 	}
 }
 
-public List<HashMap<String, Object>> prepareBillPayObjectForSync(Long id) {
-	List<VendorPaymentResults> vendorPaymentResult =
-		billPaymentService.findExpenseAndVendorByBillPaymentId(id);
-	List<String> jsonStrings = convertDtoInterfaceToString(vendorPaymentResult);
-	return convertJsonStringToHashMap(jsonStrings);
-}
-
-private List<String> convertDtoInterfaceToString(List<VendorPaymentResults> vendorPaymentResult) {
-	ObjectMapper mapper = new ObjectMapper();
-	List<String> result = new ArrayList<>();
-	for (VendorPaymentResults vpr : vendorPaymentResult) {
-	try {
-		String json = mapper.writeValueAsString(vpr);
-		result.add(json);
-	} catch (JsonProcessingException e) {
-		log.error("Error converting VendorPaymentResults to JSON string: {}", e.getMessage());
-	}
-	}
-	return result;
-}
-
-private List<HashMap<String, Object>> convertJsonStringToHashMap(List<String> jsonStrings) {
-	ObjectMapper mapper = new ObjectMapper();
-	List<HashMap<String, Object>> result = new ArrayList<>();
-	for (String jsonString : jsonStrings) {
-	try {
-		HashMap<String, Object> map =
-			mapper.readValue(jsonString, new TypeReference<HashMap<String, Object>>() {});
-		result.add(map);
-	} catch (JsonProcessingException e) {
-		log.error("Error converting JSON string to HashMap: {}", e.getMessage());
-	}
-	}
-	return result;
+public MessageWrapper<VendorPaymentResults> mapToMessageWrapper(Long orgId) {
+	MessageWrapper<VendorPaymentResults> messageWrapper = new MessageWrapper<>();
+	List<VendorPaymentResults> vendorPaymentResults =
+		billPaymentService.findExpenseAndVendorByBillPaymentId(orgId);
+	messageWrapper.setMessage(vendorPaymentResults);
+	messageWrapper.setExternalOrgId(String.valueOf(orgId));
+	messageWrapper.setEntityName("billPayments");
+	return messageWrapper;
 }
 }

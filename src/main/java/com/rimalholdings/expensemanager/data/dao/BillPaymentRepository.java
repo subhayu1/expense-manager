@@ -26,7 +26,7 @@ Page<BillPaymentEntity> findByVendorId(Long vendorId, Pageable pageable);
 			+ "INNER JOIN billpayment_expense bpe ON bp.id = bpe.billpaymentid "
 			+ "INNER JOIN expense e ON bpe.expenseid = e.id "
 			+ "INNER JOIN vendor v ON e.vendorId = v.id "
-			+ "WHERE bp.id = :id AND bp.toSync = 1",
+			+ "WHERE e.externalorgid = :orgId AND bp.toSync = 1",
 	nativeQuery = true)
-List<VendorPaymentResults> findExpenseAndVendorByBillPaymentId(@Param("id") Long id);
+List<VendorPaymentResults> findExpenseAndVendorByBillPaymentId(@Param("orgId") Long id);
 }
