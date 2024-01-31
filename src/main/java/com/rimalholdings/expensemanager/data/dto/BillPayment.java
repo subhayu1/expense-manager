@@ -15,5 +15,6 @@ private BigDecimal paymentAmount;
 private String paymentDate;
 private Integer paymentMethod;
 private String paymentReference;
+private Boolean toSync;
 private Map<String, BigDecimal> expensePayments;
 }

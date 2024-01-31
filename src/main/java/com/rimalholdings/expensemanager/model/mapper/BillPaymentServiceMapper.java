@@ -3,19 +3,21 @@ package com.rimalholdings.expensemanager.model.mapper;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.BillPayment;
+import com.rimalholdings.expensemanager.data.dto.VendorPaymentResults;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.exception.CannotOverpayExpenseException;
 import com.rimalholdings.expensemanager.exception.InvalidObjectException;
 import com.rimalholdings.expensemanager.exception.NoExpensePaymentsSpecifiedException;
+import com.rimalholdings.expensemanager.exception.ObjectNotFoundException;
 import com.rimalholdings.expensemanager.service.BillPaymentService;
 import com.rimalholdings.expensemanager.service.ExpenseService;
+import com.rimalholdings.expensemanager.sync.MessageWrapper;
 import com.rimalholdings.expensemanager.util.DateTimeUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -78,6 +80,7 @@ protected BillPaymentEntity createBillPaymentEntity(BillPayment billpayment) {
 	billPaymentEntity.setPaymentReference(billpayment.getPaymentReference());
 	billPaymentEntity.setPaymentDate(Timestamp.valueOf(billpayment.getPaymentDate()));
 	billPaymentEntity.setCreatedDate(DateTimeUtil.getCurrentTimeInUTC());
+	billPaymentEntity.setToSync(billpayment.getToSync());
 
 	VendorEntity vendorEntity = new VendorEntity();
 	vendorEntity.setId(billpayment.getVendorId());
@@ -214,6 +217,24 @@ private void handleOverPayment(BigDecimal paymentAmount, BigDecimal amountDue) {
 		String.format(
 			"Payment amount cannot be greater than amount due. Payment amount: %s, amount due: %s",
 			paymentAmount, amountDue));
+	}
+}
+
+public MessageWrapper<VendorPaymentResults> mapBillPayForSyncService(Long orgId) {
+	MessageWrapper<VendorPaymentResults> mappedBillPay = new MessageWrapper<>();
+	List<VendorPaymentResults> vendorPaymentResults =
+		billPaymentService.findExpenseAndVendorByBillPaymentId(orgId);
+	mappedBillPay.setMessage(vendorPaymentResults);
+	mappedBillPay.setExternalOrgId(String.valueOf(orgId));
+	mappedBillPay.setEntityName("billPayments");
+	return mappedBillPay;
+}
+
+public void updateBillPayWithIntegrationId(String integrationId, Long billPaymentId) {
+	if (billPaymentService.existsById(billPaymentId)) {
+	billPaymentService.updateBillPaymentIntegrationId(billPaymentId, integrationId);
+	} else {
+	throw new ObjectNotFoundException("Bill payment with id " + billPaymentId + " not found");
 	}
 }
 }
