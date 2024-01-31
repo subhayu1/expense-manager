@@ -66,7 +66,8 @@ private String billPaymentBody() {
 					"vendorId": %s,
 "expensePayments": {
 						"%s": 100
-					}
+					},
+					"toSync": true
 					}
 
 					"""
@@ -114,6 +115,7 @@ private void createBllPaymentEntity() {
 	billPaymentEntity.setPaymentApplicationStatus(1);
 	billPaymentEntity.setVendor(vendorEntity);
 	billPaymentEntity.setExpenses(expenseRepository.findAll());
+	billPaymentEntity.setToSync(true);
 	billPaymentRepository.saveAndFlush(billPaymentEntity);
 }
 }

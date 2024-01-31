@@ -22,4 +22,8 @@ public BillPaymentService(BillPaymentRepository billPaymentRepository) {
 public List<VendorPaymentResults> findExpenseAndVendorByBillPaymentId(Long orgId) {
 	return billPaymentRepository.findExpenseAndVendorByBillPaymentId(orgId);
 }
+
+public void updateBillPaymentIntegrationId(Long billPaymentId, String integrationId) {
+	billPaymentRepository.updateBillPaymentIntegrationId(billPaymentId, integrationId);
+}
 }

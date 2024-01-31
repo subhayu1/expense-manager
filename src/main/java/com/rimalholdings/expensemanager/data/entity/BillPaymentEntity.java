@@ -66,6 +66,9 @@ private Timestamp paymentDate;
 @Column(name = "tosync")
 private Boolean toSync;
 
+@Column(name = "integrationid")
+private String integrationId;
+
 @JoinColumn(name = "vendorid", referencedColumnName = "id")
 @ManyToOne
 @JsonIdentityReference(

@@ -2,6 +2,7 @@
 package com.rimalholdings.expensemanager.controller;
 
 import com.rimalholdings.expensemanager.data.dto.BillPayment;
+import com.rimalholdings.expensemanager.data.dto.BillPaymentUpdate;
 import com.rimalholdings.expensemanager.data.dto.VendorPaymentResults;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
@@ -52,12 +53,21 @@ public ResponseEntity<String> getBillPayment(@PathVariable Long billPaymentId) {
 	return ResponseEntity.ok(billPayment);
 }
 
-@GetMapping("/prepareObjectWrapper")
-public ResponseEntity<MessageWrapper<VendorPaymentResults>> prepareObjectWrapper(
+@GetMapping("/prepareObjectForSync")
+public ResponseEntity<MessageWrapper<VendorPaymentResults>> prepareObjectForSync(
 	@RequestParam Integer orgId) {
 	log.info("Getting bill payments");
 	MessageWrapper<VendorPaymentResults> billPayment =
-		billPaymentMapper.mapToMessageWrapper(Long.valueOf(orgId));
+		billPaymentMapper.mapBillPayForSyncService(Long.valueOf(orgId));
 	return ResponseEntity.ok(billPayment);
+}
+
+@PutMapping("/updateIntegrationId")
+public ResponseEntity<String> updateIntegrationId(
+	@RequestBody BillPaymentUpdate billPaymentUpdate) {
+	log.info("Updating integration id for bill payment with : {}", billPaymentUpdate);
+	billPaymentMapper.updateBillPayWithIntegrationId(
+		billPaymentUpdate.getIntegrationId(), billPaymentUpdate.getBillPaymentId());
+	return ResponseEntity.ok("Integration id updated successfully");
 }
 }

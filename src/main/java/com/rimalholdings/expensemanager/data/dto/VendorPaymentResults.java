@@ -6,6 +6,8 @@ public interface VendorPaymentResults {
 
 String getVendorId();
 
+Long getBillPayId();
+
 String getVendorNumber();
 
 String getDocumentNumber();

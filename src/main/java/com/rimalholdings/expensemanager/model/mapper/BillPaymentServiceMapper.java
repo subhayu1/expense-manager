@@ -14,6 +14,7 @@ import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.exception.CannotOverpayExpenseException;
 import com.rimalholdings.expensemanager.exception.InvalidObjectException;
 import com.rimalholdings.expensemanager.exception.NoExpensePaymentsSpecifiedException;
+import com.rimalholdings.expensemanager.exception.ObjectNotFoundException;
 import com.rimalholdings.expensemanager.service.BillPaymentService;
 import com.rimalholdings.expensemanager.service.ExpenseService;
 import com.rimalholdings.expensemanager.sync.MessageWrapper;
@@ -219,13 +220,21 @@ private void handleOverPayment(BigDecimal paymentAmount, BigDecimal amountDue) {
 	}
 }
 
-public MessageWrapper<VendorPaymentResults> mapToMessageWrapper(Long orgId) {
-	MessageWrapper<VendorPaymentResults> messageWrapper = new MessageWrapper<>();
+public MessageWrapper<VendorPaymentResults> mapBillPayForSyncService(Long orgId) {
+	MessageWrapper<VendorPaymentResults> mappedBillPay = new MessageWrapper<>();
 	List<VendorPaymentResults> vendorPaymentResults =
 		billPaymentService.findExpenseAndVendorByBillPaymentId(orgId);
-	messageWrapper.setMessage(vendorPaymentResults);
-	messageWrapper.setExternalOrgId(String.valueOf(orgId));
-	messageWrapper.setEntityName("billPayments");
-	return messageWrapper;
+	mappedBillPay.setMessage(vendorPaymentResults);
+	mappedBillPay.setExternalOrgId(String.valueOf(orgId));
+	mappedBillPay.setEntityName("billPayments");
+	return mappedBillPay;
+}
+
+public void updateBillPayWithIntegrationId(String integrationId, Long billPaymentId) {
+	if (billPaymentService.existsById(billPaymentId)) {
+	billPaymentService.updateBillPaymentIntegrationId(billPaymentId, integrationId);
+	} else {
+	throw new ObjectNotFoundException("Bill payment with id " + billPaymentId + " not found");
+	}
 }
 }
