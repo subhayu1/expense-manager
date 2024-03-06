@@ -20,5 +20,5 @@ String getAppliesToInvoiceNumber();
 
 String getDescription();
 
-BigDecimal getPaymentAmount();
+BigDecimal getAmount();
 }

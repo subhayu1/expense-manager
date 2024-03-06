@@ -230,11 +230,17 @@ public MessageWrapper<VendorPaymentResults> mapBillPayForSyncService(Long orgId)
 	return mappedBillPay;
 }
 
-public void updateBillPayWithIntegrationId(String integrationId, Long billPaymentId) {
-	if (billPaymentService.existsById(billPaymentId)) {
-	billPaymentService.updateBillPaymentIntegrationId(billPaymentId, integrationId);
+public void updateBillPayWithIntegrationId(String invoiceExternalDocumentNumber, Long orgId, String integrationId) {
+	Long billPaymentIdFromDb =
+		billPaymentService.findBillPaymentIdByExternalInvoiceNumber(
+				invoiceExternalDocumentNumber, orgId
+		);
+	if (billPaymentService.existsById(billPaymentIdFromDb)) {
+	billPaymentService.updateBillPaymentIntegrationId(
+			billPaymentIdFromDb, integrationId
+	);
 	} else {
-	throw new ObjectNotFoundException("Bill payment with id " + billPaymentId + " not found");
+	throw new ObjectNotFoundException("Bill payment with id " + orgId + " not found");
 	}
 }
 }

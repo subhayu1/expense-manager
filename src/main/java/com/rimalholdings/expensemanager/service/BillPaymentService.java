@@ -12,18 +12,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class BillPaymentService extends AbstractEntityService<BillPaymentEntity> {
 
-private final BillPaymentRepository billPaymentRepository;
+	private final BillPaymentRepository billPaymentRepository;
 
-public BillPaymentService(BillPaymentRepository billPaymentRepository) {
-	super(billPaymentRepository);
-	this.billPaymentRepository = billPaymentRepository;
-}
+	public BillPaymentService(BillPaymentRepository billPaymentRepository) {
+		super(billPaymentRepository);
+		this.billPaymentRepository = billPaymentRepository;
+	}
 
-public List<VendorPaymentResults> findExpenseAndVendorByBillPaymentId(Long orgId) {
-	return billPaymentRepository.findExpenseAndVendorByBillPaymentId(orgId);
-}
+	public List<VendorPaymentResults> findExpenseAndVendorByBillPaymentId(Long orgId) {
+		return billPaymentRepository.findExpenseAndVendorByBillPaymentId(orgId);
+	}
 
-public void updateBillPaymentIntegrationId(Long billPaymentId, String integrationId) {
-	billPaymentRepository.updateBillPaymentIntegrationId(billPaymentId, integrationId);
-}
+	public void updateBillPaymentIntegrationId(Long billPaymentId, String integrationId) {
+		billPaymentRepository.updateBillPaymentIntegrationId(billPaymentId, integrationId);
+	}
+
+	public Long findBillPaymentIdByExternalInvoiceNumber(String invoiceExternalDocumentNumber, Long orgId) {
+		return billPaymentRepository.findBillPaymentIdByExternalInvoiceNumber(invoiceExternalDocumentNumber, orgId);
+	}
 }
