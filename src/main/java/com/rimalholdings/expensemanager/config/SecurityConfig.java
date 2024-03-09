@@ -64,7 +64,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 						"/swagger-ui/**",
 						"/v3/api-docs/**",
 						"/v3/api-docs/",
-						"/auth/token")
+						"/auth/token",
+								"/api/v1/**")
 					.permitAll()
 					.anyRequest()
 					.authenticated())
@@ -78,7 +79,6 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 					.accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
 		.build();
 }
-
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Bean
 SecurityFilterChain tokenSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -121,12 +121,33 @@ public SecurityFilterChain basicAuthFilterChain(HttpSecurity http) throws Except
 }
 
 @Bean
+//@Order(Ordered.HIGHEST_PRECEDENCE)
 // matcher for create user endpoint
 public SecurityFilterChain createUserFilterChain(HttpSecurity http) throws Exception {
 	return http.csrf(AbstractHttpConfigurer::disable)
 		.authorizeHttpRequests(
 			auth ->
 				auth.requestMatchers(new AntPathRequestMatcher("/auth/user", "POST"))
+					.permitAll()
+					.anyRequest()
+					.authenticated())
+		.sessionManagement(
+			session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+		.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())))
+		.userDetailsService(userService)
+		.exceptionHandling(
+			(ex) ->
+				ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+					.accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
+		.build();
+}
+@Bean
+// matcher for bill pay template endpoint
+public SecurityFilterChain billPayTemplateFilterChain(HttpSecurity http) throws Exception {
+	return http.csrf(AbstractHttpConfigurer::disable)
+		.authorizeHttpRequests(
+			auth ->
+				auth.requestMatchers(new AntPathRequestMatcher("/api/v1/bill-payment/**", "GET"))
 					.permitAll()
 					.anyRequest()
 					.authenticated())
