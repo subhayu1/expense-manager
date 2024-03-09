@@ -6,7 +6,7 @@ orbs:
 executors:
   machine_executor_amd64:
     machine:
-      image: ubuntu-2204:2022.04.2
+      image: default
     environment:
       architecture: "amd64"
       platform: "linux/amd64"
@@ -41,9 +41,9 @@ jobs:
       #- run:
        #   name: copy flyway.conf file
        #   command: cp ./flyway.conf ./build/resources/main/flyway.conf
-    #  - run:
-      #    name: Run Integration Tests with Testcontainers
-      #    command: ./gradlew testInteg
+      - run:
+          name: Run Integration Tests with Testcontainers
+          command: ./gradlew testInteg
       - save_cache:
           paths:
             - ~/.gradle
