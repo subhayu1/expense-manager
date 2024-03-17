@@ -79,7 +79,6 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 					.accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
 		.build();
 }
-
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Bean
 SecurityFilterChain tokenSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -122,7 +121,7 @@ public SecurityFilterChain basicAuthFilterChain(HttpSecurity http) throws Except
 }
 
 @Bean
-// @Order(Ordered.HIGHEST_PRECEDENCE)
+//@Order(Ordered.HIGHEST_PRECEDENCE)
 // matcher for create user endpoint
 public SecurityFilterChain createUserFilterChain(HttpSecurity http) throws Exception {
 	return http.csrf(AbstractHttpConfigurer::disable)
@@ -142,7 +141,6 @@ public SecurityFilterChain createUserFilterChain(HttpSecurity http) throws Excep
 					.accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
 		.build();
 }
-
 @Bean
 // matcher for bill pay template endpoint
 public SecurityFilterChain billPayTemplateFilterChain(HttpSecurity http) throws Exception {
