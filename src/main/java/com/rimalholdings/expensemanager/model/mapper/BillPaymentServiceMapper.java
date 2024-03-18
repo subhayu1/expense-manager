@@ -230,11 +230,11 @@ public MessageWrapper<VendorPaymentResults> mapBillPayForSyncService(Long orgId)
 	return mappedBillPay;
 }
 
-public void updateBillPayWithIntegrationId(String invoiceExternalDocumentNumber, Long orgId, String integrationId) {
+public void updateBillPayWithIntegrationId(
+	String invoiceExternalDocumentNumber, Long orgId, String integrationId) {
 	Long billPaymentIdFromDb =
 		billPaymentService.findBillPaymentIdByExternalInvoiceNumber(
-				invoiceExternalDocumentNumber, orgId
-		);
+			invoiceExternalDocumentNumber, orgId);
 	if (billPaymentService.existsById(billPaymentIdFromDb)) {
 	billPaymentService.updateBillPaymentIntegrationId(
 			billPaymentIdFromDb, integrationId

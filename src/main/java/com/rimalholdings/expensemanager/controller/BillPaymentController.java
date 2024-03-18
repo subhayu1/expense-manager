@@ -68,8 +68,8 @@ public ResponseEntity<String> updateIntegrationId(
 	log.info("Updating integration id for bill payment with : {}", billPaymentUpdate);
 	billPaymentMapper.updateBillPayWithIntegrationId(
 		billPaymentUpdate.getInvoiceExternalDocumentNumber(),
-            Long.valueOf(billPaymentUpdate.getOrgId()),
-			billPaymentUpdate.getIntegrationId());
+		Long.valueOf(billPaymentUpdate.getOrgId()),
+		billPaymentUpdate.getIntegrationId());
 	return ResponseEntity.ok("Integration id updated successfully");
 }
 }

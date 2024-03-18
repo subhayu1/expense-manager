@@ -65,7 +65,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 						"/v3/api-docs/**",
 						"/v3/api-docs/",
 						"/auth/token",
-								"/api/v1/**")
+						"/api/v1/**")
 					.permitAll()
 					.anyRequest()
 					.authenticated())

@@ -32,30 +32,29 @@ public interface BillPaymentRepository extends BaseRepository<BillPaymentEntity>
 			nativeQuery = true)
 	List<VendorPaymentResults> findExpenseAndVendorByBillPaymentId(@Param("orgId") Long id);
 
-	@Transactional
-	@Modifying
-	@Query(
-			value =
-					"UPDATE billpayment bp "
-							+ "SET bp.integrationid = :integrationId, bp.tosync = 0 "
-							+ "WHERE bp.id = :billPaymentId",
-			nativeQuery = true)
-	void updateBillPaymentIntegrationId(
-			@Param("billPaymentId") Long billPaymentId, @Param("integrationId") String integrationId);
+@Transactional
+@Modifying
+@Query(
+	value =
+		"UPDATE billpayment bp "
+			+ "SET bp.integrationid = :integrationId, bp.tosync = 0 "
+			+ "WHERE bp.id = :billPaymentId",
+	nativeQuery = true)
+void updateBillPaymentIntegrationId(
+	@Param("billPaymentId") Long billPaymentId, @Param("integrationId") String integrationId);
 
-
-	@Query(
-			value =
-			"SELECT bp.id AS billpayId " +
-					"FROM billpayment bp " +
-					"INNER JOIN billpayment_expense bpe ON bp.id = bpe.billpaymentid " +
-					"INNER JOIN expense e ON bpe.expenseid = e.id " +
-					"WHERE e.externalorgid=:orgId " +
-					"AND e.externalinvoicenumber= :invoiceExternalDocumentNumber" ,
-
-			nativeQuery = true)
-	Long findBillPaymentIdByExternalInvoiceNumber(@Param("invoiceExternalDocumentNumber") String invoiceExternalDocumentNumber, @Param("orgId") Long orgId);
-
+@Query(
+	value =
+		"SELECT bp.id AS billpayId "
+			+ "FROM billpayment bp "
+			+ "INNER JOIN billpayment_expense bpe ON bp.id = bpe.billpaymentid "
+			+ "INNER JOIN expense e ON bpe.expenseid = e.id "
+			+ "WHERE e.externalorgid=:orgId "
+			+ "AND e.externalinvoicenumber= :invoiceExternalDocumentNumber",
+	nativeQuery = true)
+Long findBillPaymentIdByExternalInvoiceNumber(
+	@Param("invoiceExternalDocumentNumber") String invoiceExternalDocumentNumber,
+	@Param("orgId") Long orgId);
 
 
 }

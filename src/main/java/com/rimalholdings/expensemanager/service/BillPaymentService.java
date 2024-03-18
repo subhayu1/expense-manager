@@ -23,11 +23,13 @@ public class BillPaymentService extends AbstractEntityService<BillPaymentEntity>
 		return billPaymentRepository.findExpenseAndVendorByBillPaymentId(orgId);
 	}
 
-	public void updateBillPaymentIntegrationId(Long billPaymentId, String integrationId) {
-		billPaymentRepository.updateBillPaymentIntegrationId(billPaymentId, integrationId);
-	}
+public void updateBillPaymentIntegrationId(Long billPaymentId, String integrationId) {
+	billPaymentRepository.updateBillPaymentIntegrationId(billPaymentId, integrationId);
+}
 
-	public Long findBillPaymentIdByExternalInvoiceNumber(String invoiceExternalDocumentNumber, Long orgId) {
-		return billPaymentRepository.findBillPaymentIdByExternalInvoiceNumber(invoiceExternalDocumentNumber, orgId);
-	}
+public Long findBillPaymentIdByExternalInvoiceNumber(
+	String invoiceExternalDocumentNumber, Long orgId) {
+	return billPaymentRepository.findBillPaymentIdByExternalInvoiceNumber(
+		invoiceExternalDocumentNumber, orgId);
+}
 }
