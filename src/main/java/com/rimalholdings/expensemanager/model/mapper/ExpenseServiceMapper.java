@@ -35,7 +35,6 @@ protected ExpenseServiceMapper(ObjectMapper objectMapper, ExpenseService expense
 	this.expenseService = expenseService;
 }
 
-@Override
 public ExpenseEntity mapToDTO(BaseDTOInterface dtoInterface) {
 	Expense expense = (Expense) dtoInterface;
 
@@ -147,7 +146,11 @@ public String saveOrUpdateEntity(BaseDTOInterface dtoInterface) {
 
 @Override
 public Page<ExpenseEntity> getAllEntities(Pageable pageable) {
-	return expenseService.findAll(pageable);
+	return expenseService.getExpensesByExternalOrgId(pageable, null);
+}
+
+public Page<ExpenseEntity> getAllEntities(Pageable pageable, Integer externalOrgId) {
+	return expenseService.getExpensesByExternalOrgId(pageable, externalOrgId);
 }
 
 @Override

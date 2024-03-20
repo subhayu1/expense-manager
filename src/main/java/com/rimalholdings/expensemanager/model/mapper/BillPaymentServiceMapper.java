@@ -236,9 +236,7 @@ public void updateBillPayWithIntegrationId(
 		billPaymentService.findBillPaymentIdByExternalInvoiceNumber(
 			invoiceExternalDocumentNumber, orgId);
 	if (billPaymentService.existsById(billPaymentIdFromDb)) {
-	billPaymentService.updateBillPaymentIntegrationId(
-			billPaymentIdFromDb, integrationId
-	);
+	billPaymentService.updateBillPaymentIntegrationId(billPaymentIdFromDb, integrationId);
 	} else {
 	throw new ObjectNotFoundException("Bill payment with id " + orgId + " not found");
 	}
