@@ -38,8 +38,11 @@ void testShouldReturnCreatedExpenseWhenExpenseDTOIsValid() {
 @Test
 void testShouldReturnAllExpenses() {
 	Page<ExpenseEntity> expenses = Page.empty();
+	Integer externalOrgId = 1;
+	when(expenseServiceMapper.getAllEntities(pageable, externalOrgId)).thenReturn(expenses);
 	when(expenseServiceMapper.getAllEntities(pageable)).thenReturn(expenses);
-	ResponseEntity<Page<ExpenseEntity>> response = expenseController.getAllExpenses(pageable);
+	ResponseEntity<Page<ExpenseEntity>> response =
+		expenseController.getAllExpenses(externalOrgId, pageable);
 	assertEquals(expenses, response.getBody());
 }
 
