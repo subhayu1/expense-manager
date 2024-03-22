@@ -14,12 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "user")
 public class UserEntity extends BaseEntity {
-public UserEntity(String username, String password, String role) {
-	this.username = username;
-	this.password = password;
-	this.role = role;
-}
-
 @Column(name = "username", unique = true)
 private String username;
 
@@ -28,4 +22,10 @@ private String password;
 
 @Column(name = "role")
 private String role;
+
+public UserEntity(String username, String password, String role) {
+	this.username = username;
+	this.password = password;
+	this.role = role;
+}
 }

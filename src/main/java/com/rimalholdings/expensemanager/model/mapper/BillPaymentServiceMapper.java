@@ -7,17 +7,14 @@ import java.util.*;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.BillPayment;
-import com.rimalholdings.expensemanager.data.dto.VendorPaymentResults;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.exception.CannotOverpayExpenseException;
 import com.rimalholdings.expensemanager.exception.InvalidObjectException;
 import com.rimalholdings.expensemanager.exception.NoExpensePaymentsSpecifiedException;
-import com.rimalholdings.expensemanager.exception.ObjectNotFoundException;
 import com.rimalholdings.expensemanager.service.BillPaymentService;
 import com.rimalholdings.expensemanager.service.ExpenseService;
-import com.rimalholdings.expensemanager.sync.MessageWrapper;
 import com.rimalholdings.expensemanager.util.DateTimeUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,15 +29,14 @@ import org.springframework.stereotype.Service;
 public class BillPaymentServiceMapper extends AbstractServiceMapper<BillPaymentEntity> {
 
 private static final Integer ZERO = 0;
-private final BillPaymentService billPaymentService;
-private final ExpenseService expenseService;
-
 private static final Integer PARTIALLY_PAID = 1;
 private static final Integer PAID = 2;
 private static final Integer UNPAID = 3;
 private static final Integer UNAPPLIED = 3;
 private static final Integer FULLY_APPLIED = 2;
 private static final Integer PARTIALLY_APPLIED = 1;
+private final BillPaymentService billPaymentService;
+private final ExpenseService expenseService;
 
 protected BillPaymentServiceMapper(
 	ObjectMapper objectMapper,
@@ -217,28 +213,6 @@ private void handleOverPayment(BigDecimal paymentAmount, BigDecimal amountDue) {
 		String.format(
 			"Payment amount cannot be greater than amount due. Payment amount: %s, amount due: %s",
 			paymentAmount, amountDue));
-	}
-}
-
-public MessageWrapper<VendorPaymentResults> mapBillPayForSyncService(Long orgId) {
-	MessageWrapper<VendorPaymentResults> mappedBillPay = new MessageWrapper<>();
-	List<VendorPaymentResults> vendorPaymentResults =
-		billPaymentService.findExpenseAndVendorByBillPaymentId(orgId);
-	mappedBillPay.setMessage(vendorPaymentResults);
-	mappedBillPay.setExternalOrgId(String.valueOf(orgId));
-	mappedBillPay.setEntityName("billPayments");
-	return mappedBillPay;
-}
-
-public void updateBillPayWithIntegrationId(
-	String invoiceExternalDocumentNumber, Long orgId, String integrationId) {
-	Long billPaymentIdFromDb =
-		billPaymentService.findBillPaymentIdByExternalInvoiceNumber(
-			invoiceExternalDocumentNumber, orgId);
-	if (billPaymentService.existsById(billPaymentIdFromDb)) {
-	billPaymentService.updateBillPaymentIntegrationId(billPaymentIdFromDb, integrationId);
-	} else {
-	throw new ObjectNotFoundException("Bill payment with id " + orgId + " not found");
 	}
 }
 }

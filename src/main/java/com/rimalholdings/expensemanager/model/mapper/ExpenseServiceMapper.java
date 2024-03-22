@@ -25,10 +25,10 @@ import org.springframework.stereotype.Service;
 @Slf4j(topic = "ExpenseServiceMapper")
 public class ExpenseServiceMapper extends AbstractServiceMapper<ExpenseEntity> {
 
-private final ExpenseService expenseService;
 private static final Integer PARTIALLY_PAID = 1;
 private static final Integer PAID = 2;
 private static final Integer UNPAID = 3;
+private final ExpenseService expenseService;
 
 protected ExpenseServiceMapper(ObjectMapper objectMapper, ExpenseService expenseService) {
 	super(objectMapper);

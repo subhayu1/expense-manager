@@ -32,4 +32,6 @@ public Long findBillPaymentIdByExternalInvoiceNumber(
 	return billPaymentRepository.findBillPaymentIdByExternalInvoiceNumber(
 		invoiceExternalDocumentNumber, orgId);
 }
+
+public void allowBillPaymentIntegration(Long billpayId, Boolean allowIntegration) {}
 }
