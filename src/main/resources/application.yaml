@@ -69,10 +69,10 @@ logging:
   level:
     org:
       springframework:
-        web: DEBUG
+        web: INFO
         flywaydb:
           core:
-            Flyway: DEBUG
+            Flyway: INFO
 server:
   port: 10000
 rabbit:

@@ -6,6 +6,7 @@ import com.rimalholdings.expensemanager.data.dto.BillPaymentUpdate;
 import com.rimalholdings.expensemanager.data.dto.VendorPaymentResults;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.exception.UpdateNotAllowedException;
+import com.rimalholdings.expensemanager.model.mapper.BillPayIntegrationHandler;
 import com.rimalholdings.expensemanager.model.mapper.BillPaymentServiceMapper;
 import com.rimalholdings.expensemanager.sync.MessageWrapper;
 
@@ -23,9 +24,13 @@ import org.springframework.web.bind.annotation.*;
 public class BillPaymentController implements APIControllerInterface {
 
 private final BillPaymentServiceMapper billPaymentMapper;
+private final BillPayIntegrationHandler billPayIntegrationHandler;
 
-public BillPaymentController(BillPaymentServiceMapper billPaymentMapper) {
+public BillPaymentController(
+	BillPaymentServiceMapper billPaymentMapper,
+	BillPayIntegrationHandler billPayIntegrationHandler) {
 	this.billPaymentMapper = billPaymentMapper;
+	this.billPayIntegrationHandler = billPayIntegrationHandler;
 }
 
 @PostMapping("/")
@@ -71,5 +76,17 @@ public ResponseEntity<String> updateIntegrationId(
 		Long.valueOf(billPaymentUpdate.getOrgId()),
 		billPaymentUpdate.getIntegrationId());
 	return ResponseEntity.ok("Integration id updated successfully");
+}
+
+@PostMapping("/allowIntegration")
+public ResponseEntity<String> allowIntegration(@RequestBody BillPaymentUpdate billPaymentUpdate) {
+
+	log.info(
+		"Setting toSync to: {} for bill payment with id: {}",
+		billPaymentUpdate.getAllowIntegration(),
+		billPaymentUpdate.getBillPayId());
+	billPayIntegrationHandler.allowBillPaymentIntegration(
+		billPaymentUpdate.getAllowIntegration(), billPaymentUpdate.getBillPayId());
+	return ResponseEntity.ok("Integration allowed successfully");
 }
 }
