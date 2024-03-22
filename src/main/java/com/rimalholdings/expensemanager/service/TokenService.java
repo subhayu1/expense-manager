@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class TokenService {
 
-private final JwtEncoder encoder;
 private static final String ISSUER = "rimalholdings.com";
+private final JwtEncoder encoder;
 
 public TokenService(JwtEncoder encoder) {
 	this.encoder = encoder;

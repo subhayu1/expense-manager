@@ -62,4 +62,11 @@ Long findBillPaymentIdByExternalInvoiceNumber(
 	value = "update billpayment bp set bp.tosync = :allowIntegration where bp.id = :billPayId",
 	nativeQuery = true)
 void allowBillPaymentIntegration(Boolean allowIntegration, Long billPayId);
+
+@Transactional
+@Modifying
+@Query(
+	value = "update billpayment bp set bp.integrationid = null where bp.id = :billPayId",
+	nativeQuery = true)
+void clearIntegrationId(Long billPayId);
 }

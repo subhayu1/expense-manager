@@ -63,7 +63,7 @@ public ResponseEntity<MessageWrapper<VendorPaymentResults>> prepareObjectForSync
 	@RequestParam Integer orgId) {
 	log.info("Getting bill payments");
 	MessageWrapper<VendorPaymentResults> billPayment =
-		billPaymentMapper.mapBillPayForSyncService(Long.valueOf(orgId));
+		billPayIntegrationHandler.mapBillPayForSyncService(Long.valueOf(orgId));
 	return ResponseEntity.ok(billPayment);
 }
 
@@ -71,7 +71,7 @@ public ResponseEntity<MessageWrapper<VendorPaymentResults>> prepareObjectForSync
 public ResponseEntity<String> updateIntegrationId(
 	@RequestBody BillPaymentUpdate billPaymentUpdate) {
 	log.info("Updating integration id for bill payment with : {}", billPaymentUpdate);
-	billPaymentMapper.updateBillPayWithIntegrationId(
+	billPayIntegrationHandler.updateBillPayWithIntegrationId(
 		billPaymentUpdate.getInvoiceExternalDocumentNumber(),
 		Long.valueOf(billPaymentUpdate.getOrgId()),
 		billPaymentUpdate.getIntegrationId());
@@ -88,5 +88,14 @@ public ResponseEntity<String> allowIntegration(@RequestBody BillPaymentUpdate bi
 	billPayIntegrationHandler.allowBillPaymentIntegration(
 		billPaymentUpdate.getAllowIntegration(), billPaymentUpdate.getBillPayId());
 	return ResponseEntity.ok("Integration allowed successfully");
+}
+
+@PostMapping("/clearIntegrationId")
+public ResponseEntity<String> clearIntegrationId(
+	@RequestBody BillPaymentUpdate billPaymentUpdate) {
+	log.info(
+		"Clearing integration id for bill payment with id: {}", billPaymentUpdate.getBillPayId());
+	billPayIntegrationHandler.clearIntegrationId(billPaymentUpdate.getBillPayId());
+	return ResponseEntity.ok("Integration id cleared successfully");
 }
 }

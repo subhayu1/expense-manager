@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j(topic = "SyncManager")
 public class SyncManager<T> {
-private final VendorServiceMapper vendorServiceMapper;
-private final ExpenseServiceMapper expenseServiceMapper;
 public static final String VENDORS = "vendors";
 public static final String PURCHASE_INVOICES = "purchaseInvoices";
+private final VendorServiceMapper vendorServiceMapper;
+private final ExpenseServiceMapper expenseServiceMapper;
 
 public SyncManager(
 	VendorServiceMapper vendorServiceMapper, ExpenseServiceMapper expenseServiceMapper) {
