@@ -3,6 +3,7 @@ package com.rimalholdings.expensemanager.model.mapper;
 import java.util.List;
 
 import com.rimalholdings.expensemanager.data.dao.BillPaymentRepository;
+import com.rimalholdings.expensemanager.data.dto.BillPaymentInvoice;
 import com.rimalholdings.expensemanager.data.dto.VendorPaymentResults;
 import com.rimalholdings.expensemanager.exception.ObjectNotFoundException;
 import com.rimalholdings.expensemanager.service.BillPaymentService;
@@ -50,4 +51,13 @@ public MessageWrapper<VendorPaymentResults> mapBillPayForSyncService(Long orgId)
 	mappedBillPay.setEntityName("billPayments");
 	return mappedBillPay;
 }
+public MessageWrapper<BillPaymentInvoice>getBillPaymentInvoices(Long orgId) {
+	MessageWrapper<BillPaymentInvoice> BillPaymentInvoiceData = new MessageWrapper<>();
+	List<BillPaymentInvoice> billPaymentInvoices = billPaymentRepository.getBillPayments(orgId);
+	BillPaymentInvoiceData.setMessage(billPaymentInvoices);
+	BillPaymentInvoiceData.setExternalOrgId(String.valueOf(orgId));
+	BillPaymentInvoiceData.setEntityName("billPayments");
+	return BillPaymentInvoiceData;
+}
+
 }

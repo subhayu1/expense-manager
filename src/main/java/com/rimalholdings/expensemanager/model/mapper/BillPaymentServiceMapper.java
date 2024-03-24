@@ -177,6 +177,10 @@ public Page<BillPaymentEntity> getAllEntities(Pageable pageable) {
 	return billPaymentService.findAll(pageable);
 }
 
+public List<BillPaymentEntity> getAllEntities() {
+	return billPaymentService.findAll();
+}
+
 @Override
 public BillPaymentEntity getEntityForUpdate(Long id) {
 	// Billpayments cannot be updated

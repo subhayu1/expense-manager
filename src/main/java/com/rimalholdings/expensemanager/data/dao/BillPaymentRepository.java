@@ -3,6 +3,7 @@ package com.rimalholdings.expensemanager.data.dao;
 
 import java.util.List;
 
+import com.rimalholdings.expensemanager.data.dto.BillPaymentInvoice;
 import com.rimalholdings.expensemanager.data.dto.VendorPaymentResults;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 
@@ -17,7 +18,6 @@ public interface BillPaymentRepository extends BaseRepository<BillPaymentEntity>
 
 Page<BillPaymentEntity> findByVendorId(Long vendorId, Pageable pageable);
 
-// List<VendorPaymentResult> findExpenseAndVendorByBillPaymentId(@Param("id") Long id);
 @Query(
 	value =
 		"SELECT bp.id AS billPayId, v.integrationId AS vendorId, v.vendornumber AS vendorNumber, "
@@ -69,4 +69,22 @@ void allowBillPaymentIntegration(Boolean allowIntegration, Long billPayId);
 	value = "update billpayment bp set bp.integrationid = null where bp.id = :billPayId",
 	nativeQuery = true)
 void clearIntegrationId(Long billPayId);
+@Query(
+		//SELECT bp.id AS id, v.name AS vendorName, e.externalorgid AS externalOrgId,
+		//       e.externalinvoicenumber AS externalInvoiceNumber,
+		//      e.description AS description,e.totalamount AS totalAmount,
+		//       e.paymentamount as paymentAmount,e.amountdue as amountDue
+		//FROM billpayment bp
+		//INNER JOIN billpayment_expense bpe ON bp.id = bpe.billpaymentid
+		//INNER JOIN expense e ON bpe.expenseid = e.id
+		//INNER JOIN vendor v ON e.vendorid = v.id;
+	value = "SELECT bp.id AS id, v.name AS vendorName, e.externalorgid AS externalOrgId," +
+			" e.externalinvoicenumber AS externalInvoiceNumber, e.description AS description," +
+			"e.totalamount AS totalAmount, e.paymentamount as paymentAmount,e.amountdue as amountDue" +
+			" FROM billpayment bp INNER JOIN billpayment_expense bpe ON bp.id = bpe.billpaymentid " +
+			"INNER JOIN expense e ON bpe.expenseid = e.id INNER JOIN vendor v ON e.vendorid = v.id " +
+			"WHERE e.externalorgid = :orgId ",
+	nativeQuery = true)
+List<BillPaymentInvoice> getBillPayments(@Param("orgId") Long id);
+
 }
