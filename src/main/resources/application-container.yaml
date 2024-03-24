@@ -39,6 +39,12 @@ spring:
   sql:
     init:
       mode: never
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
 rsa:
   private-key: classpath:certs/private.pem
   public-key: classpath:certs/public.pem
@@ -63,3 +69,11 @@ eureka:
     enabled: true
     serviceUrl:
       defaultZone: http://eureka:8761/eureka
+rabbit:
+  em:
+    queue:
+      name: syncQueue
+    exchange:
+      name: syncExchange
+    routing:
+      key: sync.start
