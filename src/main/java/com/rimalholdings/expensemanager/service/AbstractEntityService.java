@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public abstract class AbstractEntityService<T extends BaseEntity> {
 
 private final BaseRepository<T> repository;
@@ -57,6 +59,9 @@ public void deleteById(Long id) throws DataIntegrityViolationException {
 
 public Page<T> findAll(Pageable pageable) {
 	return repository.findAll(pageable);
+}
+public List<T> findAll() {
+	return repository.findAll();
 }
 
 public boolean existsById(Long id) {

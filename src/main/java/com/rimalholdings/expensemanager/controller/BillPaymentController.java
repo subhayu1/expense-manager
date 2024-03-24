@@ -2,6 +2,7 @@
 package com.rimalholdings.expensemanager.controller;
 
 import com.rimalholdings.expensemanager.data.dto.BillPayment;
+import com.rimalholdings.expensemanager.data.dto.BillPaymentInvoice;
 import com.rimalholdings.expensemanager.data.dto.BillPaymentUpdate;
 import com.rimalholdings.expensemanager.data.dto.VendorPaymentResults;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j(topic = "BillPaymentController")
@@ -49,6 +52,12 @@ public ResponseEntity<Page<BillPaymentEntity>> getAllBillPayments(
 	log.info("Getting all bill payments");
 	Page<BillPaymentEntity> allBillPayments = billPaymentMapper.getAllEntities(pageable);
 	return ResponseEntity.ok(allBillPayments);
+}
+@GetMapping("/blps")
+public ResponseEntity<MessageWrapper<BillPaymentInvoice>> getBillPayments(@RequestParam Integer orgId) {
+	log.info("Getting bill payments");
+	MessageWrapper<BillPaymentInvoice> billPayments = billPayIntegrationHandler.getBillPaymentInvoices(Long.valueOf(orgId));
+	return ResponseEntity.ok(billPayments);
 }
 
 @GetMapping("/{billPaymentId}")
