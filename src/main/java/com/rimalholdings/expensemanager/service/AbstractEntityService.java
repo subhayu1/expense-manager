@@ -1,6 +1,8 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.service;
 
+import java.util.List;
+
 import com.rimalholdings.expensemanager.data.dao.BaseRepository;
 import com.rimalholdings.expensemanager.data.entity.BaseEntity;
 import com.rimalholdings.expensemanager.exception.ExceptionConstant;
@@ -11,8 +13,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 public abstract class AbstractEntityService<T extends BaseEntity> {
 
@@ -60,6 +60,7 @@ public void deleteById(Long id) throws DataIntegrityViolationException {
 public Page<T> findAll(Pageable pageable) {
 	return repository.findAll(pageable);
 }
+
 public List<T> findAll() {
 	return repository.findAll();
 }

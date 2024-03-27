@@ -19,8 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @Slf4j(topic = "BillPaymentController")
 @RequestMapping("/api/v1/bill-payment")
@@ -53,10 +51,13 @@ public ResponseEntity<Page<BillPaymentEntity>> getAllBillPayments(
 	Page<BillPaymentEntity> allBillPayments = billPaymentMapper.getAllEntities(pageable);
 	return ResponseEntity.ok(allBillPayments);
 }
+
 @GetMapping("/blps")
-public ResponseEntity<MessageWrapper<BillPaymentInvoice>> getBillPayments(@RequestParam Integer orgId) {
+public ResponseEntity<MessageWrapper<BillPaymentInvoice>> getBillPayments(
+	@RequestParam Integer orgId) {
 	log.info("Getting bill payments");
-	MessageWrapper<BillPaymentInvoice> billPayments = billPayIntegrationHandler.getBillPaymentInvoices(Long.valueOf(orgId));
+	MessageWrapper<BillPaymentInvoice> billPayments =
+		billPayIntegrationHandler.getBillPaymentInvoices(Long.valueOf(orgId));
 	return ResponseEntity.ok(billPayments);
 }
 

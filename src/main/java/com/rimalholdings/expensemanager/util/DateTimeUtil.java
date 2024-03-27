@@ -1,5 +1,6 @@
 package com.rimalholdings.expensemanager.util;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -14,6 +15,10 @@ public static Timestamp getCurrentTimeInUTC() {
 
 public static String convertTimestampToISO8601(Timestamp timestamp) {
 	return timestamp.toLocalDateTime().format(DateTimeFormatter.ISO_DATE_TIME) + "Z";
+}
+
+public static Date getCurrentDate() {
+	return Date.valueOf(ZonedDateTime.now(ZoneId.of("UTC")).toLocalDate());
 }
 
 public static Timestamp convertStringToTimestamp(String invoiceDate) {

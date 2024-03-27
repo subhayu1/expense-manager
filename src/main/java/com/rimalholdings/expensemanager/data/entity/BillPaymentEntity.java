@@ -43,6 +43,7 @@ public class BillPaymentEntity extends BaseEntity {
 @ToString.Exclude
 @EqualsAndHashCode.Exclude
 @JsonManagedReference
+@JsonIdentityReference(alwaysAsId = true)
 private List<ExpenseEntity> expenses = new ArrayList<>();
 
 @Column(name = "paymentamount", nullable = false)
@@ -75,4 +76,9 @@ private String integrationId;
 	alwaysAsId = true) // This annotation changes the serialization from an object to its id
 @ToString.Exclude
 private VendorEntity vendor;
+
+@ManyToOne
+@JoinColumn(name = "appaymentid", referencedColumnName = "id")
+@JsonIdentityReference(alwaysAsId = true)
+private ApPaymentEntity apPayment;
 }

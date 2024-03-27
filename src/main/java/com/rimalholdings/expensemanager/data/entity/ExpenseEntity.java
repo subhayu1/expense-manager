@@ -101,4 +101,7 @@ private String integrationId;
 
 @Column(name = "externalorgid")
 private Integer externalOrgId;
+
+@Column(name = "appaymentid")
+private Integer apPaymentId;
 }
