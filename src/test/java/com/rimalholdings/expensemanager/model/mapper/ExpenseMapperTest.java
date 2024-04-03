@@ -158,7 +158,6 @@ void testUpdatingPartiallyOrFullyPaidExpenseThrowsUpdateNotAllowedException() {
 	when(expenseService.findById(expense.getId())).thenReturn(expenseEntity);
 	when(expenseService.save(expenseEntity)).thenReturn(expenseEntity);
 
-
 	// Act & Assert
 	assertThrows(UpdateNotAllowedException.class, () -> expenseMapper.saveOrUpdateEntity(expense));
 }
