@@ -146,11 +146,18 @@ void testUpdatingPartiallyOrFullyPaidExpenseThrowsUpdateNotAllowedException() {
 	expense.setTotalAmount(totalAmount);
 	expense.setVendorId(1L);
 	expense.setDescription("Test Expense");
+	expense.setIntegrationId("1234");
 
 	expenseEntity.setPaymentStatus(1);
 	expenseEntity.setAmountDue(BigDecimal.valueOf(100.00));
-	when(expenseMapper.getEntityForUpdate(expense.getId())).thenReturn(expenseEntity);
+	expenseEntity.setIntegrationId("1234");
+	when(expenseService.existsById(expense.getId())).thenReturn(true);
+	when(expenseService.existsByIntegrationId(expense.getIntegrationId())).thenReturn(true);
+	when(expenseMapper.getEntityForUpdate(expense.getId(), expense.getIntegrationId()))
+		.thenReturn(expenseEntity);
+	when(expenseService.findById(expense.getId())).thenReturn(expenseEntity);
 	when(expenseService.save(expenseEntity)).thenReturn(expenseEntity);
+
 
 	// Act & Assert
 	assertThrows(UpdateNotAllowedException.class, () -> expenseMapper.saveOrUpdateEntity(expense));
