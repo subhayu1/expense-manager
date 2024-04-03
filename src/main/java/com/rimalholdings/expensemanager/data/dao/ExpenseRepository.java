@@ -18,4 +18,8 @@ public interface ExpenseRepository
 	value = "UPDATE expense e  SET e.appaymentid = :apPaymentId WHERE e.id = :expenseId",
 	nativeQuery = true)
 void updateExpenseWithApPaymentId(Integer expenseId, Integer apPaymentId);
+
+ExpenseEntity findByIntegrationId(String integrationId);
+
+boolean existsByIntegrationId(String integrationId);
 }

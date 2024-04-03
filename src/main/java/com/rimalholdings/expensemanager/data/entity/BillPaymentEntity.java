@@ -2,8 +2,6 @@ package com.rimalholdings.expensemanager.data.entity;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -13,39 +11,20 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-// private String vendorId;
-//
-// private String vendorNumber;
-//
-// private String documentNumber;
-//
-// private String externalDocumentNumber;
-//
-// private String appliesToInvoiceId;
-//
-// private String appliesToInvoiceNumber;
-//
-// private String description;
-//
-// private BigDecimal paymentAmount;
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "billpayment")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BillPaymentEntity extends BaseEntity {
+@Id
+@GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+private Long id;
 
-@ManyToMany(cascade = jakarta.persistence.CascadeType.PERSIST)
-@JoinTable(
-	name = "billpayment_expense",
-	joinColumns = @JoinColumn(name = "billpaymentid", referencedColumnName = "id"),
-	inverseJoinColumns = @JoinColumn(name = "expenseid", referencedColumnName = "id"))
 @ToString.Exclude
 @EqualsAndHashCode.Exclude
 @JsonManagedReference
 @JsonIdentityReference(alwaysAsId = true)
-private List<ExpenseEntity> expenses = new ArrayList<>();
-
 @Column(name = "paymentamount", nullable = false)
 private BigDecimal paymentAmount;
 
@@ -77,8 +56,15 @@ private String integrationId;
 @ToString.Exclude
 private VendorEntity vendor;
 
+// private List<ExpenseEntity> expenses = new ArrayList<>();
+
 @ManyToOne
 @JoinColumn(name = "appaymentid", referencedColumnName = "id")
 @JsonIdentityReference(alwaysAsId = true)
 private ApPaymentEntity apPayment;
+
+@OneToOne
+@JoinColumn(name = "expenseid", referencedColumnName = "id")
+@JsonIdentityReference(alwaysAsId = true)
+private ExpenseEntity expense;
 }

@@ -73,4 +73,16 @@ public ExpenseEntity save(ExpenseEntity expenseEntity) {
 public Page<ExpenseEntity> findAll(Pageable pageable) {
 	return expenseRepository.findAll(pageable);
 }
+
+public ExpenseEntity findByIntegrationId(String integrationId) {
+	return expenseRepository.findByIntegrationId(integrationId);
+}
+
+public boolean existsById(Long id) {
+	return expenseRepository.existsById(id);
+}
+
+public boolean existsByIntegrationId(String integrationId) {
+	return expenseRepository.existsByIntegrationId(integrationId);
+}
 }

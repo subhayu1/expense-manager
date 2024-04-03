@@ -35,12 +35,12 @@ public BillPaymentController(
 }
 
 @PostMapping("/")
-public ResponseEntity<String> createBillPayment(@RequestBody BillPayment billPayment) {
+public ResponseEntity<BillPayment> createBillPayment(@RequestBody BillPayment billPayment) {
 	log.info("Creating new bill payment: {}", billPayment);
 	if (billPayment.getId() != null) {
 	throw new UpdateNotAllowedException("Not allowed to update bill payment");
 	}
-	String createdBillPayment = billPaymentMapper.saveOrUpdateEntity(billPayment);
+	BillPayment createdBillPayment = billPaymentMapper.saveBillPayment(billPayment);
 	return ResponseEntity.status(HttpStatus.CREATED).body(createdBillPayment);
 }
 

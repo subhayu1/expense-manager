@@ -2,6 +2,7 @@
 package com.rimalholdings.expensemanager.data.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -19,5 +20,6 @@ private String paymentReference;
 private Boolean toSync;
 private Integer apPaymentId;
 private Integer externalOrgId;
+private List<Long> billPaymentIds;
 private Map<String, BigDecimal> expensePayments;
 }

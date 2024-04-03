@@ -25,8 +25,7 @@ Page<BillPaymentEntity> findByVendorId(Long vendorId, Pageable pageable);
 			+ "e.integrationId AS appliesToInvoiceId, e.externalInvoiceNumber AS appliesToInvoiceNumber, "
 			+ "e.description AS description, bp.paymentamount AS amount "
 			+ "FROM billpayment bp "
-			+ "INNER JOIN appayment ap on bp.appaymentid = ap.id "
-			+ "INNER JOIN expense e on ap.id = e.appaymentid "
+			+ "INNER JOIN expense e on e.id = bp.expenseid "
 			+ "INNER JOIN vendor v ON e.vendorId = v.id "
 			+ "WHERE e.externalorgid = :orgId AND bp.toSync = 1",
 	nativeQuery = true)
@@ -45,12 +44,11 @@ void updateBillPaymentIntegrationId(
 
 @Query(
 	value =
-		"SELECT bp.id AS billpayId "
-			+ "FROM billpayment bp "
-			+ "INNER JOIN billpayment_expense bpe ON bp.id = bpe.billpaymentid "
-			+ "INNER JOIN expense e ON bpe.expenseid = e.id "
-			+ "WHERE e.externalorgid=:orgId "
-			+ "AND e.externalinvoicenumber= :invoiceExternalDocumentNumber",
+		"select  bp.id as billPayId "
+			+ "from billpayment bp "
+			+ "join  expense e on bp.expenseid = e.id "
+			+ "WHERE e.externalinvoicenumber= :invoiceExternalDocumentNumber "
+			+ "AND e.externalorgid = :orgId ",
 	nativeQuery = true)
 Long findBillPaymentIdByExternalInvoiceNumber(
 	@Param("invoiceExternalDocumentNumber") String invoiceExternalDocumentNumber,

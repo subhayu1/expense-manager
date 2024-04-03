@@ -1,6 +1,5 @@
 package com.rimalholdings.expensemanager.model.mapper;
 
-import java.util.Collections;
 import java.util.List;
 
 import com.rimalholdings.expensemanager.data.dao.BillPaymentRepository;
@@ -50,7 +49,7 @@ public MessageWrapper<VendorPaymentResults> mapBillPayForSyncService(Long orgId)
 	MessageWrapper<VendorPaymentResults> mappedBillPay = new MessageWrapper<>();
 	List<VendorPaymentResults> vendorPaymentResults =
 		billPaymentService.findExpenseAndVendorByBillPaymentId(orgId);
-	log.info("billPayments: {}", Collections.singletonList(vendorPaymentResults));
+	log.info("billPayments: {}", vendorPaymentResults);
 	mappedBillPay.setMessage(vendorPaymentResults);
 	mappedBillPay.setExternalOrgId(String.valueOf(orgId));
 	mappedBillPay.setEntityName("billPayments");
