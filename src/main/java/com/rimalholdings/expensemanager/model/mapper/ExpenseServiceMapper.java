@@ -45,7 +45,7 @@ public ExpenseEntity mapToDTO(BaseDTOInterface dtoInterface) {
 }
 
 private ExpenseEntity getOrCreateExpenseEntity(Expense expense) {
-	ExpenseEntity expenseEntity = getEntityForUpdate(expense.getId());
+	ExpenseEntity expenseEntity = getEntityForUpdate(expense.getId(), expense.getIntegrationId());
 	if (expenseEntity == null) {
 	expenseEntity = new ExpenseEntity();
 	expenseEntity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -149,14 +149,30 @@ public Page<ExpenseEntity> getAllEntities(Pageable pageable) {
 	return expenseService.getExpensesByExternalOrgId(pageable, null);
 }
 
+@Override
+public ExpenseEntity getEntityForUpdate(Long id) {
+	return null;
+}
+
 public Page<ExpenseEntity> getAllEntities(Pageable pageable, Integer externalOrgId) {
 	return expenseService.getExpensesByExternalOrgId(pageable, externalOrgId);
 }
 
-@Override
-public ExpenseEntity getEntityForUpdate(Long id) {
-	try {
+public ExpenseEntity getEntityForUpdate(Long id, String integrationId) {
+	// 1. check if Id is null, if not null, then get the entity by Id
+	// then check if findByIntegrationId is null, if not null, then get the entity by IntegrationId
+	// and then update the entity
+	if (id != null && expenseService.existsById(id)) {
 	return expenseService.findById(id);
+	} else if (integrationId != null && expenseService.existsByIntegrationId(integrationId)) {
+	return expenseService.findByIntegrationId(integrationId);
+	}
+	return null;
+}
+
+public ExpenseEntity getExpenseEntityByIntegrationId(String integrationId) {
+	try {
+	return expenseService.findByIntegrationId(integrationId);
 	} catch (Exception e) {
 	return null;
 	}

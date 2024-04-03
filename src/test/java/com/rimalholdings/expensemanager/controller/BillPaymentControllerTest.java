@@ -33,11 +33,11 @@ void setUp() {
 void shouldReturnCreatedBillPaymentWhenBillPaymentDTOIsValid() {
 	BillPayment billPayment = new BillPayment();
 	billPayment.setId(null);
-	when(billPaymentMapper.saveOrUpdateEntity(billPayment)).thenReturn("createdBillPayment");
+	when(billPaymentMapper.saveBillPayment(billPayment)).thenReturn(new BillPayment());
 
-	ResponseEntity<String> response = billPaymentController.createBillPayment(billPayment);
+	ResponseEntity<BillPayment> response = billPaymentController.createBillPayment(billPayment);
 
-	assertEquals("createdBillPayment", response.getBody());
+	assertEquals(billPayment, response.getBody());
 }
 
 @Test

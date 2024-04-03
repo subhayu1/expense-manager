@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.BillPayment;
+import com.rimalholdings.expensemanager.data.entity.ApPaymentEntity;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
@@ -23,10 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j(topic = "BillPaymentServiceMapper")
-public class BillPaymentServiceMapper extends AbstractServiceMapper<BillPaymentEntity> {
+public class BillPaymentServiceMapper<T> {
 
 private static final Integer ZERO = 0;
 private static final Integer PARTIALLY_PAID = 1;
@@ -37,15 +39,22 @@ private static final Integer FULLY_APPLIED = 2;
 private static final Integer PARTIALLY_APPLIED = 1;
 private final BillPaymentService billPaymentService;
 private final ExpenseService expenseService;
+private final ApPaymentMapper apPaymentMapper;
+private Integer apPaymentId;
 
 protected BillPaymentServiceMapper(
-	ObjectMapper objectMapper,
 	BillPaymentService billPaymentService,
-	ExpenseService expenseService) {
-	super(objectMapper);
+	ExpenseService expenseService,
+	ApPaymentMapper apPaymentMapper) {
 	this.billPaymentService = billPaymentService;
 	this.expenseService = expenseService;
+	this.apPaymentMapper = apPaymentMapper;
 }
+
+// TODO: figure out how to add appPaymentId to the BillPaymentEntity.
+// Problem: we need to first make sure billPaymentEntity is saved before we can get the id
+// of the billPaymentEntity to create the apPaymentEntity and
+// then add the apPaymentEntity id to the expenseEntity somehow.
 
 private Long parseLongFromString(Map<String, Long> expenseId) {
 	for (Map.Entry<String, Long> entry : expenseId.entrySet()) {
@@ -54,46 +63,45 @@ private Long parseLongFromString(Map<String, Long> expenseId) {
 	return null;
 }
 
-@Override
-public BillPaymentEntity mapToDTO(BaseDTOInterface dtoInterface) {
+public BillPayment mapBillPayment(BaseDTOInterface dtoInterface) {
 	BillPayment billpayment = (BillPayment) dtoInterface;
-	BillPaymentEntity billPaymentEntity = createBillPaymentEntity(billpayment);
 	Map<String, BigDecimal> expensePaymentMap = billpayment.getExpensePayments();
 
 	if (!expensePaymentMap.isEmpty()) {
-	processExpensePayments(expensePaymentMap, billpayment, billPaymentEntity);
+	return processExpensePayments(expensePaymentMap, billpayment);
 	} else {
 	handleEmptyExpensePayments();
 	}
-
-	return billPaymentEntity;
+	return null;
 }
 
 protected BillPaymentEntity createBillPaymentEntity(BillPayment billpayment) {
 	BillPaymentEntity billPaymentEntity = new BillPaymentEntity();
-	billPaymentEntity.setPaymentAmount(billpayment.getPaymentAmount());
+
+	VendorEntity vendorEntity = new VendorEntity();
+	ApPaymentEntity apPaymentEntity = new ApPaymentEntity();
+	apPaymentEntity.setId(this.apPaymentId);
+
 	billPaymentEntity.setPaymentMethod(billpayment.getPaymentMethod());
 	billPaymentEntity.setPaymentReference(billpayment.getPaymentReference());
 	billPaymentEntity.setPaymentDate(Timestamp.valueOf(billpayment.getPaymentDate()));
 	billPaymentEntity.setCreatedDate(DateTimeUtil.getCurrentTimeInUTC());
 	billPaymentEntity.setToSync(billpayment.getToSync());
-
-	VendorEntity vendorEntity = new VendorEntity();
 	vendorEntity.setId(billpayment.getVendorId());
 	billPaymentEntity.setVendor(vendorEntity);
+	billPaymentEntity.setApPayment(apPaymentEntity);
 
 	return billPaymentEntity;
 }
 
-protected void processExpensePayments(
-	Map<String, BigDecimal> expensePaymentMap,
-	BillPayment billpayment,
-	BillPaymentEntity billPaymentEntity) {
+protected BillPayment processExpensePayments(
+	Map<String, BigDecimal> expensePaymentMap, BillPayment billpayment) {
 	expensePaymentMap.forEach(
 		(expenseId, paymentAmount) -> {
 		validatePaymentAmount(expensePaymentMap, billpayment);
 		ExpenseEntity expenseEntity = getExpenseEntity(expenseId, billpayment);
 		expenseEntity.setPaymentAmount(paymentAmount);
+		expenseEntity.setApPaymentId(this.apPaymentId);
 
 		log.info("amount due: {}", expenseEntity.getAmountDue());
 		log.info("payment amount: {}", paymentAmount);
@@ -101,10 +109,21 @@ protected void processExpensePayments(
 		// check to see if payment amount is greater than amount due and throw exception if it is
 		handleOverPayment(paymentAmount, expenseEntity.getAmountDue());
 
+		// Create a new BillPaymentEntity for each expense
+		BillPaymentEntity billPaymentEntity = createBillPaymentEntity(billpayment);
+		billPaymentEntity.setPaymentAmount(paymentAmount);
+		billPaymentEntity.setExpense(expenseEntity);
 		updatePaymentStatus(paymentAmount, expenseEntity, billPaymentEntity);
 		updateDueAmount(paymentAmount, expenseEntity);
-		billPaymentEntity.getExpenses().add(expenseEntity);
+		billpayment.getExpensePayments().put(expenseId, paymentAmount);
+		billpayment.setExpensePayments(expensePaymentMap);
+		billpayment.setBillPaymentIds(Collections.singletonList(billPaymentEntity.getId()));
+
+		// billPaymentEntity.getExpenses().add(expenseEntity);
+		log.info(billPaymentEntity.toString());
+		billPaymentService.save(billPaymentEntity);
 		});
+	return billpayment;
 }
 
 protected void validatePaymentAmount(
@@ -156,35 +175,50 @@ private void handleEmptyExpensePayments() {
 		"no expense payments specified. Please specify expense payments");
 }
 
-@Override
-public void deleteEntity(Long id) {}
-
-@Override
 public String getEntity(Long id) {
-	return convertDtoToString(billPaymentService.findById(id));
+	return convertDtoToString((T) billPaymentService.findById(id));
 }
 
-@Override
-public String saveOrUpdateEntity(BaseDTOInterface dtoInterface) {
+@Transactional
+public BillPayment saveBillPayment(BaseDTOInterface dtoInterface) {
 	BillPayment billpayment = (BillPayment) dtoInterface;
-	BillPaymentEntity billPaymentEntity = mapToDTO(billpayment);
-	BillPaymentEntity savedBillPaymentEntity = billPaymentService.save(billPaymentEntity);
-	return convertDtoToString(savedBillPaymentEntity);
+
+	this.apPaymentId = apPaymentMapper.createApPayment(billpayment);
+	billpayment.setApPaymentId(this.apPaymentId);
+
+	// BillPaymentEntity billPaymentEntity = mapBillPayment(billpayment);
+
+	// BillPaymentEntity savedBillPaymentEntity = billPaymentService.save(billPaymentEntity);
+
+	return mapBillPayment(billpayment);
 }
 
-@Override
+private String convertDtoToString(T stringValue) {
+	ObjectMapper objectMapper = new ObjectMapper();
+	try {
+	return objectMapper.writeValueAsString(stringValue);
+	} catch (Exception e) {
+	log.error("Error converting BillPayment to JSON string: {}", e.getMessage());
+	}
+	return null;
+}
+
+private BillPayment convertStringToDto(String billpayment) {
+	ObjectMapper objectMapper = new ObjectMapper();
+	try {
+	return objectMapper.readValue(billpayment, BillPayment.class);
+	} catch (Exception e) {
+	log.error("Error converting JSON string to BillPayment: {}", e.getMessage());
+	}
+	return null;
+}
+
 public Page<BillPaymentEntity> getAllEntities(Pageable pageable) {
 	return billPaymentService.findAll(pageable);
 }
 
 public List<BillPaymentEntity> getAllEntities() {
 	return billPaymentService.findAll();
-}
-
-@Override
-public BillPaymentEntity getEntityForUpdate(Long id) {
-	// Billpayments cannot be updated
-	return null;
 }
 
 private Integer paymentApplicationStatus(BigDecimal paymentAmount, BigDecimal amountDue) {

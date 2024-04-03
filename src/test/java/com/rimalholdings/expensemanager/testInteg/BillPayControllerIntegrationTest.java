@@ -114,7 +114,6 @@ private void createBllPaymentEntity() {
 	billPaymentEntity.setCreatedDate(DateTimeUtil.getCurrentTimeInUTC());
 	billPaymentEntity.setPaymentApplicationStatus(1);
 	billPaymentEntity.setVendor(vendorEntity);
-	billPaymentEntity.setExpenses(expenseRepository.findAll());
 	billPaymentEntity.setToSync(true);
 	billPaymentRepository.saveAndFlush(billPaymentEntity);
 }

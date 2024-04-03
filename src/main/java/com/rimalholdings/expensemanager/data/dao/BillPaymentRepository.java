@@ -25,8 +25,7 @@ Page<BillPaymentEntity> findByVendorId(Long vendorId, Pageable pageable);
 			+ "e.integrationId AS appliesToInvoiceId, e.externalInvoiceNumber AS appliesToInvoiceNumber, "
 			+ "e.description AS description, bp.paymentamount AS amount "
 			+ "FROM billpayment bp "
-			+ "INNER JOIN billpayment_expense bpe ON bp.id = bpe.billpaymentid "
-			+ "INNER JOIN expense e ON bpe.expenseid = e.id "
+			+ "INNER JOIN expense e on e.id = bp.expenseid "
 			+ "INNER JOIN vendor v ON e.vendorId = v.id "
 			+ "WHERE e.externalorgid = :orgId AND bp.toSync = 1",
 	nativeQuery = true)
@@ -45,12 +44,11 @@ void updateBillPaymentIntegrationId(
 
 @Query(
 	value =
-		"SELECT bp.id AS billpayId "
-			+ "FROM billpayment bp "
-			+ "INNER JOIN billpayment_expense bpe ON bp.id = bpe.billpaymentid "
-			+ "INNER JOIN expense e ON bpe.expenseid = e.id "
-			+ "WHERE e.externalorgid=:orgId "
-			+ "AND e.externalinvoicenumber= :invoiceExternalDocumentNumber",
+		"select  bp.id as billPayId "
+			+ "from billpayment bp "
+			+ "join  expense e on bp.expenseid = e.id "
+			+ "WHERE e.externalinvoicenumber= :invoiceExternalDocumentNumber "
+			+ "AND e.externalorgid = :orgId ",
 	nativeQuery = true)
 Long findBillPaymentIdByExternalInvoiceNumber(
 	@Param("invoiceExternalDocumentNumber") String invoiceExternalDocumentNumber,
@@ -69,22 +67,23 @@ void allowBillPaymentIntegration(Boolean allowIntegration, Long billPayId);
 	value = "update billpayment bp set bp.integrationid = null where bp.id = :billPayId",
 	nativeQuery = true)
 void clearIntegrationId(Long billPayId);
+
 @Query(
-		//SELECT bp.id AS id, v.name AS vendorName, e.externalorgid AS externalOrgId,
-		//       e.externalinvoicenumber AS externalInvoiceNumber,
-		//      e.description AS description,e.totalamount AS totalAmount,
-		//       e.paymentamount as paymentAmount,e.amountdue as amountDue
-		//FROM billpayment bp
-		//INNER JOIN billpayment_expense bpe ON bp.id = bpe.billpaymentid
-		//INNER JOIN expense e ON bpe.expenseid = e.id
-		//INNER JOIN vendor v ON e.vendorid = v.id;
-	value = "SELECT bp.id AS id, v.name AS vendorName, e.externalorgid AS externalOrgId," +
-			" e.externalinvoicenumber AS externalInvoiceNumber, e.description AS description," +
-			"e.totalamount AS totalAmount, e.paymentamount as paymentAmount,e.amountdue as amountDue" +
-			" FROM billpayment bp INNER JOIN billpayment_expense bpe ON bp.id = bpe.billpaymentid " +
-			"INNER JOIN expense e ON bpe.expenseid = e.id INNER JOIN vendor v ON e.vendorid = v.id " +
-			"WHERE e.externalorgid = :orgId ",
+	// SELECT bp.id AS id, v.name AS vendorName, e.externalorgid AS externalOrgId,
+	//       e.externalinvoicenumber AS externalInvoiceNumber,
+	//      e.description AS description,e.totalamount AS totalAmount,
+	//       e.paymentamount as paymentAmount,e.amountdue as amountDue
+	// FROM billpayment bp
+	// INNER JOIN billpayment_expense bpe ON bp.id = bpe.billpaymentid
+	// INNER JOIN expense e ON bpe.expenseid = e.id
+	// INNER JOIN vendor v ON e.vendorid = v.id;
+	value =
+		"SELECT bp.id AS id, v.name AS vendorName, e.externalorgid AS externalOrgId,"
+			+ " e.externalinvoicenumber AS externalInvoiceNumber, e.description AS description,"
+			+ "e.totalamount AS totalAmount, e.paymentamount as paymentAmount,e.amountdue as amountDue"
+			+ " FROM billpayment bp INNER JOIN billpayment_expense bpe ON bp.id = bpe.billpaymentid "
+			+ "INNER JOIN expense e ON bpe.expenseid = e.id INNER JOIN vendor v ON e.vendorid = v.id "
+			+ "WHERE e.externalorgid = :orgId ",
 	nativeQuery = true)
 List<BillPaymentInvoice> getBillPayments(@Param("orgId") Long id);
-
 }

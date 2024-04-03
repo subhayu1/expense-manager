@@ -36,7 +36,13 @@ create table billpayment
     paymentdate       timestamp,
     createddate       timestamp,
     paymentamount decimal(38,2),
-    paymentapplicationstatus int not null COMMENT '1=partially applied ,2=fully applied ,3=unapplied'
+    paymentapplicationstatus int not null COMMENT '1=partially applied ,2=fully applied ,3=unapplied',
+    tosync BOOLEAN NOT NULL DEFAULT TRUE,
+    integrationid VARCHAR(36) NULL,
+    appaymentid INT not NULL references appayment(id),
+    expenseid INT NOT NULL references expense(id)
+
+
 );
 
 create table expense
@@ -46,24 +52,29 @@ create table expense
     vendorid      bigint         not null,
     externalinvoicenumber varchar(255)   null,
     vendorinvoicenumber varchar(255)   null,
-    integrationid varchar(255)   null,
+    integrationid varchar(255)   null unique ,
     externalorgid int null,
     totalamount   decimal(38, 2) not null,
     amountdue     decimal(38, 2) not null,
     paymentamount decimal(38, 2) null,
-    invoicedate  datetime(6)    null,
-
-    duedate       datetime(6)    null,
+    invoicedate  datetime(6)    not null ,
+    duedate       datetime(6)     not null,
     description   varchar(255)   null,
     createddate   timestamp      null,
     updateddate   timestamp      null,
-    paymentstatus int            not null comment '1=partially paid ,2=fully paid ,3=unpaid 4=unknown'
+    paymentstatus int            not null comment '1=partially paid ,2=fully paid ,3=unpaid 4=unknown',
+    appaymentid INT  NULL DEFAULT 0
 );
 
-create table billpayment_expense
-(
-    billpaymentid bigint not null references billpayment (id),
-    expenseid     bigint not null references expense (id)
+CREATE TABLE appayment (
+                           id INTEGER PRIMARY KEY AUTO_INCREMENT,
+                           paymentamount DECIMAL(10,2) NOT NULL,
+                           paymentdate DATE NOT NULL,
+                           paymentmethod INTEGER NOT NULL, -- Removed (255) as it's not applicable
+                           paymentreference VARCHAR(255) NOT NULL,
+                           externalorgid INTEGER ,
+                           createddate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+ALTER TABLE appayment ADD INDEX idx_appayment_externalorgid (externalorgid);
 ALTER TABLE vendor ADD INDEX idx_vendor_externalorgid (externalorgid);
 ALTER TABLE vendor ADD INDEX idx_vendor_integrationid (integrationId);
