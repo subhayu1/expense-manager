@@ -60,6 +60,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-actuator-autoconfigure")
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+    // https://mvnrepository.com/artifact/net.logstash.logback/logstash-logback-encoder
+    implementation ("net.logstash.logback:logstash-logback-encoder:7.4")
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-mysql")
     runtimeOnly("com.mysql:mysql-connector-j")

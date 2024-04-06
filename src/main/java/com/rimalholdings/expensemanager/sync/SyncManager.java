@@ -36,6 +36,8 @@ public void sync(MessageWrapper<T> messageWrapper) {
 		break;
 	default:
 		log.info("No entity found");
+		log.info("entityName: {}", entityName);
+		log.info("entity info: {}", message);
 	}
 }
 }
