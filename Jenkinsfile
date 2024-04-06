@@ -22,7 +22,8 @@ pipeline {
             steps {
                 script {
                     env.PATH = "${env.PATH}:/usr/local/bin"
-                    docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME_EM_SERVICE}:${IMAGE_TAG}", ".", "--platform linux/arm64")
+                    //docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME_EM_SERVICE}:${IMAGE_TAG}", ".", "--platform linux/arm64")
+                    sh "docker build --platform=linux/arm64 -t registry.ops.rimalholdings.internal:11000/em-service:latest ."
                 }
             }
         }
