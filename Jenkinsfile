@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     env.PATH = "${env.PATH}:/usr/local/bin"
-                    docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME_EM_SERVICE}:${IMAGE_TAG}", ".")
+                    docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME_EM_SERVICE}:${IMAGE_TAG}", ".", "--platform linux/arm64")
                 }
             }
         }
