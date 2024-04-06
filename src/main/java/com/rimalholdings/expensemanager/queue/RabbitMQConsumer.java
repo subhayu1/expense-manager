@@ -19,6 +19,7 @@ public RabbitMQConsumer(SyncManager<T> syncManager) {
 @RabbitListener(queues = "syncQueue")
 public MessageWrapper<T> consume(MessageWrapper<T> messages) {
 	log.info("Message received from RabbitMQ");
+	log.info("message: {}", messages.getMessage());
 	syncManager.sync(messages);
 
 	return null;
