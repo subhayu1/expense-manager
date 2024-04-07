@@ -19,7 +19,8 @@ pipeline {
             steps {
                 git url: REPO_NAME_EM_SERVICE, branch: 'main'
             }
-        }stage('Decode public and private keys') {
+        }
+        stage('Decode public and private keys') {
             steps {
                 sh 'echo "${JWT_PRIVATE_KEY_BASE64}" | base64 --decode > ./src/main/resources/certs/private.pem'
                 sh 'echo "${JWT_PUBLIC_KEY_BASE64}" | base64 --decode > ./src/main/resources/certs/public.pem'
