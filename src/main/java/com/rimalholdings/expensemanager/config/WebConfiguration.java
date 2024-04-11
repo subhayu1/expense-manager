@@ -21,7 +21,8 @@ public WebMvcConfigurer corsConfigurer() {
 
 		registry
 			.addMapping("/auth/token")
-			.allowedOrigins("http://localhost:5173")
+			.allowedOrigins("http://192.168.1.160:5173",
+							"http://localhost:5173", "admin.ops.rimalholdings.internal:5173")
 			.allowedMethods("POST")
 			.allowedHeaders("*")
 			.exposedHeaders("Authorization", "Content-Type")
