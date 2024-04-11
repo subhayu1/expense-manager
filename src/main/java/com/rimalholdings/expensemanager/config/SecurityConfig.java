@@ -84,6 +84,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 @Bean
 SecurityFilterChain tokenSecurityFilterChain(HttpSecurity http) throws Exception {
 	return http.securityMatcher(new AntPathRequestMatcher("/auth/token"))
+		.cors(withDefaults())
+		.csrf(AbstractHttpConfigurer::disable)
 		.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
 		.sessionManagement(
 			session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -110,6 +112,7 @@ public SecurityFilterChain basicAuthFilterChain(HttpSecurity http) throws Except
 		// the
 		// token
 		// endpoint
+		.cors(withDefaults()) // enable CORS
 		.httpBasic(withDefaults()) // enable Basic Auth
 		.csrf(AbstractHttpConfigurer::disable) // disable CSRF protection
 		.sessionManagement(
