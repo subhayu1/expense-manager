@@ -7,45 +7,26 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfiguration {
 
 @Bean
-public WebMvcConfigurer corsConfigurer() {
-	return new WebMvcConfigurer() {
-	@Override
-	public void addCorsMappings(CorsRegistry registry) {
-
-		registry
-			.addMapping("/auth/token")
-			.allowedOrigins("http://192.168.1.160:5173",
-							"http://localhost:5173", "admin.ops.rimalholdings.internal:5173")
-			.allowedMethods("POST")
-			.allowedHeaders("*")
-			.exposedHeaders("Authorization", "Content-Type")
-			.allowCredentials(true)
-			.maxAge(3600);
-	}
-	};
-}
-
-@Bean
 public CorsFilter corsFilter() {
 	CorsConfiguration configuration = new CorsConfiguration();
 	configuration.setAllowCredentials(true);
-
-	// Using patterns that are explicitly known to work with CORS
-	configuration.setAllowedOriginPatterns(
+	configuration.setAllowedOrigins(
 		List.of(
-			"http://localhost:[*]", // Matches all ports on localhost
-			"http://piserver.ops" // Assumes this is a valid origin, adjust if this needs wildcard
-			));
-
+			"http://localhost:5173",
+			"http://192.168.1.160:5173",
+			"http://admin.ops.rimalholdings.internal:5173",
+			"http://piserver.ops.rimalholdings.internal",
+			"http://192.168.1.145"));
 	configuration.addAllowedHeader("*");
 	configuration.addAllowedMethod("*");
+	configuration.setExposedHeaders(List.of("Authorization", "Content-Type"));
+	configuration.setMaxAge(
+		3600L); // Set how long the response from a pre-flight request can be cached
 
 	UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 	source.registerCorsConfiguration("/**", configuration);
