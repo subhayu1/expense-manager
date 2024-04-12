@@ -54,7 +54,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.projectlombok:lombok")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    //implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-starter-amqp")
     implementation("org.springframework.boot:spring-boot-configuration-processor:2.6.2")
     implementation("org.springframework.boot:spring-boot-actuator-autoconfigure")
