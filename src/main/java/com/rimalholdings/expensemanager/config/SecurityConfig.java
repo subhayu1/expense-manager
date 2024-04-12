@@ -182,16 +182,16 @@ JwtEncoder jwtEncoder() {
 	return new NimbusJwtEncoder(jwks);
 }
 
-@Bean
-CorsConfigurationSource corsConfigurationSource() {
-	CorsConfiguration configuration = new CorsConfiguration();
-	configuration.setAllowedOrigins(List.of("https://localhost:3000"));
-	configuration.setAllowedHeaders(List.of("*"));
-	configuration.setAllowedMethods(List.of("GET"));
-	UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-	source.registerCorsConfiguration("/**", configuration);
-	return source;
-}
+//@Bean
+//CorsConfigurationSource corsConfigurationSource() {
+//	CorsConfiguration configuration = new CorsConfiguration();
+//	configuration.setAllowedOrigins(List.of("https://localhost:3000"));
+//	configuration.setAllowedHeaders(List.of("*"));
+//	configuration.setAllowedMethods(List.of("GET"));
+//	UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//	source.registerCorsConfiguration("/**", configuration);
+//	return source;
+//}
 
 @Bean
 public PasswordEncoder passwordEncoder() {

@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin
+//@CrossOrigin
 @RequestMapping("/api/v1/vendor")
 @Slf4j(topic = "VendorController")
 public class VendorController implements APIControllerInterface {
