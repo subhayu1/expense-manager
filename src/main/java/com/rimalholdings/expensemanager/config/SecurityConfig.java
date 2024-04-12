@@ -1,6 +1,8 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.config;
 
+import java.util.List;
+
 import com.rimalholdings.expensemanager.service.UserService;
 
 import com.nimbusds.jose.jwk.JWK;
@@ -27,6 +29,9 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthen
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -82,7 +87,7 @@ SecurityFilterChain tokenSecurityFilterChain(HttpSecurity http) throws Exception
 			new AntPathRequestMatcher("/auth/token")) // Match only /auth/token requests
 		.csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection once
 		.authorizeHttpRequests(
-			auth -> auth.anyRequest().permitAll()) // Permit all requests to /auth/token
+			auth -> auth.anyRequest().authenticated()) // Permit all requests to /auth/token
 		.sessionManagement(
 			session ->
 				session.sessionCreationPolicy(
@@ -178,16 +183,17 @@ JwtEncoder jwtEncoder() {
 	return new NimbusJwtEncoder(jwks);
 }
 
-// @Bean
-// CorsConfigurationSource corsConfigurationSource() {
-//	CorsConfiguration configuration = new CorsConfiguration();
-//	configuration.setAllowedOrigins(List.of("https://localhost:3000"));
-//	configuration.setAllowedHeaders(List.of("*"));
-//	configuration.setAllowedMethods(List.of("GET"));
-//	UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//	source.registerCorsConfiguration("/**", configuration);
-//	return source;
-// }
+@Bean
+CorsConfigurationSource corsConfigurationSource() {
+	CorsConfiguration configuration = new CorsConfiguration();
+	configuration.setAllowedOrigins(List.of("https://localhost:5173"));
+	configuration.setAllowedHeaders(List.of("*"));
+	configuration.setAllowedMethods(List.of("GET"));
+	configuration.setAllowCredentials(true);
+	UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+	source.registerCorsConfiguration("/**", configuration);
+	return source;
+}
 
 @Bean
 public PasswordEncoder passwordEncoder() {

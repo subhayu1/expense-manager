@@ -63,6 +63,7 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka
+      prefer-ip-address: true
     enabled: false
 logging:
   include-application-name: true
