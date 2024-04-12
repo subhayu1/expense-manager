@@ -1,8 +1,6 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.config;
 
-import java.util.List;
-
 import com.rimalholdings.expensemanager.service.UserService;
 
 import com.nimbusds.jose.jwk.JWK;
@@ -29,9 +27,6 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthen
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -83,20 +78,21 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Bean
 SecurityFilterChain tokenSecurityFilterChain(HttpSecurity http) throws Exception {
-	return http.securityMatcher(new AntPathRequestMatcher("/auth/token"))
-			//http.cors(Customizer.withDefaults()
-		.csrf(AbstractHttpConfigurer::disable)
-		.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+	return http.securityMatcher(
+			new AntPathRequestMatcher("/auth/token")) // Match only /auth/token requests
+		.csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection once
+		.authorizeHttpRequests(
+			auth -> auth.anyRequest().permitAll()) // Permit all requests to /auth/token
 		.sessionManagement(
-			session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-		.csrf(AbstractHttpConfigurer::disable)
-		.userDetailsService(userService)
+			session ->
+				session.sessionCreationPolicy(
+					SessionCreationPolicy.STATELESS)) // Stateless session management
 		.exceptionHandling(
-			ex -> {
+			ex -> { // Exception handling for authentication and access denied
 			ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint());
 			ex.accessDeniedHandler(new BearerTokenAccessDeniedHandler());
 			})
-		.httpBasic(withDefaults())
+		.httpBasic(withDefaults()) // Enable HTTP Basic authentication
 		.build();
 }
 
@@ -112,7 +108,7 @@ public SecurityFilterChain basicAuthFilterChain(HttpSecurity http) throws Except
 		// the
 		// token
 		// endpoint
-		//.cors(withDefaults()) // enable CORS
+		// .cors(withDefaults()) // enable CORS
 		.httpBasic(withDefaults()) // enable Basic Auth
 		.csrf(AbstractHttpConfigurer::disable) // disable CSRF protection
 		.sessionManagement(
@@ -182,8 +178,8 @@ JwtEncoder jwtEncoder() {
 	return new NimbusJwtEncoder(jwks);
 }
 
-//@Bean
-//CorsConfigurationSource corsConfigurationSource() {
+// @Bean
+// CorsConfigurationSource corsConfigurationSource() {
 //	CorsConfiguration configuration = new CorsConfiguration();
 //	configuration.setAllowedOrigins(List.of("https://localhost:3000"));
 //	configuration.setAllowedHeaders(List.of("*"));
@@ -191,7 +187,7 @@ JwtEncoder jwtEncoder() {
 //	UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 //	source.registerCorsConfiguration("/**", configuration);
 //	return source;
-//}
+// }
 
 @Bean
 public PasswordEncoder passwordEncoder() {
