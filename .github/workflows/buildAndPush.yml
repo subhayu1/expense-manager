@@ -32,7 +32,7 @@ jobs:
   # arguments:  clean build
 
   build-image:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -40,12 +40,83 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
           file: ./Dockerfile
           push: true
-          tags: 7c5b-66-232-16-125.ngrok-free.app/em-service:latest
+          tags: hornet-rational-immensely.ngrok-free.app/em-service:latest
           platforms: linux/arm64
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
+  restart-containers:
+    runs-on: self-hosted
+    needs: build-image
+    steps:
+      - name: pull latest images from registry
+        run: |
+          echo "Pulling latest images from registry"
+          docker compose -f /home/srimal/rh-app/docker-compose.yml pull
+          echo "Images pulled from registry"
+      - name: start filebeat container
+        run: |
+          echo "Starting filebeat container"
+          docker start 20f2cad1f733
+          echo "Filebeat container started"
+      - name: Check if rh_bridge network exists
+        id: check_network
+        run: |
+          if docker network ls | grep -q rh_bridge; then
+            echo "Network exists."
+            echo "network_exists=true" >> $GITHUB_ENV
+          else
+            echo "Network does not exist."
+            echo "network_exists=false" >> $GITHUB_ENV
+          fi
 
+      - name: Create network if it does not exist
+        if: env.network_exists == 'false'
+        run: |
+          docker network create rh_bridge
+          echo "Network created."
+
+
+
+      - name: restart containers
+        run: |
+          echo "Restarting containers"
+          docker compose -f /home/srimal/rh-app/docker-compose.yml up -d
+          echo "Containers restarted"
+      #send slack notification
+
+  Send-slack-notification:
+    needs: build-image
+    runs-on: self-hosted
+    steps:
+      - name: Send Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        with:
+          status: ${{ job.status }}
+          author_name: ${{ github.actor }}
+          mention: '@srimal'
+          title: 'Sync Service'
+          text: 'Sync Service has been deployed successfully'
+          fields: repo,message
+          color: good
+          footer: 'Sync Service'
+          footer_icon: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+          ts: ${{ github.run_id }}
+          channel: '#sync-service'
+          icon_emoji: ':rocket:'
+          username: 'GitHub Actions'
