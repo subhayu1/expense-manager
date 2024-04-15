@@ -5,7 +5,7 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-name: Java CI with Gradle
+name: buildAndPush
 
 on:
   push:
@@ -106,17 +106,8 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        with:
-          status: ${{ job.status }}
-          author_name: ${{ github.actor }}
-          mention: '@srimal'
-          title: 'Sync Service'
-          text: 'Sync Service has been deployed successfully'
-          fields: repo,message
-          color: good
-          footer: 'Sync Service'
-          footer_icon: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
-          ts: ${{ github.run_id }}
-          channel: '#sync-service'
-          icon_emoji: ':rocket:'
-          username: 'GitHub Actions'
+          SLACK_ICON_EMOJI: ":rocket:"
+          SLACK_USERNAME: "GitHub Actions"
+          SLACK_MESSAGE_ON_SUCCESS: "Sync Service Docker Image has been updated"
+          SLACK_COLOR: "#00FF00"
+          SLACK_MESSAGE_ON_FAILURE: "BUILD FAILURE"

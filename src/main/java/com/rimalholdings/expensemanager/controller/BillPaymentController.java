@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j(topic = "BillPaymentController")
 @RequestMapping("/api/v1/bill-payment")
-// @CrossOrigin
+@CrossOrigin
 public class BillPaymentController implements APIControllerInterface {
 
 private final BillPaymentServiceMapper billPaymentMapper;
