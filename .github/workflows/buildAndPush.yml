@@ -99,7 +99,7 @@ jobs:
       #send slack notification
 
   Send-slack-notification:
-    needs: build-image
+    needs: restart-containers
     runs-on: self-hosted
     steps:
       - name: Send Slack Notification

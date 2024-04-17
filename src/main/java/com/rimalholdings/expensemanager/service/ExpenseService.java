@@ -1,6 +1,7 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.rimalholdings.expensemanager.data.dao.ExpenseRepository;
@@ -84,5 +85,11 @@ public boolean existsById(Long id) {
 
 public boolean existsByIntegrationId(String integrationId) {
 	return expenseRepository.existsByIntegrationId(integrationId);
+}
+
+public List<ExpenseEntity> getUnpaidExpenses() {
+	// grab all unpaid expenses i.e. paymentstatus =3
+	List<Integer> paymentStatus = Arrays.asList(1, 3); // 1 is partially paid , 3 is unpaid
+	return expenseRepository.findByPaymentStatusIn(paymentStatus);
 }
 }

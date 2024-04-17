@@ -185,7 +185,7 @@ public void saveExpenses(List<Expense> expenses) {
 	try {
 		saveOrUpdateEntity(expense);
 	} catch (Exception e) {
-		log.error("Error while saving expense: " + e.getMessage(), e);
+		log.error("Error while saving expense: {}", e.getMessage(), e);
 	}
 	}
 }
@@ -200,8 +200,12 @@ private List<Expense> convertMessageToExpenseResponse(List<Expense> messageWrapp
 	try {
 	return objectMapper.convertValue(messageWrapper, new TypeReference<>() {});
 	} catch (Exception e) {
-	log.error("Error while mapping json to Object: " + e.getMessage(), e);
+	log.error("Error while mapping json to Object: {}", e.getMessage(), e);
 	throw new RuntimeException("Failed to map json to Expense", e);
 	}
+}
+
+public List<ExpenseEntity> getUnpaidExpenses() {
+	return expenseService.getUnpaidExpenses();
 }
 }

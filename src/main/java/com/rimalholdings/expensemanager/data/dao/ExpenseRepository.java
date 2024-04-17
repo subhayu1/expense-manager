@@ -1,6 +1,9 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.data.dao;
 
+import java.util.Collection;
+import java.util.List;
+
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,4 +25,6 @@ void updateExpenseWithApPaymentId(Integer expenseId, Integer apPaymentId);
 ExpenseEntity findByIntegrationId(String integrationId);
 
 boolean existsByIntegrationId(String integrationId);
+
+List<ExpenseEntity> findByPaymentStatusIn(Collection<Integer> paymentStatus);
 }
