@@ -1,6 +1,8 @@
 /* (C)1 */
 package com.rimalholdings.expensemanager.controller;
 
+import java.util.List;
+
 import com.rimalholdings.expensemanager.data.dto.Expense;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
 import com.rimalholdings.expensemanager.model.mapper.ExpenseServiceMapper;
@@ -52,6 +54,12 @@ public ResponseEntity<Page<ExpenseEntity>> getAllExpenses(
 	@RequestParam(value = "externalOrgId", required = false) Integer externalOrgId,
 	@ParameterObject Pageable pageable) {
 	Page<ExpenseEntity> expenses = expenseMapper.getAllEntities(pageable, externalOrgId);
+	return ResponseEntity.ok(expenses);
+}
+
+@GetMapping("/getUnpaidExpenses/")
+public ResponseEntity<List<ExpenseEntity>> getUnpaidExpenses() {
+	List<ExpenseEntity> expenses = expenseMapper.getUnpaidExpenses();
 	return ResponseEntity.ok(expenses);
 }
 

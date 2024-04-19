@@ -3,7 +3,6 @@ package com.rimalholdings.expensemanager.data.dto;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -12,7 +11,7 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BillPayment implements BaseDTOInterface {
 private Long id;
-private Long vendorId;
+// private Long vendorId;
 private BigDecimal paymentAmount;
 private String paymentDate;
 private Integer paymentMethod;
@@ -21,5 +20,5 @@ private Boolean toSync;
 private Integer apPaymentId;
 private Integer externalOrgId;
 private List<Long> billPaymentIds;
-private Map<String, BigDecimal> expensePayments;
+private List<ExpensePayment> expensePayments;
 }

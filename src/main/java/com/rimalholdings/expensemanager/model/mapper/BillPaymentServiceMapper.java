@@ -2,11 +2,11 @@
 package com.rimalholdings.expensemanager.model.mapper;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.*;
 
 import com.rimalholdings.expensemanager.data.dto.BaseDTOInterface;
 import com.rimalholdings.expensemanager.data.dto.BillPayment;
+import com.rimalholdings.expensemanager.data.dto.ExpensePayment;
 import com.rimalholdings.expensemanager.data.entity.ApPaymentEntity;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
@@ -63,19 +63,7 @@ private Long parseLongFromString(Map<String, Long> expenseId) {
 	return null;
 }
 
-public BillPayment mapBillPayment(BaseDTOInterface dtoInterface) {
-	BillPayment billpayment = (BillPayment) dtoInterface;
-	Map<String, BigDecimal> expensePaymentMap = billpayment.getExpensePayments();
-
-	if (!expensePaymentMap.isEmpty()) {
-	return processExpensePayments(expensePaymentMap, billpayment);
-	} else {
-	handleEmptyExpensePayments();
-	}
-	return null;
-}
-
-protected BillPaymentEntity createBillPaymentEntity(BillPayment billpayment) {
+protected BillPaymentEntity createBillPaymentEntity(BillPayment billpayment, Long vendorId) {
 	BillPaymentEntity billPaymentEntity = new BillPaymentEntity();
 
 	VendorEntity vendorEntity = new VendorEntity();
@@ -84,10 +72,11 @@ protected BillPaymentEntity createBillPaymentEntity(BillPayment billpayment) {
 
 	billPaymentEntity.setPaymentMethod(billpayment.getPaymentMethod());
 	billPaymentEntity.setPaymentReference(billpayment.getPaymentReference());
-	billPaymentEntity.setPaymentDate(Timestamp.valueOf(billpayment.getPaymentDate()));
+	billPaymentEntity.setPaymentDate(
+		DateTimeUtil.convertISO8601ToTimestamp(billpayment.getPaymentDate()));
 	billPaymentEntity.setCreatedDate(DateTimeUtil.getCurrentTimeInUTC());
 	billPaymentEntity.setToSync(billpayment.getToSync());
-	vendorEntity.setId(billpayment.getVendorId());
+	vendorEntity.setId(vendorId);
 	billPaymentEntity.setVendor(vendorEntity);
 	billPaymentEntity.setApPayment(apPaymentEntity);
 
@@ -95,53 +84,57 @@ protected BillPaymentEntity createBillPaymentEntity(BillPayment billpayment) {
 }
 
 protected BillPayment processExpensePayments(
-	Map<String, BigDecimal> expensePaymentMap, BillPayment billpayment) {
-	expensePaymentMap.forEach(
-		(expenseId, paymentAmount) -> {
-		validatePaymentAmount(expensePaymentMap, billpayment);
-		ExpenseEntity expenseEntity = getExpenseEntity(expenseId, billpayment);
-		expenseEntity.setPaymentAmount(paymentAmount);
-		expenseEntity.setApPaymentId(this.apPaymentId);
-
-		log.info("amount due: {}", expenseEntity.getAmountDue());
-		log.info("payment amount: {}", paymentAmount);
-
-		// check to see if payment amount is greater than amount due and throw exception if it is
-		handleOverPayment(paymentAmount, expenseEntity.getAmountDue());
-
-		// Create a new BillPaymentEntity for each expense
-		BillPaymentEntity billPaymentEntity = createBillPaymentEntity(billpayment);
-		billPaymentEntity.setPaymentAmount(paymentAmount);
-		billPaymentEntity.setExpense(expenseEntity);
-		updatePaymentStatus(paymentAmount, expenseEntity, billPaymentEntity);
-		updateDueAmount(paymentAmount, expenseEntity);
-		billpayment.getExpensePayments().put(expenseId, paymentAmount);
-		billpayment.setExpensePayments(expensePaymentMap);
-		billpayment.setBillPaymentIds(Collections.singletonList(billPaymentEntity.getId()));
-
-		// billPaymentEntity.getExpenses().add(expenseEntity);
-		log.info(billPaymentEntity.toString());
-		billPaymentService.save(billPaymentEntity);
-		});
+	List<ExpensePayment> expensePayments, BillPayment billpayment) {
+	for (ExpensePayment expensePayment : expensePayments) {
+	BigDecimal paymentAmount = expensePayment.getPaymentAmount();
+	validatePaymentAmount(expensePayments, billpayment);
+	ExpenseEntity expenseEntity =
+		getExpenseEntity(expensePayment.getExpenseId(), expensePayment.getVendorId());
+	expenseEntity.setPaymentAmount(paymentAmount);
+	expenseEntity.setApPaymentId(this.apPaymentId);
+	handleOverPayment(paymentAmount, expenseEntity.getAmountDue());
+	BillPaymentEntity billPaymentEntity =
+		createBillPaymentEntity(billpayment, expensePayment.getVendorId());
+	billPaymentEntity.setPaymentAmount(paymentAmount);
+	billPaymentEntity.setExpense(expenseEntity);
+	updatePaymentStatus(paymentAmount, expenseEntity, billPaymentEntity);
+	updateDueAmount(paymentAmount, expenseEntity);
+	// billpayment.getExpensePayments().add(expensePayment);
+	billPaymentService.save(billPaymentEntity);
+	}
 	return billpayment;
 }
 
+public BillPayment mapBillPayment(BaseDTOInterface dtoInterface) {
+	BillPayment billpayment = (BillPayment) dtoInterface;
+	List<ExpensePayment> expensePayments = billpayment.getExpensePayments();
+
+	if (!expensePayments.isEmpty()) {
+	return processExpensePayments(expensePayments, billpayment);
+	} else {
+	handleEmptyExpensePayments();
+	}
+	return null;
+}
+
 protected void validatePaymentAmount(
-	Map<String, BigDecimal> expensePaymentMap, BillPayment billpayment) {
+	List<ExpensePayment> expensePayments, BillPayment billpayment) {
 	BigDecimal sumOfExpensePaymentMapValues =
-		expensePaymentMap.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
+		expensePayments.stream()
+			.map(ExpensePayment::getPaymentAmount)
+			.reduce(BigDecimal.ZERO, BigDecimal::add);
 	if (sumOfExpensePaymentMapValues.compareTo(billpayment.getPaymentAmount()) != 0) {
 	throw new IllegalArgumentException(
 		"payment amount does not match sum of expense payment amounts");
 	}
 }
 
-protected ExpenseEntity getExpenseEntity(String expenseId, BillPayment billpayment) {
-	ExpenseEntity expenseEntity = expenseService.findById(Long.parseLong(expenseId));
-	if (expenseEntity == null) {
+protected ExpenseEntity getExpenseEntity(Long expenseId, Long vendorId) {
+	ExpenseEntity expenseEntity = expenseService.findById(expenseId);
+	if (expenseEntity.getId() == null) {
 	throw new EntityNotFoundException("Expense with id " + expenseId + " not found");
 	}
-	if (!Objects.equals(expenseEntity.getVendor().getId(), billpayment.getVendorId())) {
+	if (!Objects.equals(expenseEntity.getVendor().getId(), vendorId)) {
 
 	throw new InvalidObjectException("expense id does not belong to vendor ");
 	}
