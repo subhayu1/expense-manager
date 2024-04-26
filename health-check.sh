@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Directory where your git repository is located
-REPO_DIR="/path/to/your/repo"
+REPO_DIR="./"
 # JSON file to append the data
-OUTPUT_FILE="/path/to/output.json"
+OUTPUT_FILE="./health-check.json"
 
 # Navigate to the repository directory
 cd "$REPO_DIR"

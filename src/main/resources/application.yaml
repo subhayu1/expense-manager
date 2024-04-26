@@ -1,5 +1,6 @@
 spring:
 
+
   application:
     name: expense-manager
     admin:
@@ -55,6 +56,10 @@ management:
     web:
       exposure:
         include: health,info,flyway
+  info:
+    git:
+      enabled: true
+      mode: full
 springdoc:
   show-actuator: true
 sync-service:
