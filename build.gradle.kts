@@ -178,3 +178,6 @@ tasks.named("compileJava", JavaCompile::class) {
 tasks.named("compileTestJava", JavaCompile::class) {
     options.compilerArgs.add("-parameters")
 }
+gitProperties {
+    failOnNoGitDirectory = false  // Prevent build failure if no .git directory is found
+}
