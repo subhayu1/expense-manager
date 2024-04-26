@@ -38,3 +38,4 @@ out/
 .vscode/
 /.gradle/
 /.gradle/buildOutputCleanup/buildOutputCleanup.lock
+src/main/resources/git.properties
