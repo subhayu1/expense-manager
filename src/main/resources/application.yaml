@@ -1,6 +1,4 @@
 spring:
-  config:
-    import: classpath:git.properties
 
 
   application:
@@ -47,9 +45,6 @@ spring:
   cloud:
     loadbalancer:
       enabled: false
-  info:
-    git:
-      location: classpath:git.properties
 #rsa:
 #  private-key: classpath:certs/private.pem
 #  public-key: classpath:certs/public.pem
@@ -64,7 +59,7 @@ management:
   info:
     git:
       enabled: true
-
+      mode: full
 springdoc:
   show-actuator: true
 sync-service:
