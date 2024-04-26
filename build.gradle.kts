@@ -3,7 +3,7 @@ import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.
 plugins {
     `java-library`
     `maven-publish`
-   id("com.gorylenko.gradle-git-properties") version "2.4.1"
+    id("com.gorylenko.gradle-git-properties") version "2.4.1"
     id("org.springframework.boot") version "3.2.2"
     id("io.spring.dependency-management") version "1.1.4"
     id("org.flywaydb.flyway") version "8.0.0"
@@ -179,5 +179,6 @@ tasks.named("compileTestJava", JavaCompile::class) {
     options.compilerArgs.add("-parameters")
 }
 gitProperties {
-    failOnNoGitDirectory = false  // Prevent build failure if no .git directory is found
+    failOnNoGitDirectory =false // Prevent build failure if no .git directory is found
 }
+
