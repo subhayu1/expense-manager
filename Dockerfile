@@ -18,8 +18,11 @@ COPY src /app/src
 RUN chmod +x ./gradlew
 
 # Build the application using the Gradle Wrapper
+RUN ./gradlew  build
 RUN ./gradlew generateGitProperties
-RUN ./gradlew clean build 
+SHELL ["/bin/sh", "-c", "echo $(cat /app/build/resources/main/git.properties)"]
+# check if git.properties file is generated anc echo the content
+
 #RUN ./gradlew bootJar
 
 # Start a new stage for the final image
@@ -46,5 +49,6 @@ RUN ls -la /app >./app.txt
 RUN chmod +x /app/entrypoint.sh
 
 # Run the web service on container startup
-CMD ["java", "-jar", "/app/app.jar", "--spring.profiles.active=container"]
+#CMD ["java", "-jar", "/app/app.jar", "--spring.profiles.active=container"]
+CMD ["java", "-jar", "/app/app.jar"]
 #ENTRYPOINT ["/app/entrypoint.sh"]

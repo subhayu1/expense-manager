@@ -181,9 +181,9 @@ tasks.named("compileTestJava", JavaCompile::class) {
 gitProperties {
     failOnNoGitDirectory =false // Prevent build failure if no .git directory is found
     //gitPropertiesResourceDir.set(file("${projectDir}/build/resources/main"))
-    configure<com.gorylenko.GitPropertiesPluginExtension> {
-        gitPropertiesResourceDir.set(file("${projectDir}/build/resources/main"))
-    }
+   // configure<com.gorylenko.GitPropertiesPluginExtension> {
+       // gitPropertiesResourceDir.set(file("/build/resources/main"))
+   //c }
 
 }
 tasks.named("processResources", Copy::class) {
