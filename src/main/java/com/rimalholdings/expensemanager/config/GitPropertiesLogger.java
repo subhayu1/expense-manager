@@ -6,10 +6,12 @@ import java.util.Map;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j(topic = "ApplicationStartupLogger")
+@PropertySource("classpath:git.properties")
 public class GitPropertiesLogger {
 @Value("${git.commit.id}")
 private String commitId;
