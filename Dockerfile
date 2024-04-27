@@ -25,7 +25,7 @@ RUN chmod +x /app/entrypoint.sh
 # Use the RUN command to execute the script
 RUN chmod +x /app/health-check.sh
 RUN ./gradlew build
-#RUN ./gradlew generateGitProperties
+RUN ./gradlew generateGitProperties
 SHELL ["/bin/sh", "-c", "echo $(cat /app/build/resources/main/git.properties)"]
 # check if git.properties file is generated anc echo the content
 
