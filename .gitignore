@@ -39,3 +39,4 @@ out/
 /.gradle/
 /.gradle/buildOutputCleanup/buildOutputCleanup.lock
 src/main/resources/git.properties
+/health-check.json

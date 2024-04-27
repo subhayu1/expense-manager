@@ -51,7 +51,7 @@ public void readHealthCheck() {
 	ObjectMapper objectMapper = new ObjectMapper();
 	try {
 	HealthCheck healthCheck =
-		objectMapper.readValue(new File("healthcheck.json"), HealthCheck.class);
+		objectMapper.readValue(new File("health-check.json"), HealthCheck.class);
 	log.info(healthCheck.toString());
 	} catch (IOException e) {
 	log.error("Error reading health check file", e);
