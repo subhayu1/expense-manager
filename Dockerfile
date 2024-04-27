@@ -19,7 +19,6 @@ RUN chmod +x ./gradlew
 
 # Build the application using the Gradle Wrapper
 RUN ./gradlew  build
-RUN ./gradlew generateGitProperties
 SHELL ["/bin/sh", "-c", "echo $(cat /app/build/resources/main/git.properties)"]
 # check if git.properties file is generated anc echo the content
 
