@@ -46,7 +46,7 @@ public void logGitProperties() {
 	log.info(gitProperties.toString());
 }
 
-//@PostConstruct
+// @PostConstruct
 public void readHealthCheck() {
 	// read the health check.json file using object mapper
 	// log the health check details
@@ -65,7 +65,7 @@ public void readHealthCheckText() {
 	// read the health check.txt file using object mapper
 	// log the health check details
 	try {
-		String healthCheck = new String(Files.readAllBytes(Paths.get("git-info.txt")));
+	String healthCheck = new String(Files.readAllBytes(Paths.get("git-info.txt")));
 	log.info(healthCheck);
 	} catch (IOException e) {
 	log.error("Error reading health check file", e);
