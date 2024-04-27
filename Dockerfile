@@ -19,7 +19,7 @@ RUN chmod +x ./gradlew
 
 # Build the application using the Gradle Wrapper
 RUN ./gradlew clean build 
-RUN ./gradlew bootJar
+#RUN ./gradlew bootJar
 
 # Start a new stage for the final image
 FROM amazoncorretto:17-alpine-jdk
