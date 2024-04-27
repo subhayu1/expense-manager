@@ -34,6 +34,7 @@ public BillPaymentController(
 	this.billPaymentMapper = billPaymentMapper;
 	this.billPayIntegrationHandler = billPayIntegrationHandler;
 }
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @PostMapping("/")
 public ResponseEntity<BillPayment> createBillPayment(@RequestBody BillPayment billPayment) {
