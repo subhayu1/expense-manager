@@ -13,13 +13,19 @@ COPY settings.gradle.kts /app/
 
 # Copy the source code
 COPY src /app/src
+COPY entrypoint.sh /app/
+
 
 # Grant execution rights on the Gradle Wrapper
 RUN chmod +x ./gradlew
+# Copy the health-check.sh script into the Docker image
+COPY health-check.sh /app/
+RUN chmod +x /app/entrypoint.sh
 
-# Build the application using the Gradle Wrapper
-RUN ./gradlew  build
-RUN ./gradlew generateGitProperties
+# Use the RUN command to execute the script
+RUN chmod +x /app/health-check.sh
+RUN ./gradlew build
+#RUN ./gradlew generateGitProperties
 SHELL ["/bin/sh", "-c", "echo $(cat /app/build/resources/main/git.properties)"]
 # check if git.properties file is generated anc echo the content
 
@@ -37,16 +43,10 @@ RUN apk add --no-cache mysql-client
 # Copy the built JAR file from the builder stage
 COPY --from=builder /app/build/libs/*.jar ./app.jar
 
-# List the contents of the /app directory
-
-# Copy the entrypoint script
-COPY entrypoint.sh /app/
-#COPY flyway-container.conf /app/
 
 COPY src/main/resources/db/migration /app/db/migration
 RUN ls -la /app >./app.txt
-
-RUN chmod +x /app/entrypoint.sh
+SHELL ["/bin/sh", "-c", " /app/health-check.sh"]
 
 # Run the web service on container startup
 CMD ["java", "-jar", "/app/app.jar", "--spring.profiles.active=container"]

@@ -19,16 +19,4 @@ private static final String ROLE_ADMIN = "ADMIN";
 public static void main(String[] args) {
 	SpringApplication.run(ExpenseManagerApplication.class, args);
 }
-
-// @Bean
-// CommandLineRunner setupDefaultUser(UserRepository repository, PasswordEncoder passwordEncoder)
-// {
-//	return args -> {
-//	try {
-//		repository.save(new UserEntity(ADMIN, passwordEncoder.encode(PASSWORD), ROLE_ADMIN));
-//	} catch (DataIntegrityViolationException e) {
-//		log.info("User already exists,skipping default user creation.");
-//	}
-//	};
-// }
 }

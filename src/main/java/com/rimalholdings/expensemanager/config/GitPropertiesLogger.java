@@ -10,22 +10,20 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j(topic = "ApplicationStartupLogger")
-// @PropertySource("classpath:git.properties")
 public class GitPropertiesLogger {
-
-@Value("${git.commit.id:unknown}")
+@Value("${git.commit.id}")
 private String commitId;
 
-@Value("${git.branch:unknown}")
+@Value("${git.branch}")
 private String branch;
 
-@Value("${git.commit.message.short:unknown}")
+@Value("${git.commit.message.full}")
 private String commitMessage;
 
-@Value("${git.build.host:unknown}")
+@Value("${git.build.host}")
 private String buildHost;
 
-@Value("${git.commit.time:unknown}")
+@Value("${git.commit.time}")
 private String commitTime;
 
 @PostConstruct

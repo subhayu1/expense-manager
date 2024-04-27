@@ -24,4 +24,4 @@ commit_date=$(git log -1 --format=%cd)
 json_object="{\"commit_hash\": \"$commit_hash\", \"branch_name\": \"$branch_name\", \"commit_message\": \"$commit_message\", \"commit_date\": \"$commit_date\"}"
 
 # Append the JSON object to the output file
-echo $json_object >> $OUTPUT_FILE
+echo $json_object > $OUTPUT_FILE
