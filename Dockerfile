@@ -18,6 +18,7 @@ COPY src /app/src
 RUN chmod +x ./gradlew
 
 # Build the application using the Gradle Wrapper
+RUN ./gradlew generateGitProperties
 RUN ./gradlew clean build 
 #RUN ./gradlew bootJar
 

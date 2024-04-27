@@ -10,8 +10,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
-@PropertySource("classpath:git.properties")
 @Slf4j(topic = "ApplicationStartupLogger")
+@PropertySource("classpath:git.properties")
 public class GitPropertiesLogger {
 
 @Value("${git.commit.id:unknown}")
