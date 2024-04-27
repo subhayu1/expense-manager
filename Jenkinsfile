@@ -28,8 +28,6 @@ pipeline {
                     env.GIT_URL = sh(script: 'git config --get remote.origin.url', returnStdout: true).trim()
                     //write to a file
                     writeFile file: 'git-info.txt', text: "GIT_COMMIT=${env.GIT_COMMIT}\nGIT_BRANCH=${env.GIT_BRANCH}\nGIT_URL=${env.GIT_URL}"
-                    Author: ${env.GIT_AUTHOR_NAME}
-                    Branch: ${env.GIT_BRANCH}
                 }
 
             }
