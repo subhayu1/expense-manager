@@ -1,8 +1,13 @@
 package com.rimalholdings.expensemanager.config;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.rimalholdings.expensemanager.data.dto.HealthCheck;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,5 +42,19 @@ public void logGitProperties() {
 	gitProperties.put("buildHost", buildHost);
 	gitProperties.put("commitTime", commitTime);
 	log.info(gitProperties.toString());
+}
+
+@PostConstruct
+public void readHealthCheck() {
+	// read the health check.json file using object mapper
+	// log the health check details
+	ObjectMapper objectMapper = new ObjectMapper();
+	try {
+	HealthCheck healthCheck =
+		objectMapper.readValue(new File("healthcheck.json"), HealthCheck.class);
+	log.info(healthCheck.toString());
+	} catch (IOException e) {
+	log.error("Error reading health check file", e);
+	}
 }
 }

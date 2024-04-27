@@ -31,10 +31,16 @@ pipeline {
         stage('Build EM_SERVICE') {
             steps {
                 script {
+                    //run health-check.sh script in the root directory
+                    sh 'sh health-check.sh'
+
+                }
+                script {
                     env.PATH = "${env.PATH}:/usr/local/bin"
                     //docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME_EM_SERVICE}:${IMAGE_TAG}", ".", "--platform linux/arm64")
                     sh "docker build --platform=linux/arm64 -t registry.ops.rimalholdings.internal:11000/em-service:latest ."
                 }
+
             }
         }
         stage('Push EM_SERVICE') {

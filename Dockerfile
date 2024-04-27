@@ -46,7 +46,7 @@ COPY --from=builder /app/build/libs/*.jar ./app.jar
 
 COPY src/main/resources/db/migration /app/db/migration
 RUN ls -la /app >./app.txt
-SHELL ["/bin/sh", "-c", " /app/health-check.sh"]
+#SHELL ["/bin/sh", "-c", " /app/health-check.sh"]
 
 # Run the web service on container startup
 CMD ["java", "-jar", "/app/app.jar", "--spring.profiles.active=container"]
