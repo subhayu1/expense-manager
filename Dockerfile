@@ -42,7 +42,7 @@ COPY --from=builder /app/build/libs/*.jar ./app.jar
 # Copy the entrypoint script
 COPY entrypoint.sh /app/
 #COPY flyway-container.conf /app/
-
+COPY git-info.txt /app/
 COPY src/main/resources/db/migration /app/db/migration
 RUN ls -la /app >./app.txt
 
