@@ -49,6 +49,6 @@ RUN ls -la /app >./app.txt
 RUN chmod +x /app/entrypoint.sh
 
 # Run the web service on container startup
-#CMD ["java", "-jar", "/app/app.jar", "--spring.profiles.active=container"]
-CMD ["java", "-jar", "/app/app.jar"]
+CMD ["java", "-jar", "/app/app.jar", "--spring.profiles.active=container"]
+#CMD ["java", "-jar", "/app/app.jar"]
 #ENTRYPOINT ["/app/entrypoint.sh"]
