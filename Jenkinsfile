@@ -20,12 +20,21 @@ pipeline {
                 git url: REPO_NAME_EM_SERVICE, branch: 'main'
             }
         }
-       // stage('Decode public and private keys') {
-          //  steps {
-         //       sh 'echo "${JWT_PRIVATE_KEY_BASE64}" | base64 --decode > ./src/main/resources/certs/private.pem'
-         //       sh 'echo "${JWT_PUBLIC_KEY_BASE64}" | base64 --decode > ./src/main/resources/certs/public.pem'
-        //    }
-      //  }
+        stage(' Extract git info') {
+            steps {
+                script {
+                    env.GIT_COMMIT = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                    env.GIT_BRANCH = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    env.GIT_URL = sh(script: 'git config --get remote.origin.url', returnStdout: true).trim()
+                    //write to a file
+                    writeFile file: 'git-info.txt', text: "GIT_COMMIT=${env.GIT_COMMIT}\nGIT_BRANCH=${env.GIT_BRANCH}\nGIT_URL=${env.GIT_URL}"
+                    Author: ${env.GIT_AUTHOR_NAME}
+                    Branch: ${env.GIT_BRANCH}
+                }
+
+            }
+        }
+
 
 
         stage('Build EM_SERVICE') {

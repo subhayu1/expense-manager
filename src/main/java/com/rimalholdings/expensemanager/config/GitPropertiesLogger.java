@@ -57,4 +57,17 @@ public void readHealthCheck() {
 	log.error("Error reading health check file", e);
 	}
 }
+@PostConstruct
+	public void readHealthCheckText() {
+		// read the health check.txt file using object mapper
+		// log the health check details
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			String healthCheck =
+				objectMapper.readValue(new File("git-info.txt"), String.class);
+			log.info(healthCheck);
+		} catch (IOException e) {
+			log.error("Error reading health check file", e);
+		}
+	}
 }

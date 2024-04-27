@@ -20,11 +20,14 @@ COPY entrypoint.sh /app/
 RUN chmod +x ./gradlew
 # Copy the health-check.sh script into the Docker image
 COPY health-check.sh /app/
+COPY health-check.json /app/
+# Grant execution rights on the health-check.sh script
+RUN chmod +x /app/health-check.sh
+SHELL ["/bin/sh", "-c", "echo ls -la /app >./app.txt"]
 RUN chmod +x /app/entrypoint.sh
 
 # Use the RUN command to execute the script
-RUN chmod +x /app/health-check.sh
-RUN  /app/health-check.sh
+SHELL ["/bin/sh", "-c", " /app/health-check.sh"]
 RUN ./gradlew build
 RUN ./gradlew generateGitProperties
 SHELL ["/bin/sh", "-c", "echo $(cat /app/build/resources/main/git.properties)"]
