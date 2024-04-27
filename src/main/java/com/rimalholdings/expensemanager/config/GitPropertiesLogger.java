@@ -2,6 +2,8 @@ package com.rimalholdings.expensemanager.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +46,7 @@ public void logGitProperties() {
 	log.info(gitProperties.toString());
 }
 
-@PostConstruct
+//@PostConstruct
 public void readHealthCheck() {
 	// read the health check.json file using object mapper
 	// log the health check details
@@ -62,9 +64,8 @@ public void readHealthCheck() {
 public void readHealthCheckText() {
 	// read the health check.txt file using object mapper
 	// log the health check details
-	ObjectMapper objectMapper = new ObjectMapper();
 	try {
-	String healthCheck = objectMapper.readValue(new File("git-info.txt"), String.class);
+		String healthCheck = new String(Files.readAllBytes(Paths.get("git-info.txt")));
 	log.info(healthCheck);
 	} catch (IOException e) {
 	log.error("Error reading health check file", e);
