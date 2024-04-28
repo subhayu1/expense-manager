@@ -11,7 +11,6 @@ import com.rimalholdings.expensemanager.model.mapper.BillPayIntegrationHandler;
 import com.rimalholdings.expensemanager.model.mapper.BillPaymentServiceMapper;
 import com.rimalholdings.expensemanager.sync.MessageWrapper;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -23,9 +22,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j(topic = "BillPaymentController")
 @RequestMapping("/api/v1/bill-payment")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+// @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class BillPaymentController implements APIControllerInterface {
-
 private final BillPaymentServiceMapper billPaymentMapper;
 private final BillPayIntegrationHandler billPayIntegrationHandler;
 
@@ -36,19 +34,6 @@ public BillPaymentController(
 	this.billPayIntegrationHandler = billPayIntegrationHandler;
 }
 
-@RequestMapping(value = "/api/**", method = RequestMethod.OPTIONS)
-public void corsHeaders(HttpServletResponse response) {
-	response.addHeader("Access-Control-Allow-Origin", "*");
-	response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-	response.addHeader(
-		"Access-Control-Allow-Headers", "origin, content-type, accept, x-requested-with");
-	response.addHeader("Access-Control-Max-Age", "3600");
-}
-
-@CrossOrigin(
-	origins = "*",
-	allowedHeaders = "*",
-	methods = {RequestMethod.POST, RequestMethod.OPTIONS})
 @PostMapping("/")
 public ResponseEntity<BillPayment> createBillPayment(@RequestBody BillPayment billPayment) {
 	log.info("Creating new bill payment: {}", billPayment);

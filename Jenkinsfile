@@ -26,8 +26,12 @@ pipeline {
                     env.GIT_COMMIT = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
                     env.GIT_BRANCH = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
                     env.GIT_URL = sh(script: 'git config --get remote.origin.url', returnStdout: true).trim()
+                    env.GIT_COMMIT_MESSAGE = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
                     //write to a file
-                    writeFile file: 'git-info.txt', text: "GIT_COMMIT=${env.GIT_COMMIT}\nGIT_BRANCH=${env.GIT_BRANCH}\nGIT_URL=${env.GIT_URL}"
+                    writeFile file: 'git-info.txt', text: "GIT_COMMIT=${env.GIT_COMMIT}\n" +
+                            "GIT_COMMIT_MESSAGE=${env.GIT_COMMIT_MESSAGE}/n" +
+                            "GIT_BRANCH=${env.GIT_BRANCH}\n" +
+                            "GIT_URL=${env.GIT_URL}"
                 }
 
             }
