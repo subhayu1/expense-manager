@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j(topic = "ExpenseController")
-@CrossOrigin
+//@CrossOrigin
 @RequestMapping(value = "/api/v1/expense", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ExpenseController implements APIControllerInterface {
 

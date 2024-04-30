@@ -19,10 +19,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Slf4j(topic = "BillPaymentController")
 @RequestMapping("/api/v1/bill-payment")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+
 // @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class BillPaymentController implements APIControllerInterface {
 private final BillPaymentServiceMapper billPaymentMapper;
@@ -34,9 +36,8 @@ public BillPaymentController(
 	this.billPaymentMapper = billPaymentMapper;
 	this.billPayIntegrationHandler = billPayIntegrationHandler;
 }
-
 @PostMapping("/")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public ResponseEntity<BillPayment> createBillPayment(@RequestBody BillPayment billPayment) {
 	log.info("Creating new bill payment: {}", billPayment);
 	if (billPayment.getId() != null) {
