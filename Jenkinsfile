@@ -29,7 +29,7 @@ pipeline {
                     env.GIT_COMMIT_MESSAGE = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
                     //write to a file
                     writeFile file: 'git-info.txt', text: "GIT_COMMIT=${env.GIT_COMMIT}\n" +
-                            "GIT_COMMIT_MESSAGE=${env.GIT_COMMIT_MESSAGE}/n" +
+                            "GIT_COMMIT_MESSAGE=${env.GIT_COMMIT_MESSAGE}\n" +
                             "GIT_BRANCH=${env.GIT_BRANCH}\n" +
                             "GIT_URL=${env.GIT_URL}"
                 }
