@@ -22,17 +22,15 @@ pipeline {
         }
         stage(' Extract git info') {
             steps {
-                script {
-                    sh '''
-                       touch ./git-info.txt
-                       '''
                     env.GIT_COMMIT = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
                     env.GIT_BRANCH = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
                     env.GIT_URL = sh(script: 'git config --get remote.origin.url', returnStdout: true).trim()
                     env.GIT_COMMIT_MESSAGE = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
                     //write to a file
-                    if(fileExists('git-info.txt')) {
-                        echo "file exists, writing to git-info.txt"
+                    if(!fileExists('git-info.txt')) {
+                        echo "file does not exist, creating git-info.txt"
+                        sh ' touch git-info.txt'
+                    }
                     writeFile file: 'git-info.txt', text: "GIT_COMMIT=${env.GIT_COMMIT}\n" +
                             "GIT_COMMIT_MESSAGE=${env.GIT_COMMIT_MESSAGE}\n" +
                             "GIT_BRANCH=${env.GIT_BRANCH}\n" +
