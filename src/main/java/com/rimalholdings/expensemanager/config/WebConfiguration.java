@@ -1,16 +1,16 @@
-//package com.rimalholdings.expensemanager.config;
+// package com.rimalholdings.expensemanager.config;
 //
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.web.cors.CorsConfiguration;
-//import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-//import org.springframework.web.filter.CorsFilter;
+// import org.springframework.context.annotation.Bean;
+// import org.springframework.context.annotation.Configuration;
+// import org.springframework.web.cors.CorsConfiguration;
+// import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+// import org.springframework.web.filter.CorsFilter;
 //
-//@Configuration
-//public class WebConfiguration {
+// @Configuration
+// public class WebConfiguration {
 //
-//@Bean
-//public CorsFilter corsFilter() {
+// @Bean
+// public CorsFilter corsFilter() {
 //	CorsConfiguration configuration = new CorsConfiguration();
 //	configuration.setAllowCredentials(false); // Set based on your needs
 //	configuration.addAllowedOriginPattern("*"); // Allows all origins
@@ -21,5 +21,5 @@
 //	UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 //	source.registerCorsConfiguration("/**", configuration);
 //	return new CorsFilter(source);
-//}
-//}
+// }
+// }
