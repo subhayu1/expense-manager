@@ -78,12 +78,13 @@ void clearIntegrationId(Long billPayId);
 	// INNER JOIN expense e ON bpe.expenseid = e.id
 	// INNER JOIN vendor v ON e.vendorid = v.id;
 	value =
-		"SELECT bp.id AS id, v.name AS vendorName, e.externalorgid AS externalOrgId,"
-			+ " e.externalinvoicenumber AS externalInvoiceNumber, e.description AS description,"
-			+ "e.totalamount AS totalAmount, e.paymentamount as paymentAmount,e.amountdue as amountDue"
-			+ " FROM billpayment bp INNER JOIN billpayment_expense bpe ON bp.id = bpe.billpaymentid "
-			+ "INNER JOIN expense e ON bpe.expenseid = e.id INNER JOIN vendor v ON e.vendorid = v.id "
-			+ "WHERE e.externalorgid = :orgId ",
+		"SELECT bp.id AS id, v.name AS vendorName, e.externalorgid AS externalOrgId, "
+			+ " e.externalinvoicenumber AS externalInvoiceNumber, e.description AS description, "
+			+ "e.totalamount AS totalAmount, e.paymentamount as paymentAmount,e.amountdue as amountDue "
+			+ " FROM billpayment bp "
+			+ "INNER JOIN vendor v ON bp.vendorid = v.id "
+			+ "INNER JOIN expense e ON bp.expenseid = e.id "
+			+ " WHERE e.externalorgid = :orgId  ",
 	nativeQuery = true)
 List<BillPaymentInvoice> getBillPayments(@Param("orgId") Long id);
 }
