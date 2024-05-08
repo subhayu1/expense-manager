@@ -59,7 +59,7 @@ management:
 springdoc:
   show-actuator: true
 sync-service:
-  vendor-url: http://SYNC-SERVICE:9000/api/v1/sync/get/vendors
+  vendor-url: http://GATEWAY-SERVICE:8090/sync-service/api/v1/sync/get/vendors
 server:
   port: 10000
 eureka:
