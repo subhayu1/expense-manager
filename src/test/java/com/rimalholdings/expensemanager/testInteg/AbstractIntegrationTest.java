@@ -31,6 +31,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import static io.restassured.RestAssured.given;
 
@@ -47,7 +48,7 @@ public abstract class AbstractIntegrationTest {
 
 @Container
 public static MySQLContainer<?> mysql =
-	new MySQLContainer<>("mysql:8.0.26")
+	new MySQLContainer<>(DockerImageName.parse("mysql:8.0.26"))
 		.withUsername("root")
 		.withPassword("password")
 		.withDatabaseName("test");
