@@ -72,7 +72,6 @@ void testIntegUpdateExpenseShouldReturnUpdatedExpense() {
 
 private String postRequest() {
 	return given()
-		.header("Authorization", "Bearer " + getToken())
 		.contentType(ContentType.JSON)
 		.body(expensePostRequestString())
 		.when()
@@ -85,7 +84,6 @@ private String postRequest() {
 
 private String putRequest() {
 	return given()
-		.header("Authorization", "Bearer " + getToken())
 		.contentType(ContentType.JSON)
 		.body(expensePutRequestString())
 		.when()

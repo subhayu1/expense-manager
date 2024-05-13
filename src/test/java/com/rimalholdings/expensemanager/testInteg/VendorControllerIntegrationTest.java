@@ -77,7 +77,6 @@ void testIntegUpdateVendorShouldReturnUpdatedVendor() {
 
 private String putResponseString() {
 	return given()
-		.header("Authorization", "Bearer " + getToken())
 		.contentType(ContentType.JSON)
 		.body(vendorPutRequestString())
 		.when()
@@ -102,7 +101,6 @@ private String vendorPutRequestString() {
 
 protected String postResponseString(String url) {
 	return given()
-		.header("Authorization", "Bearer " + getToken())
 		.contentType(ContentType.JSON)
 		.body(postVendorBody())
 		.when()

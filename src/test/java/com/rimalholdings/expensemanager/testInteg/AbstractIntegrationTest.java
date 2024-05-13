@@ -1,11 +1,12 @@
 package com.rimalholdings.expensemanager.testInteg;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.nio.charset.StandardCharsets;
 import java.sql.Date;
-import java.util.Base64;
 
+import com.rimalholdings.expensemanager.data.dao.ApPaymentRepository;
+import com.rimalholdings.expensemanager.data.dao.BillPaymentRepository;
 import com.rimalholdings.expensemanager.data.dao.ExpenseRepository;
 import com.rimalholdings.expensemanager.data.dao.VendorRepository;
 import com.rimalholdings.expensemanager.data.entity.ExpenseEntity;
@@ -15,7 +16,6 @@ import com.rimalholdings.expensemanager.util.DateTimeUtil;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -42,14 +42,22 @@ public abstract class AbstractIntegrationTest {
 
 @Autowired private VendorRepository vendorRepository;
 @Autowired private ExpenseRepository expenseRepository;
+@Autowired private BillPaymentRepository billPaymentRepository;
+@Autowired private ApPaymentRepository apPaymentRepository;
 
 @Container
 public static MySQLContainer<?> mysql =
-	new MySQLContainer<>("mysql:8.0.26").withUsername("root").withPassword("password");
+	new MySQLContainer<>("mysql:8.0.26")
+		.withUsername("root")
+		.withPassword("password")
+		.withDatabaseName("test");
 
 @BeforeAll
-static void beforeAll() {
+static void beforeAll() throws IOException, InterruptedException {
 	mysql.start();
+	// create test database
+	mysql.execInContainer("mysql -uroot -ppassword -e 'CREATE DATABASE test'");
+
 	// Configure Flyway to use hardcoded credentials
 	Flyway.configure().dataSource(mysql.getJdbcUrl(), "root", "password").load().migrate();
 }
@@ -75,30 +83,8 @@ static void mysqlProperties(DynamicPropertyRegistry registry) {
 	registry.add("flyway.password", () -> "password");
 }
 
-protected String authenticateAndGetToken(String username, String password) {
-	String base64Credentials =
-		Base64.getEncoder()
-			.encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
-
-	Response response =
-		given()
-			.header("Authorization", "Basic " + base64Credentials)
-			.header("Accept", "application/json")
-			.contentType(ContentType.JSON)
-			.when()
-			.post("/auth/token");
-	return response.then().extract().path("token");
-}
-
-protected String getToken() {
-	String token = authenticateAndGetToken("admin", "password");
-	System.out.println(token);
-	return token;
-}
-
 protected String getResponseString(String url) {
 	return given()
-		.header("Authorization", "Bearer " + getToken())
 		.contentType(ContentType.JSON)
 		.when()
 		.get(url)
@@ -110,7 +96,6 @@ protected String getResponseString(String url) {
 
 protected String deleteResponseString(String url) {
 	return given()
-		.header("Authorization", "Bearer " + getToken())
 		.contentType(ContentType.JSON)
 		.when()
 		.delete(url)

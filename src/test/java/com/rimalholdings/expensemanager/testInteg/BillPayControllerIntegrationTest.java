@@ -2,8 +2,10 @@ package com.rimalholdings.expensemanager.testInteg;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.sql.Date;
 
 import com.rimalholdings.expensemanager.data.dao.*;
+import com.rimalholdings.expensemanager.data.entity.ApPaymentEntity;
 import com.rimalholdings.expensemanager.data.entity.BillPaymentEntity;
 import com.rimalholdings.expensemanager.data.entity.VendorEntity;
 import com.rimalholdings.expensemanager.util.DateTimeUtil;
@@ -25,6 +27,7 @@ public class BillPayControllerIntegrationTest extends AbstractIntegrationTest {
 @Autowired private BillPaymentRepository billPaymentRepository;
 @Autowired private VendorRepository vendorRepository;
 @Autowired private ExpenseRepository expenseRepository;
+@Autowired private ApPaymentRepository apPaymentRepository;
 private static final String BASE_ENTITY_URL = "/api/v1/bill-payment/";
 
 @BeforeEach
@@ -46,7 +49,7 @@ void testIntegPostBillPayShouldReturnCreatedBillPay() {
 }
 
 @Test
-void OtestIntegGetBillPayByIdShouldReturnBillPay() {
+void testIntegGetBillPayByIdShouldReturnBillPay() {
 	createBllPaymentEntity();
 	Long billPaymentId = billPaymentRepository.findAll().get(0).getId();
 	String url = BASE_ENTITY_URL + billPaymentId;
@@ -59,20 +62,22 @@ private String billPaymentBody() {
 	String expenseId = expenseRepository.findAll().get(0).getId().toString();
 	return """
 						{
-					"paymentAmount": 100,
-					"paymentMethod": 1,
-					"paymentReference": "123",
-					"paymentDate": "2021-09-01 00:00:00.0",
-					"vendorId": %s,
-"expensePayments": {
-						"%s": 100
-					},
-					"toSync": true
-					}
+								"paymentAmount": 100,
+								"paymentMethod": 1,
+								"paymentReference": "123",
+								"toSync": true,
+								"paymentDate": "2021-09-01 00:00:00.0",
+								"expensePayments": [
+												{
+																"vendorId": %s,
+																"expenseId": %s,
+																"paymentAmount": 100
+												}
+								]
+				}
 
-					"""
+				\t"""
 		.formatted(vendorEntity, expenseId);
-
 	//	return "{\n"
 	//		+ "  \"paymentAmount\": 100,\n"
 	//		+ "  \"paymentMethod\": 1,\n"
@@ -91,7 +96,6 @@ private String billPaymentBody() {
 
 private String billPayPostResponseString(String url) {
 	return given()
-		.header("Authorization", "Bearer " + getToken())
 		.contentType(ContentType.JSON)
 		.body(billPaymentBody())
 		.when()
@@ -104,11 +108,15 @@ private String billPayPostResponseString(String url) {
 
 private void createBllPaymentEntity() {
 	VendorEntity vendorEntity = saveVendorEntity();
+	createApPaymentEntity();
 	createExpenseEntity();
+
 	BillPaymentEntity billPaymentEntity = new BillPaymentEntity();
 	billPaymentEntity.setId(1L);
 	billPaymentEntity.setPaymentAmount(new BigDecimal(100).round(new MathContext(2)));
 	billPaymentEntity.setPaymentMethod(3);
+	billPaymentEntity.setExpense(expenseRepository.findAll().get(0));
+	billPaymentEntity.setApPayment(apPaymentRepository.findAll().get(0));
 	billPaymentEntity.setPaymentReference("123");
 	billPaymentEntity.setPaymentDate(DateTimeUtil.getCurrentTimeInUTC());
 	billPaymentEntity.setCreatedDate(DateTimeUtil.getCurrentTimeInUTC());
@@ -116,5 +124,17 @@ private void createBllPaymentEntity() {
 	billPaymentEntity.setVendor(vendorEntity);
 	billPaymentEntity.setToSync(true);
 	billPaymentRepository.saveAndFlush(billPaymentEntity);
+}
+
+protected void createApPaymentEntity() {
+	ApPaymentEntity apPaymentEntity = new ApPaymentEntity();
+	apPaymentEntity.setId(1);
+	apPaymentEntity.setPaymentAmount(new BigDecimal(100).round(new MathContext(2)));
+	apPaymentEntity.setPaymentMethod(3);
+	apPaymentEntity.setPaymentReference("123");
+	apPaymentEntity.setPaymentDate(new Date(System.currentTimeMillis()));
+	apPaymentEntity.setCreatedDate(new Date(System.currentTimeMillis()));
+
+	apPaymentRepository.saveAndFlush(apPaymentEntity);
 }
 }
