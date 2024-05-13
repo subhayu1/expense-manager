@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Date;
+import java.time.Duration;
 
 import com.rimalholdings.expensemanager.data.dao.ApPaymentRepository;
 import com.rimalholdings.expensemanager.data.dao.BillPaymentRepository;
@@ -29,6 +30,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.startupcheck.IndefiniteWaitOneShotStartupCheckStrategy;
+import org.testcontainers.containers.startupcheck.OneShotStartupCheckStrategy;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
@@ -51,7 +54,8 @@ public static MySQLContainer<?> mysql =
 	new MySQLContainer<>(DockerImageName.parse("mysql:8.0.26"))
 		.withUsername("root")
 		.withPassword("password")
-		.withDatabaseName("test");
+		.withDatabaseName("test")
+			.withReuse(true);
 
 @BeforeAll
 static void beforeAll() throws IOException, InterruptedException {
