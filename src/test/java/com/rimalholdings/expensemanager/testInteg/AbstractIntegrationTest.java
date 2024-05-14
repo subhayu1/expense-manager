@@ -48,7 +48,7 @@ public abstract class AbstractIntegrationTest {
 
 @Container
 public static MySQLContainer<?> mysql =
-	new MySQLContainer<>(DockerImageName.parse("mysql:8.0.26"))
+	new MySQLContainer<>(DockerImageName.parse("mysql:8.0.37"))
 		.withUsername("root")
 		.withPassword("password")
 		.withDatabaseName("test")
